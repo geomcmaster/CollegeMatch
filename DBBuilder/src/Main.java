@@ -1,30 +1,28 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Main {
 
-	private static final String URL = "";
-	private static final String USER = "";
-	private static final String PASSWORD = "";
-	private static Connection conn;
-	
-	private static final String BASE_DATA_URL = "";
-	
-	private static void openConnection() {
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-		} catch (SQLException e) {
-			System.out.println("Unsuccessful connection attempt.\n");
-		}
-	}
-	
-	private static void closeConnection() {
-		//
-	}
-
 	public static void main(String[] args) {
-
+		DBUtil db = new DBUtil();
+		db.openConnection();
+		
+		try {
+			//on first page result, remember to get total number of results from metadata.total, 
+			//then divide by 20 to know how many more iterations to do
+			//SQL stuff
+		}
+		/*//need something that throws SQLException to have catch block
+		catch (SQLException e) {
+			//do something
+		}
+		*/
+		finally {
+			//call closing methods
+		}
 	}
 
 }
