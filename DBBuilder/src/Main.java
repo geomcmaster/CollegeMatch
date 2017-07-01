@@ -6,23 +6,17 @@ import java.sql.Statement;
 
 public class Main {
 
+	/**
+	 * 
+	 * @param args
+	 * 	args[0] :	api key
+	 */
 	public static void main(String[] args) {
-		DBUtil db = new DBUtil();
-		db.openConnection();
+		String apiKey = args[0];
+
+		JSONUtil jutil = new JSONUtil();
 		
-		try {
-			//on first page result, remember to get total number of results from metadata.total, 
-			//then divide by 20 to know how many more iterations to do
-			//SQL stuff
-		}
-		/*//need something that throws SQLException to have catch block
-		catch (SQLException e) {
-			//do something
-		}
-		*/
-		finally {
-			//call closing methods
-		}
+		jutil.processAllRecords(apiKey);
 	}
 
 }
