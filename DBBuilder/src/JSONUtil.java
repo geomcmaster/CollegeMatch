@@ -17,10 +17,11 @@ import com.google.gson.Gson;
 public class JSONUtil {
 	private static final String BASE_DATA_URL = 
 			"https://api.data.gov/ed/collegescorecard/v1/schools.json";
-//TODO once the attributes we need are determined, create constants for that part of the string
+	private static final String CONDITIONS = "school.degrees_awarded.predominant=3";
+	private static final String ATTRIBUTES = "id,school.name";
 	
 	private int currentPage;	//page of results
-	private int per_page;		//number of results per page
+	private int perPage;		//number of results per page
 	private int numPages;		//number of total pages with data
 	
 	/**
@@ -37,36 +38,55 @@ public class JSONUtil {
 	 */
 	public void processAllRecords(String apiKey) {
 		//limiting to schools that predominately award bachelors (for now at least)
-		String baseUrl = BASE_DATA_URL + "?school.degrees_awarded.predominant=3&_fields=id,school.name&api_key=" + apiKey + "&_page=";
-		
-		String json = readAsString(baseUrl + currentPage);
+		String baseUrl = BASE_DATA_URL + "?" + CONDITIONS + 
+				"&_fields=" + ATTRIBUTES + "&api_key=" + apiKey + "&_page=";
+		       
+	    Root root = getRoot(baseUrl);
 	    
-	    Gson gson = new Gson();        
-	    Root root = gson.fromJson(json, Root.class);
-	    
-	    per_page = root.metadata.per_page;
-	    numPages = (root.metadata.total / per_page) + (root.metadata.total % per_page == 0 ? 0 : 1);
-	    
-	    for (Result result : root.results) {
-	    	System.out.println(result.schoolName);
-	    }
+	    setPageData(root);
+	    processPage(root);
 	    currentPage++;
 	    
-	    for (;currentPage < numPages; currentPage++) {
-	    	
-	    	json = readAsString(baseUrl + currentPage);
-		    
-		    gson = new Gson();        
-		    root = gson.fromJson(json, Root.class);
-		    
-		    for (Result result : root.results) {
-		    	//for now we just print the school name
-		    	//when database stuff is ready, we'll call a method in DBUtil class
-		    	//		to populate db from a result
-		    	System.out.println(result.schoolName);
-		    }
+	    for (;currentPage < numPages; currentPage++) {     
+		    processPage(getRoot(baseUrl));
 	    }
 
+	}
+	
+	/**
+	 * Sets perPage and numPages based on metadata
+	 * 
+	 * @param root The root element
+	 */
+	private void setPageData(Root root) {
+		perPage = root.metadata.per_page;
+	    numPages = (root.metadata.total / perPage) + (root.metadata.total % perPage == 0 ? 0 : 1);
+	}
+	
+	/**
+	 * Populates objects from json and returns the root
+	 * 
+	 * @param url The url to use
+	 * @return The root of the json at the url
+	 */
+	private Root getRoot(String url) {
+		String json = readAsString(url + currentPage);
+		Gson gson = new Gson();
+		return gson.fromJson(json, Root.class);
+	}
+	
+	/**
+	 * Processes a single page of results
+	 * 
+	 * @param root Root element of this page
+	 */
+	private void processPage(Root root) {
+		for (Result result : root.results) {
+	    	//for now we just print the school name
+	    	//when database stuff is ready, we'll call a method in DBUtil class
+	    	//		to populate db from a result
+			System.out.println(result.schoolName);
+		}
 	}
 	
 	/**
