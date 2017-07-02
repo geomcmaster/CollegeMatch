@@ -13,10 +13,13 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		String apiKey = args[0];
+		String mysqluser = args[1];
+		String mysqlpw = args[2];
 
-		JSONUtil jutil = new JSONUtil();
+		DBUtil dbutil = new DBUtil(mysqluser, mysqlpw);
+		JSONUtil jutil = new JSONUtil(apiKey, dbutil);
 		
-		jutil.processAllRecords(apiKey);
+		jutil.processAllRecords();
 	}
 
 }

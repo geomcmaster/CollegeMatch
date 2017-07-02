@@ -20,36 +20,43 @@ public class JSONUtil {
 	private static final String CONDITIONS = "school.degrees_awarded.predominant=3";
 	private static final String ATTRIBUTES = "id,school.name";
 	
+	private final String API_KEY;
+	private DBUtil dbUtil;
 	private int currentPage;	//page of results
 	private int perPage;		//number of results per page
 	private int numPages;		//number of total pages with data
 	
 	/**
-	 * Set current page of results to 0
+	 * 
+	 * @param apiKey API key for the dataset
+	 * @param dbUtil DBUtil to use for processing
 	 */
-	public JSONUtil() {
+	public JSONUtil(String apiKey, DBUtil dbUtil) {
 		currentPage = 0;
+		API_KEY = apiKey;
+		this.dbUtil = dbUtil;
 	}
 	
 	/**
 	 * Process everything in the dataset.
 	 * 
-	 * @param apiKey API key for the dataset
 	 */
-	public void processAllRecords(String apiKey) {
+	public void processAllRecords() {
 		//limiting to schools that predominately award bachelors (for now at least)
 		String baseUrl = BASE_DATA_URL + "?" + CONDITIONS + 
-				"&_fields=" + ATTRIBUTES + "&api_key=" + apiKey + "&_page=";
+				"&_fields=" + ATTRIBUTES + "&api_key=" + API_KEY + "&_page=";
 		       
 	    Root root = getRoot(baseUrl);
 	    
 	    setPageData(root);
+	    //TODO open a database connection
 	    processPage(root);
 	    currentPage++;
 	    
 	    for (;currentPage < numPages; currentPage++) {     
 		    processPage(getRoot(baseUrl));
 	    }
+	    //TODO close connection
 
 	}
 	

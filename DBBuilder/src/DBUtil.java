@@ -4,17 +4,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Utility class for db operations. Intended to be used from JSONUtil.
+ * 
+ * @author Geoff
+ *
+ */
 public class DBUtil {
-	private static final String URL = "";
-	private static final String USER = "";
-	private static final String PASSWORD = "";
+	private final String URL = "jdbc:mysql://localhost/CollegeMatch";
+	private final String USER;
+	private final String PASSWORD;
 	public Connection conn;
+	
+	public DBUtil(String user, String pw) {
+		USER = user;
+		PASSWORD = pw;
+	}
 	
 	public void openConnection() {
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 		} catch (SQLException e) {
-			System.out.println("Unsuccessful connection attempt.\n");
+			System.out.println(e.toString());
 		}
 	}
 	
@@ -23,7 +34,7 @@ public class DBUtil {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				
+				System.out.println(e.toString());
 			}
 		}
 	}
@@ -33,7 +44,7 @@ public class DBUtil {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				
+				System.out.println(e.toString());
 			}
 		}
 	}
@@ -43,7 +54,7 @@ public class DBUtil {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				
+				System.out.println(e.toString());
 			}
 		}
 	}
