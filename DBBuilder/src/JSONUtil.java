@@ -17,8 +17,11 @@ import com.google.gson.Gson;
 public class JSONUtil {
 	private static final String BASE_DATA_URL = 
 			"https://api.data.gov/ed/collegescorecard/v1/schools.json";
+	//limiting results by predominant degree for now, we can change this
 	private static final String CONDITIONS = "school.degrees_awarded.predominant=3";
-	private static final String ATTRIBUTES = "id,school.name";
+	private static final String ATTRIBUTES = "id,school.name,school.ownership,"
+			+ "school.school_url,school.alias,school.institutional_characteristics.level,"
+			+ "admissions.admission_rate.overall";
 	
 	private final String API_KEY;
 	private DBUtil dbUtil;

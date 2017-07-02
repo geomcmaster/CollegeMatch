@@ -9,7 +9,9 @@ public class Main {
 	/**
 	 * 
 	 * @param args
-	 * 	args[0] :	api key
+	 *  args[0] API key for dataset
+	 *  args[1] MySQL username
+	 *  args[2] MySQL password
 	 */
 	public static void main(String[] args) {
 		String apiKey = args[0];
