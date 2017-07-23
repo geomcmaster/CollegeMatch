@@ -18,7 +18,7 @@ public class DBUtil {
 	
 	//TODO write all the create statements
 	private final String SCHOOL_TBL = "";
-	private final String USER_TBL = "CREATE TABLE user (ID INT AUTO_INCREMENT, password INT NOT NULL, SAT_SCORE INT,"
+	private final String USER_TBL = "CREATE TABLE user (ID VARCHAR(255), password INT NOT NULL, SAT_SCORE INT,"
 			+ "ACT_SCORE INT, PRIMARY KEY (ID) ); ";
 	private final String REGION_TBL = "";
 	private final String LOC_TBL = "";
