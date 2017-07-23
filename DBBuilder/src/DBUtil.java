@@ -1,6 +1,7 @@
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,20 +13,28 @@ import java.sql.Statement;
  *
  */
 public class DBUtil {
-	private final String URL = "jdbc:mysql://localhost/?useSSL=false";
+	private static final String URL = "jdbc:mysql://localhost/?useSSL=false";
 	private final String USER;
 	private final String PASSWORD;
+	private Statement stmt;
+	private CallableStatement cstmt;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	public Connection conn;
 	
-	private final String REGION_TBL = "CREATE TABLE region ("
+	/////////////////////////////
+	//TABLE CREATION STATEMENTS//
+	/////////////////////////////
+	private static final String REGION_TBL = "CREATE TABLE region ("
 			+ "state INT, "
 			+ "region_name VARCHAR(255), "
 			+ "PRIMARY KEY (state) ); ";
-	private final String GENDER_TBL = "CREATE TABLE GenderDemographics ("
+	private static final String GENDER_TBL = "CREATE TABLE GenderDemographics ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "female DOUBLE, "
 			+ "male DOUBLE, "
 			+ "PRIMARY KEY (ID) ); ";
-	private final String ETHNIC_TBL = "CREATE TABLE EthnicDemographics ("
+	private static final String ETHNIC_TBL = "CREATE TABLE EthnicDemographics ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "white DOUBLE, "
 			+ "black DOUBLE, "
@@ -36,14 +45,14 @@ public class DBUtil {
 			+ "unknown DOUBLE, "
 			+ "nonresident DOUBLE, "
 			+ "PRIMARY KEY (ID) ); ";
-	private final String LOC_TBL = "CREATE TABLE location ("
+	private static final String LOC_TBL = "CREATE TABLE location ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "city VARCHAR(255), "
 			+ "state INT, "
 			+ "ZIP INT, "
 			+ "PRIMARY KEY (ID), "
 			+ "FOREIGN KEY (state) REFERENCES region(state) ); ";
-	private final String SCHOOL_TBL = "CREATE TABLE school ("
+	private static final String SCHOOL_TBL = "CREATE TABLE school ("
 			+ "ID INT, "
 			+ "name VARCHAR(255), "
 			+ "url VARCHAR(255), "
@@ -78,35 +87,35 @@ public class DBUtil {
 			+ "PRIMARY KEY (ID), "
 			+ "FOREIGN KEY (GenderDemographics_ID) REFERENCES GenderDemographics(ID), "
 			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID) ); ";
-	private final String USER_TBL = "CREATE TABLE user ("
+	private static final String USER_TBL = "CREATE TABLE user ("
 			+ "ID VARCHAR(255), "
 			+ "password INT NOT NULL, "
 			+ "SAT_SCORE INT, "
 			+ "ACT_SCORE INT, "
 			+ "PRIMARY KEY (ID) ); ";
-	private final String SCHOOL_LOC_TBL = "CREATE TABLE school_loc ("
+	private static final String SCHOOL_LOC_TBL = "CREATE TABLE school_loc ("
 			+ "school_ID INT, "
 			+ "loc_ID INT NOT NULL, "
 			+ "PRIMARY KEY (school_ID), "
 			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
-	private final String RESIDENCE_TBL = "CREATE TABLE residence ("
+	private static final String RESIDENCE_TBL = "CREATE TABLE residence ("
 			+ "std_ID VARCHAR(255), "
 			+ "loc_ID INT NOT NULL, "
 			+ "PRIMARY KEY (std_ID), "
 			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
 			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
-	private final String FIELD_TBL = "CREATE TABLE fieldsOfStudy ("
+	private static final String FIELD_TBL = "CREATE TABLE fieldsOfStudy ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "name VARCHAR(255) NOT NULL, "
 			+ "PRIMARY KEY (ID) ); ";
-	private final String FAV_FIELD_TBL = "CREATE TABLE favoriteFieldsOfStudy ("
+	private static final String FAV_FIELD_TBL = "CREATE TABLE favoriteFieldsOfStudy ("
 			+ "std_ID VARCHAR(255), "
 			+ "field_ID INT, "
 			+ "rank INT, "
 			+ "PRIMARY KEY (std_ID, field_ID), "
 			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
 			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
-	private final String FAV_SCHOOL_TBL = "CREATE TABLE favoriteSchools("
+	private static final String FAV_SCHOOL_TBL = "CREATE TABLE favoriteSchools("
 			+ "std_ID VARCHAR(255), "
 			+ "school_ID INT, "
 			+ "rank INT, "
@@ -117,17 +126,20 @@ public class DBUtil {
 			+ "PRIMARY KEY (std_ID, school_ID), "
 			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
 			+ "FOREIGN KEY (school_ID) REFERENCES school(ID) ); ";
-	private final String OFFERS_TBL = "CREATE TABLE offers ("
+	private static final String OFFERS_TBL = "CREATE TABLE offers ("
 			+ "school_ID INT, "
 			+ "field_ID INT, "
 			+ "PRIMARY KEY (school_ID, field_ID), "
 			+ "FOREIGN KEY (school_ID) REFERENCES school(ID), "
 			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
 	
-	//We need separate stored procedures for tables that are referenced by other tables. We execute
-	//these stored procedures first.
-	private final String DROP_TABLES_PROC_1 = "DROP PROCEDURE IF EXISTS createTables1";
-	private final String CREATE_TABLES_STORED_PROC_1 = "CREATE PROCEDURE createTables1() "
+	////////////////////////////////////
+	//TABLE CREATION STORED PROCEDURES//
+	////////////////////////////////////
+	//Tables that are referenced by other tables need to be created by separate stored procedures before
+	//the tables that reference them.
+	private static final String DROP_TABLES_PROC_1 = "DROP PROCEDURE IF EXISTS createTables1";
+	private static final String CREATE_TABLES_STORED_PROC_1 = "CREATE PROCEDURE createTables1() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
 			+ "user, "
@@ -141,8 +153,8 @@ public class DBUtil {
 			+ ETHNIC_TBL
 			+ REGION_TBL 
 			+ "END";
-	private final String DROP_TABLES_PROC_2 = "DROP PROCEDURE IF EXISTS createTables2";
-	private final String CREATE_TABLES_STORED_PROC_2 = "CREATE PROCEDURE createTables2() "
+	private static final String DROP_TABLES_PROC_2 = "DROP PROCEDURE IF EXISTS createTables2";
+	private static final String CREATE_TABLES_STORED_PROC_2 = "CREATE PROCEDURE createTables2() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
 			+ "location, "
@@ -150,8 +162,8 @@ public class DBUtil {
 			+ LOC_TBL
 			+ SCHOOL_TBL
 			+ "END";
-	private final String DROP_TABLES_PROC_3 = "DROP PROCEDURE IF EXISTS createTables3";
-	private final String CREATE_TABLES_STORED_PROC_3 = "CREATE PROCEDURE createTables3() "
+	private static final String DROP_TABLES_PROC_3 = "DROP PROCEDURE IF EXISTS createTables3";
+	private static final String CREATE_TABLES_STORED_PROC_3 = "CREATE PROCEDURE createTables3() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
 			+ "school_loc, "
@@ -165,9 +177,19 @@ public class DBUtil {
 			+ FAV_SCHOOL_TBL 
 			+ OFFERS_TBL 
 			+ "END";
-	private Statement stmt;
-	private CallableStatement cstmt;
-	public Connection conn;
+	
+	//////////
+	//REGIONS/
+	//////////
+	private static final String NEW_ENGLAND = "New England";
+	private static final String MID_EAST = "Mid East";
+	private static final String GREAT_LAKES = "Great Lakes";
+	private static final String PLAINS = "Plains";
+	private static final String SE = "Southeast";
+	private static final String SW = "Southwest";
+	private static final String ROCKY_MTNS = "Rocky Mountains";
+	private static final String FAR_WEST = "Far West";
+	private static final String OUTLYING_AREAS = "Outlying Areas";
 	
 	public DBUtil(String user, String pw) {
 		USER = user;
@@ -185,7 +207,7 @@ public class DBUtil {
 		return c;
 	}
 	
-	public void closeResultSet(ResultSet rs) {
+	private void closeResultSet() {
 		if (rs != null) {
 			try {
 				rs.close();
@@ -195,7 +217,7 @@ public class DBUtil {
 		}
 	}
 	
-	public void closeStatement() {
+	private void closeStatements() {
 		if (stmt != null) {
 			try {
 				stmt.close();
@@ -203,12 +225,30 @@ public class DBUtil {
 				System.out.println(e.toString());
 			}
 		}
+		
+		if (cstmt != null) {
+			try {
+				cstmt.close();
+			} catch (SQLException e) {
+				System.out.println(e.toString());
+			}
+		}
+		
+		if (pstmt != null) {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				System.out.println(e.toString());
+			}
+		}
 	}
 	
 	public void closeConnection() {
+		closeResultSet();
+		closeStatements();
 		if (conn != null) {
 			try {
-				closeStatement();
+				closeStatements();
 				conn.close();
 			} catch (SQLException e) {
 				System.out.println(e.toString());
@@ -230,10 +270,10 @@ public class DBUtil {
 	}
 	
 	/**
-	 * Drops tables if they exist then creates all tables.
+	 * Drops tables if they exist then creates all tables. Also populates static tables.
 	 */
 	public void createTables() {
-		prepareDB();
+		setDB();
 		
 		try {
 			stmt.execute(DROP_TABLES_PROC_1);
@@ -251,13 +291,16 @@ public class DBUtil {
 		} catch (SQLException e) {
 			System.out.println(e.toString());
 		}
+		
+		populateRegion();
+		populateFieldsOfStudy();
 	}
 	
 	/**
 	 * Clears all data from all tables.
 	 */
 	public void clearTables() {
-		prepareDB();
+		setDB();
 		
 		//TODO implement
 	}
@@ -279,9 +322,282 @@ public class DBUtil {
 	 */
 	public void prepareDB() {
 		setDB();
-		//TODO let's ensure all static tables are populated first
-		//	-region
-		//	-fieldOfStudy
+		
+		try {
+			rs = stmt.executeQuery("SELECT COUNT(*) FROM region");
+			if (rs.next() && rs.getInt(1) == 0) {	//data already exists
+				populateRegion();
+			}
+			
+			rs = stmt.executeQuery("SELECT COUNT(*) FROM fieldsOfStudy");
+			if (rs.next() && rs.getInt(1) == 0) {	//data already exists
+				populateFieldsOfStudy();
+			}
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		}
+	}
+	
+	/**
+	 * buckle up
+	 */
+	private void populateRegion() {
+		try {
+			
+			pstmt = conn.prepareStatement("INSERT INTO region (state, region_name) VALUES (?, ?)");
+			
+			//NEW ENGLAND
+			pstmt.setInt(1, 9);	//CT
+			pstmt.setString(2, NEW_ENGLAND);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 23); //ME
+			pstmt.setString(2, NEW_ENGLAND);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 25); //MA
+			pstmt.setString(2, NEW_ENGLAND);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 33); //NH
+			pstmt.setString(2, NEW_ENGLAND);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 44); //RI
+			pstmt.setString(2, NEW_ENGLAND);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 50); //VT
+			pstmt.setString(2, NEW_ENGLAND);
+			pstmt.execute();
+			
+			//MID EAST
+			pstmt.setInt(1, 10); //DE
+			pstmt.setString(2, MID_EAST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 11); //DC
+			pstmt.setString(2, MID_EAST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 24); //MD
+			pstmt.setString(2, MID_EAST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 34); //NJ
+			pstmt.setString(2, MID_EAST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 36); //NY
+			pstmt.setString(2, MID_EAST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 42); //PA
+			pstmt.setString(2, MID_EAST);
+			pstmt.execute();
+			
+			//Great Lakes
+			pstmt.setInt(1, 17); //IL
+			pstmt.setString(2, GREAT_LAKES);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 18); //IN
+			pstmt.setString(2, GREAT_LAKES);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 26); //MI
+			pstmt.setString(2, GREAT_LAKES);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 39); //OH
+			pstmt.setString(2, GREAT_LAKES);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 55); //WI
+			pstmt.setString(2, GREAT_LAKES);
+			pstmt.execute();
+			
+			//Plains
+			pstmt.setInt(1, 19); //IA
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 20); //KS
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 27); //MN
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 29); //MO
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 31); //NE
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 38); //ND
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 46); //SD
+			pstmt.setString(2, PLAINS);
+			pstmt.execute();
+			
+			//Southeast
+			pstmt.setInt(1, 1); //AL
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 5); //AR
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 12); //FL
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 13); //GA
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 21); //KY
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 22); //LA
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 28); //MS
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 37); //NC
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 45); //SC
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 47); //TN
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 51); //VA
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 54); //WV
+			pstmt.setString(2, SE);
+			pstmt.execute();
+			
+			//Southwest
+			pstmt.setInt(1, 4); //AZ
+			pstmt.setString(2, SW);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 35); //NM
+			pstmt.setString(2, SW);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 40); //OK
+			pstmt.setString(2, SW);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 48); //TX
+			pstmt.setString(2, SW);
+			pstmt.execute();
+			
+			//Rocky Mountains
+			pstmt.setInt(1, 8); //CO
+			pstmt.setString(2, ROCKY_MTNS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 16); //ID
+			pstmt.setString(2, ROCKY_MTNS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 30); //MT
+			pstmt.setString(2, ROCKY_MTNS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 49); //UT
+			pstmt.setString(2, ROCKY_MTNS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 56); //WY
+			pstmt.setString(2, ROCKY_MTNS);
+			pstmt.execute();
+			
+			//Far West
+			pstmt.setInt(1, 2); //AK
+			pstmt.setString(2, FAR_WEST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 6); //CA
+			pstmt.setString(2, FAR_WEST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 15); //HI
+			pstmt.setString(2, FAR_WEST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 32); //NV
+			pstmt.setString(2, FAR_WEST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 41); //OR
+			pstmt.setString(2, FAR_WEST);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 53); //WA
+			pstmt.setString(2, FAR_WEST);
+			pstmt.execute();
+			
+			//Outlying Areas
+			pstmt.setInt(1, 60); //AS
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 64); //FM
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 66); //GU
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 68); //MH
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 69); //MP
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 72); //PR
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 70); //PW
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+			
+			pstmt.setInt(1, 78); //VI
+			pstmt.setString(2, OUTLYING_AREAS);
+			pstmt.execute();
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		}
+	}
+	
+	private void populateFieldsOfStudy() {
+		//TODO implement
+		//check if empty
 	}
 	
 	/**
