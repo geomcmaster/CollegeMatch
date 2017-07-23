@@ -178,9 +178,9 @@ public class DBUtil {
 			+ OFFERS_TBL 
 			+ "END";
 	
-	//////////
-	//REGIONS/
-	//////////
+	///////////
+	//REGIONS//
+	///////////
 	private static final String NEW_ENGLAND = "New England";
 	private static final String MID_EAST = "Mid East";
 	private static final String GREAT_LAKES = "Great Lakes";
@@ -596,8 +596,125 @@ public class DBUtil {
 	}
 	
 	private void populateFieldsOfStudy() {
-		//TODO implement
-		//check if empty
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO fieldsOfStudy (name) VALUES (?)");
+			
+			pstmt.setString(1, "Agriculture, Agriculture Operations, and Related Sciences");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Natural Resources and Conservation");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Architecture and Related Services");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Area, Ethnic, Cultural, Gender, and Group Studies");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Communication, Journalism, and Related Programs");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Communications Technologies/Technicians and Support Services");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Computer and Information Sciences and Support Services");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Personal and Culinary Services");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Education");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Engineering");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Engineering Technologies and Engineering-Related Fields");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Foreign Languages, Literatures, and Linguistics");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Family and Consumer Sciences/Human Sciences");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Legal Professions and Studies");
+			pstmt.execute();
+			
+			pstmt.setString(1, "English Language and Literature/Letters");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Liberal Arts and Sciences, General Studies and Humanities");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Library Science");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Biological and Biomedical Sciences");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Mathematics and Statistics");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Military Technologies and Applied Sciences");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Multi/Interdisciplinary Studies");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Parks, Recreation, Leisure, and Fitness Studies");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Philosophy and Religious Studies");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Theology and Religious Vocations");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Physical Sciences");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Science Technologies/Technicians");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Psychology");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Homeland Security, Law Enforcement, Firefighting and Related Protective ");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Public Administration and Social Service Professions");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Social Sciences");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Construction Trades");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Mechanic and Repair Technologies/Technicians");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Precision Production");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Transportation and Materials Moving");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Visual and Performing Arts");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Health Professions and Related Programs");
+			pstmt.execute();
+			
+			pstmt.setString(1, "Business, Management, Marketing, and Related Support Services");
+			pstmt.execute();
+			
+			pstmt.setString(1, "History");
+			pstmt.execute();
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		}
 	}
 	
 	/**
