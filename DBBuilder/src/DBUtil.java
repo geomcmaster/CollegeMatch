@@ -17,13 +17,14 @@ public class DBUtil {
 	private final String PASSWORD;
 	
 	//TODO write all the create statements
-	private final String GENDER_TBL = "CREATE TABLE GenderDemographics "
-			+ "(ID INT AUTO_INCREMENT, "
+	private final String REGION_TBL = "";
+	private final String GENDER_TBL = "CREATE TABLE GenderDemographics ("
+			+ "ID INT AUTO_INCREMENT, "
 			+ "female DOUBLE, "
 			+ "male DOUBLE, "
 			+ "PRIMARY KEY (ID)); ";
-	private final String ETHNIC_TBL = "CREATE TABLE EthnicDemographics "
-			+ "(ID INT AUTO_INCREMENT, "
+	private final String ETHNIC_TBL = "CREATE TABLE EthnicDemographics ("
+			+ "ID INT AUTO_INCREMENT, "
 			+ "white DOUBLE, "
 			+ "black DOUBLE, "
 			+ "hispanic DOUBLE, "
@@ -33,8 +34,9 @@ public class DBUtil {
 			+ "unknown DOUBLE, "
 			+ "nonresident DOUBLE, "
 			+ "PRIMARY KEY (ID)); ";
-	private final String SCHOOL_TBL = "CREATE TABLE school "
-			+ "(ID INT, "
+	private final String LOC_TBL = "";
+	private final String SCHOOL_TBL = "CREATE TABLE school ("
+			+ "ID INT, "
 			+ "name VARCHAR(255), "
 			+ "url VARCHAR(255), "
 			+ "alias VARCHAR(255), "
@@ -67,16 +69,18 @@ public class DBUtil {
 			+ "EthnicDemographics_ID INT NOT NULL, "
 			+ "PRIMARY KEY (ID), "
 			+ "FOREIGN KEY (GenderDemographics_ID) REFERENCES GenderDemographics(ID), "
-			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID)); ";
-	private final String USER_TBL = "CREATE TABLE user "
-			+ "(ID VARCHAR(255), "
+			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID) ); ";
+	private final String USER_TBL = "CREATE TABLE user ("
+			+ "ID VARCHAR(255), "
 			+ "password INT NOT NULL, "
 			+ "SAT_SCORE INT, "
 			+ "ACT_SCORE INT, "
 			+ "PRIMARY KEY (ID) ); ";
-	private final String REGION_TBL = "";
-	private final String LOC_TBL = "";
-	private final String SCHOOL_LOC_TBL = "";
+	private final String SCHOOL_LOC_TBL = "CREATE TABLE school_loc ("
+			+ "school_ID INT, "
+			+ "loc_ID INT NOT NULL, "
+			+ "PRIMARY KEY (school_ID), "
+			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
 	private final String RESIDENCE_TBL = "";
 	private final String FIELD_TBL = "";
 	private final String FAV_FIELD_TBL = "";
@@ -85,23 +89,44 @@ public class DBUtil {
 	
 	//We need separate stored procedures for tables that are referenced by other tables. We execute
 	//these stored procedures first.
-	private final String DROP_TABLES_PROC_1 = "DROP PROCEDURE IF EXISTS createDemographicTables";
-	private final String CREATE_TABLES_STORED_PROC_1 = "CREATE PROCEDURE createDemographicTables() "
+	private final String DROP_TABLES_PROC_1 = "DROP PROCEDURE IF EXISTS createReferencedTables1";
+	private final String CREATE_TABLES_STORED_PROC_1 = "CREATE PROCEDURE createReferencedTables1() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
+			+ "user, "
+			+ "fieldOfStudy, "
 			+ "genderDemographics, "
-			+ "ethnicDemographics; " 
-			+ GENDER_TBL 
-			+ ETHNIC_TBL 
+			+ "ethnicDemographics, "
+			+ "region; "
+			+ USER_TBL
+			+ FIELD_TBL
+			+ GENDER_TBL
+			+ ETHNIC_TBL
+			+ REGION_TBL 
 			+ "END";
-	private final String DROP_TABLES_PROC_2 = "DROP PROCEDURE IF EXISTS createTables";
-	private final String CREATE_TABLES_STORED_PROC_2 = "CREATE PROCEDURE createTables() "
+	private final String DROP_TABLES_PROC_2 = "DROP PROCEDURE IF EXISTS createReferencedTables2";
+	private final String CREATE_TABLES_STORED_PROC_2 = "CREATE PROCEDURE createReferencedTables2() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
-			+ "school, user, region, location, school_loc, residence, fieldOfStudy, "
-			+ "favoriteFieldsOfStudy, favoriteSchools, offers; " 
-			+ SCHOOL_TBL + USER_TBL + REGION_TBL + LOC_TBL + SCHOOL_LOC_TBL + RESIDENCE_TBL + FIELD_TBL  
-			+ FAV_FIELD_TBL + FAV_SCHOOL_TBL + OFFERS_TBL 
+			+ "location, "
+			+ "school; "
+			+ LOC_TBL
+			+ SCHOOL_TBL
+			+ "END";
+	private final String DROP_TABLES_PROC_3 = "DROP PROCEDURE IF EXISTS createTables";
+	private final String CREATE_TABLES_STORED_PROC_3 = "CREATE PROCEDURE createTables() "
+			+ "BEGIN "
+			+ "DROP TABLE IF EXISTS "
+			+ "school_loc, "
+			+ "residence, "
+			+ "favoriteFieldsOfStudy, "
+			+ "favoriteSchools, "
+			+ "offers; " 
+			+ SCHOOL_LOC_TBL 
+			+ RESIDENCE_TBL 
+			+ FAV_FIELD_TBL 
+			+ FAV_SCHOOL_TBL 
+			+ OFFERS_TBL 
 			+ "END";
 	private Statement stmt;
 	private CallableStatement cstmt;
@@ -178,7 +203,11 @@ public class DBUtil {
 			stmt.execute(CREATE_TABLES_STORED_PROC_1);
 			stmt.execute(DROP_TABLES_PROC_2);
 			stmt.execute(CREATE_TABLES_STORED_PROC_2);
-			cstmt = conn.prepareCall("{call createDemographicTables()}");
+			stmt.execute(DROP_TABLES_PROC_3);
+			stmt.execute(CREATE_TABLES_STORED_PROC_3);
+			cstmt = conn.prepareCall("{call createReferencedTables1()}");
+			cstmt.execute();
+			cstmt = conn.prepareCall("{call createReferencedTables2()}");
 			cstmt.execute();
 			cstmt = conn.prepareCall("{call createTables()}");
 			cstmt.execute();
