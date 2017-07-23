@@ -21,7 +21,7 @@ public class JSONUtil {
 	private static final String CONDITIONS = "school.degrees_awarded.predominant=3";
 	private static final String ATTRIBUTES = "id,school.name,school.ownership,"
 			+ "school.school_url,school.alias,school.institutional_characteristics.level,"
-			+ "admissions.admission_rate.overall";
+			+ "2014.admissions.admission_rate.overall";
 	
 	private final String API_KEY;
 	private DBUtil dbUtil;
@@ -52,14 +52,12 @@ public class JSONUtil {
 	    Root root = getRoot(baseUrl);
 	    
 	    setPageData(root);
-	    //TODO open a database connection
 	    processPage(root);
 	    currentPage++;
 	    
 	    for (;currentPage < numPages; currentPage++) {     
 		    processPage(getRoot(baseUrl));
 	    }
-	    //TODO close connection
 
 	}
 	
@@ -93,8 +91,9 @@ public class JSONUtil {
 	private void processPage(Root root) {
 		for (Result result : root.results) {
 	    	//for now we just print the school name
-	    	//when database stuff is ready, we'll call a method in DBUtil class
+	    	//when database stuff is ready, we'll call processSchool
 	    	//		to populate db from a result
+			//dbUtil.processSchool(result);
 			System.out.println(result.schoolName);
 		}
 	}

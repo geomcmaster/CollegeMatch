@@ -105,7 +105,7 @@ public class DBUtil {
 	 * Drops tables if they exist then creates all tables.
 	 */
 	public void createTables() {
-		setDB();
+		prepareDB();
 		
 		try {
 			stmt.execute(DROP_TABLES_PROC);
@@ -121,7 +121,7 @@ public class DBUtil {
 	 * Clears all data from all tables.
 	 */
 	public void clearTables() {
-		setDB();
+		prepareDB();
 		
 		//TODO implement
 	}
@@ -139,9 +139,28 @@ public class DBUtil {
 	}
 	
 	/**
-	 * Set the connection's database
+	 * Set the connection's database, makes sure static tables are populated
 	 */
 	public void prepareDB() {
 		setDB();
+		//TODO let's ensure all static tables are populated first
+		//	-region
+		//	-fieldOfStudy
+	}
+	
+	/**
+	 * Updates database with school info
+	 */
+	public void processSchool(Result result) {
+		//TODO implement this method
+		//making notes on what we're going to need to do here
+		//might want helper methods for each table
+		//1. insert into demographics tables
+		//	ID will be an AUTO INCREMENT field for those
+		//  we will need to grab those IDs for when we populate the record in the school table for this school
+		//2. insert into school
+		//	pre-processing: top 5 fields, demographics IDs (as noted above)
+		//3. insert into location and school_loc
+		//	after inserting into location (which should be an AUTO_INCREMENT) we grab that ID to insert into school_loc
 	}
 }

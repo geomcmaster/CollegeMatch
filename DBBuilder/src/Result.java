@@ -26,7 +26,7 @@ public class Result {
 	@SerializedName("school.institutional_characteristics.level")
 	int schoolLevel;
 	
-	@SerializedName("admissions.admission_rate.overall")
+	@SerializedName("2014.admissions.admission_rate.overall")
 	double admissionRate;
 	
 	
