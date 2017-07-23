@@ -17,26 +17,81 @@ public class DBUtil {
 	private final String PASSWORD;
 	
 	//TODO write all the create statements
-	private final String SCHOOL_TBL = "";
-	private final String USER_TBL = "CREATE TABLE user (ID VARCHAR(255), password INT NOT NULL, SAT_SCORE INT,"
-			+ "ACT_SCORE INT, PRIMARY KEY (ID) ); ";
+	private final String GENDER_TBL = "CREATE TABLE GenderDemographics "
+			+ "(ID INT AUTO_INCREMENT, "
+			+ "female DOUBLE, "
+			+ "male DOUBLE, "
+			+ "PRIMARY KEY (ID)); ";
+	private final String ETHNIC_TBL = "CREATE TABLE EthnicDemographics "
+			+ "(ID INT AUTO_INCREMENT, "
+			+ "white DOUBLE, "
+			+ "black DOUBLE, "
+			+ "hispanic DOUBLE, "
+			+ "asian DOUBLE, "
+			+ "american_indian DOUBLE, "
+			+ "two_or_more DOUBLE, "
+			+ "unknown DOUBLE, "
+			+ "nonresident DOUBLE, "
+			+ "PRIMARY KEY (ID)); ";
+	private final String SCHOOL_TBL = "CREATE TABLE school "
+			+ "(ID INT, "
+			+ "name VARCHAR(255), "
+			+ "url VARCHAR(255), "
+			+ "alias VARCHAR(255), "
+			+ "SAT_pct_25 DOUBLE, "
+			+ "SAT_pct_75 DOUBLE, "
+			+ "SAT_avg DOUBLE, "
+			+ "ACT_pct_25 DOUBLE, "
+			+ "ACT_pct_75 DOUBLE, "
+			+ "ACT_avg DOUBLE, "
+			+ "avg_earnings INT, "
+			+ "avg_cost INT, "
+			+ "control INT, "
+			+ "med_debt DOUBLE, "
+			+ "std_bdy_sz INT, "
+			+ "pop_prog_1 INT, "
+			+ "pop_prog_2 INT, "
+			+ "pop_prog_3 INT, "
+			+ "pop_prog_4 INT, "
+			+ "pop_prog_5 INT, "
+			+ "adm_rate DOUBLE, "
+			+ "avg_fam_inc INT, "
+			+ "med_fam_inc INT, "
+			+ "tuition_out INT, "
+			+ "tuition_in INT, "
+			+ "avg_entry_age INT, "
+			+ "1_gen_std DOUBLE, "
+			+ "level INT, "
+			+ "dist_learning INT, "
+			+ "GenderDemographics_ID INT, "
+			+ "EthnicDemographics_ID INT, "
+			+ "PRIMARY KEY (ID), "
+			+ "FOREIGN KEY (GenderDemographics_ID) REFERENCES GenderDemographics(ID), "
+			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID)); ";
+	private final String USER_TBL = "CREATE TABLE user "
+			+ "(ID VARCHAR(255), "
+			+ "password INT NOT NULL, "
+			+ "SAT_SCORE INT, "
+			+ "ACT_SCORE INT, "
+			+ "PRIMARY KEY (ID) ); ";
 	private final String REGION_TBL = "";
 	private final String LOC_TBL = "";
 	private final String SCHOOL_LOC_TBL = "";
 	private final String RESIDENCE_TBL = "";
 	private final String FIELD_TBL = "";
-	private final String GENDER_TBL = "";
-	private final String ETHNIC_TBL = "";
 	private final String FAV_FIELD_TBL = "";
 	private final String FAV_SCHOOL_TBL = "";
 	private final String OFFERS_TBL = "";
 	
 	private final String DROP_TABLES_PROC = "DROP PROCEDURE IF EXISTS createTables";
-	private final String CREATE_TABLES_STORED_PROC = "CREATE PROCEDURE createTables() BEGIN DROP TABLE IF EXISTS "
+	private final String CREATE_TABLES_STORED_PROC = "CREATE PROCEDURE createTables() "
+			+ "BEGIN "
+			+ "DROP TABLE IF EXISTS "
 			+ "school, user, region, location, school_loc, residence, fieldOfStudy, genderDemographics, "
-			+ "ethnicDemographics, favoriteFieldsOfStudy, favoriteSchools, offers; " + SCHOOL_TBL + USER_TBL + 
-			REGION_TBL + LOC_TBL + SCHOOL_LOC_TBL + RESIDENCE_TBL + FIELD_TBL + GENDER_TBL + ETHNIC_TBL + 
-			FAV_FIELD_TBL + FAV_SCHOOL_TBL + OFFERS_TBL + "END";
+			+ "ethnicDemographics, favoriteFieldsOfStudy, favoriteSchools, offers; " 
+			+ SCHOOL_TBL + USER_TBL + REGION_TBL + LOC_TBL + SCHOOL_LOC_TBL + RESIDENCE_TBL + FIELD_TBL + GENDER_TBL 
+			+ ETHNIC_TBL + FAV_FIELD_TBL + FAV_SCHOOL_TBL + OFFERS_TBL 
+			+ "END";
 	private Statement stmt;
 	private CallableStatement cstmt;
 	public Connection conn;
