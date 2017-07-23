@@ -16,13 +16,15 @@ public class DBUtil {
 	private final String USER;
 	private final String PASSWORD;
 	
-	//TODO write all the create statements
-	private final String REGION_TBL = "";
+	private final String REGION_TBL = "CREATE TABLE region ("
+			+ "state INT, "
+			+ "region_name VARCHAR(255), "
+			+ "PRIMARY KEY (state) ); ";
 	private final String GENDER_TBL = "CREATE TABLE GenderDemographics ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "female DOUBLE, "
 			+ "male DOUBLE, "
-			+ "PRIMARY KEY (ID)); ";
+			+ "PRIMARY KEY (ID) ); ";
 	private final String ETHNIC_TBL = "CREATE TABLE EthnicDemographics ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "white DOUBLE, "
@@ -33,8 +35,14 @@ public class DBUtil {
 			+ "two_or_more DOUBLE, "
 			+ "unknown DOUBLE, "
 			+ "nonresident DOUBLE, "
-			+ "PRIMARY KEY (ID)); ";
-	private final String LOC_TBL = "";
+			+ "PRIMARY KEY (ID) ); ";
+	private final String LOC_TBL = "CREATE TABLE location ("
+			+ "ID INT AUTO_INCREMENT, "
+			+ "city VARCHAR(255), "
+			+ "state INT, "
+			+ "ZIP INT, "
+			+ "PRIMARY KEY (ID), "
+			+ "FOREIGN KEY (state) REFERENCES region(state) ); ";
 	private final String SCHOOL_TBL = "CREATE TABLE school ("
 			+ "ID INT, "
 			+ "name VARCHAR(255), "
@@ -81,16 +89,45 @@ public class DBUtil {
 			+ "loc_ID INT NOT NULL, "
 			+ "PRIMARY KEY (school_ID), "
 			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
-	private final String RESIDENCE_TBL = "";
-	private final String FIELD_TBL = "";
-	private final String FAV_FIELD_TBL = "";
-	private final String FAV_SCHOOL_TBL = "";
-	private final String OFFERS_TBL = "";
+	private final String RESIDENCE_TBL = "CREATE TABLE residence ("
+			+ "std_ID VARCHAR(255), "
+			+ "loc_ID INT NOT NULL, "
+			+ "PRIMARY KEY (std_ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
+	private final String FIELD_TBL = "CREATE TABLE fieldsOfStudy ("
+			+ "ID INT AUTO_INCREMENT, "
+			+ "name VARCHAR(255) NOT NULL, "
+			+ "PRIMARY KEY (ID) ); ";
+	private final String FAV_FIELD_TBL = "CREATE TABLE favoriteFieldsOfStudy ("
+			+ "std_ID VARCHAR(255), "
+			+ "field_ID INT, "
+			+ "rank INT, "
+			+ "PRIMARY KEY (std_ID, field_ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
+	private final String FAV_SCHOOL_TBL = "CREATE TABLE favoriteSchools("
+			+ "std_ID VARCHAR(255), "
+			+ "school_ID INT, "
+			+ "rank INT, "
+			+ "app_status VARCHAR(255), "
+			+ "fin_aid INT, "
+			+ "loan_amt INT, "
+			+ "merit_scholarships INT, "
+			+ "PRIMARY KEY (std_ID, school_ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (school_ID) REFERENCES school(ID) ); ";
+	private final String OFFERS_TBL = "CREATE TABLE offers ("
+			+ "school_ID INT, "
+			+ "field_ID INT, "
+			+ "PRIMARY KEY (school_ID, field_ID), "
+			+ "FOREIGN KEY (school_ID) REFERENCES school(ID), "
+			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
 	
 	//We need separate stored procedures for tables that are referenced by other tables. We execute
 	//these stored procedures first.
-	private final String DROP_TABLES_PROC_1 = "DROP PROCEDURE IF EXISTS createReferencedTables1";
-	private final String CREATE_TABLES_STORED_PROC_1 = "CREATE PROCEDURE createReferencedTables1() "
+	private final String DROP_TABLES_PROC_1 = "DROP PROCEDURE IF EXISTS createTables1";
+	private final String CREATE_TABLES_STORED_PROC_1 = "CREATE PROCEDURE createTables1() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
 			+ "user, "
@@ -104,8 +141,8 @@ public class DBUtil {
 			+ ETHNIC_TBL
 			+ REGION_TBL 
 			+ "END";
-	private final String DROP_TABLES_PROC_2 = "DROP PROCEDURE IF EXISTS createReferencedTables2";
-	private final String CREATE_TABLES_STORED_PROC_2 = "CREATE PROCEDURE createReferencedTables2() "
+	private final String DROP_TABLES_PROC_2 = "DROP PROCEDURE IF EXISTS createTables2";
+	private final String CREATE_TABLES_STORED_PROC_2 = "CREATE PROCEDURE createTables2() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
 			+ "location, "
@@ -113,8 +150,8 @@ public class DBUtil {
 			+ LOC_TBL
 			+ SCHOOL_TBL
 			+ "END";
-	private final String DROP_TABLES_PROC_3 = "DROP PROCEDURE IF EXISTS createTables";
-	private final String CREATE_TABLES_STORED_PROC_3 = "CREATE PROCEDURE createTables() "
+	private final String DROP_TABLES_PROC_3 = "DROP PROCEDURE IF EXISTS createTables3";
+	private final String CREATE_TABLES_STORED_PROC_3 = "CREATE PROCEDURE createTables3() "
 			+ "BEGIN "
 			+ "DROP TABLE IF EXISTS "
 			+ "school_loc, "
@@ -205,11 +242,11 @@ public class DBUtil {
 			stmt.execute(CREATE_TABLES_STORED_PROC_2);
 			stmt.execute(DROP_TABLES_PROC_3);
 			stmt.execute(CREATE_TABLES_STORED_PROC_3);
-			cstmt = conn.prepareCall("{call createReferencedTables1()}");
+			cstmt = conn.prepareCall("{call createTables1()}");
 			cstmt.execute();
-			cstmt = conn.prepareCall("{call createReferencedTables2()}");
+			cstmt = conn.prepareCall("{call createTables2()}");
 			cstmt.execute();
-			cstmt = conn.prepareCall("{call createTables()}");
+			cstmt = conn.prepareCall("{call createTables3()}");
 			cstmt.execute();
 		} catch (SQLException e) {
 			System.out.println(e.toString());
