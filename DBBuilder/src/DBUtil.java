@@ -739,11 +739,29 @@ public class DBUtil {
 		//making notes on what we're going to need to do here
 		//might want helper methods for each table
 		//1. insert into demographics tables
-		//	ID will be an AUTO INCREMENT field for those
-		//  we will need to grab those IDs for when we populate the record in the school table for this school
+		//	- use the values from the object as is
+		//  - we also need to obtain IDs (from the AUTO_INCREMENT) 
+		//		for when we populate the record in the school table 
+		//		for this school. To do so, use: SELECT LAST_INSERT_ID()
+		//
 		//2. insert into school
-		//	pre-processing: top 5 fields, demographics IDs (as noted above)
-		//3. insert into location and school_loc
-		//	after inserting into location (which should be an AUTO_INCREMENT) we grab that ID to insert into school_loc
+		//	- Top 5 fields
+		//		iterate over all fields to find top 5
+		//	- Demographics IDs
+		//		use value obtained above
+		//	- Everything else should be usable as is?
+		//
+		//3. insert into location
+		//	- search for an existing match, if so use that id for school_loc
+		//	- if no match, do an insert then use SELECT LAST_INSERT_ID()
+		//
+		//4. insert into school_loc
+		//	- use ID from location and the school ID
+		//
+		//5. insert into offers
+		//	- for each attribute, if value is 1 (or 2?), find ID for it 
+		//		in fieldsOfStudy, then insert into this table with that 
+		//		ID and the school ID
+		//
 	}
 }
