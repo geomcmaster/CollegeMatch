@@ -16,10 +16,6 @@ public class DBUtil {
 	private static final String URL = "jdbc:mysql://localhost/?useSSL=false";
 	private final String USER;
 	private final String PASSWORD;
-	private Statement stmt;
-	private CallableStatement cstmt;
-	private PreparedStatement pstmt;
-	private ResultSet rs;
 	public Connection conn;
 	
 	/////////////////////////////
@@ -207,7 +203,7 @@ public class DBUtil {
 		return c;
 	}
 	
-	private void closeResultSet() {
+	private void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {
 				rs.close();
@@ -217,7 +213,7 @@ public class DBUtil {
 		}
 	}
 	
-	private void closeStatements() {
+	private void closeStatement(Statement stmt) {
 		if (stmt != null) {
 			try {
 				stmt.close();
@@ -225,30 +221,11 @@ public class DBUtil {
 				System.out.println(e.toString());
 			}
 		}
-		
-		if (cstmt != null) {
-			try {
-				cstmt.close();
-			} catch (SQLException e) {
-				System.out.println(e.toString());
-			}
-		}
-		
-		if (pstmt != null) {
-			try {
-				pstmt.close();
-			} catch (SQLException e) {
-				System.out.println(e.toString());
-			}
-		}
 	}
 	
 	public void closeConnection() {
-		closeResultSet();
-		closeStatements();
 		if (conn != null) {
 			try {
-				closeStatements();
 				conn.close();
 			} catch (SQLException e) {
 				System.out.println(e.toString());
@@ -260,12 +237,15 @@ public class DBUtil {
 	 * Drops database if it exists then creates database.
 	 */
 	public void createDatabase() {
+		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
 			stmt.execute("DROP DATABASE IF EXISTS CollegeMatch");
 			stmt.execute("CREATE DATABASE CollegeMatch");
 		} catch (SQLException e) {
 			System.out.println(e.toString());
+		} finally {
+			closeStatement(stmt);
 		}
 	}
 	
@@ -274,22 +254,30 @@ public class DBUtil {
 	 */
 	public void createTables() {
 		setDB();
-		
+		Statement stmt = null;
+		CallableStatement cstmt = null;
 		try {
+			stmt = conn.createStatement();
 			stmt.execute(DROP_TABLES_PROC_1);
 			stmt.execute(CREATE_TABLES_STORED_PROC_1);
 			stmt.execute(DROP_TABLES_PROC_2);
 			stmt.execute(CREATE_TABLES_STORED_PROC_2);
 			stmt.execute(DROP_TABLES_PROC_3);
 			stmt.execute(CREATE_TABLES_STORED_PROC_3);
+			
 			cstmt = conn.prepareCall("{call createTables1()}");
 			cstmt.execute();
-			cstmt = conn.prepareCall("{call createTables2()}");
-			cstmt.execute();
-			cstmt = conn.prepareCall("{call createTables3()}");
-			cstmt.execute();
+			closeStatement(cstmt);
+			CallableStatement cstmt2 = conn.prepareCall("{call createTables2()}");
+			cstmt2.execute();
+			closeStatement(cstmt2);
+			CallableStatement cstmt3 = conn.prepareCall("{call createTables3()}");
+			cstmt3.execute();
+			closeStatement(cstmt3);
 		} catch (SQLException e) {
 			System.out.println(e.toString());
+		} finally {
+			closeStatement(stmt);
 		}
 		
 		populateRegion();
@@ -302,8 +290,10 @@ public class DBUtil {
 	public void clearTables() {
 		setDB();
 		
+		Statement stmt = null;
 		//omitting region and fieldsOfStudy since those are hand populated and should not be modified
 		try {
+			stmt = conn.createStatement();
 			stmt.execute("DELETE FROM school");
 			stmt.execute("DELETE FROM user");
 			stmt.execute("DELETE FROM location");
@@ -316,6 +306,8 @@ public class DBUtil {
 			stmt.execute("DELETE FROM offers");
 		} catch (SQLException e) {
 			System.out.println(e.toString());
+		} finally {
+			closeStatement(stmt);
 		}
 	}
 	
@@ -325,7 +317,6 @@ public class DBUtil {
 	private void setDB() {
 		try {
 			conn.setCatalog("CollegeMatch");
-			stmt = conn.createStatement();	//statement needs to be created AFTER catalog set to respect it
 		} catch (SQLException e) {
 			System.out.println(e.toString());
 		}
@@ -336,19 +327,25 @@ public class DBUtil {
 	 */
 	public void prepareDB() {
 		setDB();
-		
+		Statement stmt = null;
+		ResultSet rs = null;
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery("SELECT COUNT(*) FROM region");
 			if (rs.next() && rs.getInt(1) == 0) {	//data already exists
 				populateRegion();
 			}
+			closeResultSet(rs);
 			
-			rs = stmt.executeQuery("SELECT COUNT(*) FROM fieldsOfStudy");
-			if (rs.next() && rs.getInt(1) == 0) {	//data already exists
+			ResultSet rs2 = stmt.executeQuery("SELECT COUNT(*) FROM fieldsOfStudy");
+			if (rs2.next() && rs2.getInt(1) == 0) {	//data already exists
 				populateFieldsOfStudy();
 			}
+			closeResultSet(rs2);
 		} catch (SQLException e) {
 			System.out.println(e.toString());
+		} finally {
+			closeStatement(stmt);
 		}
 	}
 	
@@ -356,6 +353,7 @@ public class DBUtil {
 	 * buckle up
 	 */
 	private void populateRegion() {
+		PreparedStatement pstmt = null;
 		try {
 			
 			pstmt = conn.prepareStatement("INSERT INTO region (state, region_name) VALUES (?, ?)");
@@ -606,10 +604,13 @@ public class DBUtil {
 			pstmt.execute();
 		} catch (SQLException e) {
 			System.out.println(e.toString());
+		} finally {
+			closeStatement(pstmt);
 		}
 	}
 	
 	private void populateFieldsOfStudy() {
+		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO fieldsOfStudy (name) VALUES (?)");
 			
@@ -728,6 +729,8 @@ public class DBUtil {
 			pstmt.execute();
 		} catch (SQLException e) {
 			System.out.println(e.toString());
+		} finally {
+			closeStatement(pstmt);
 		}
 	}
 	
