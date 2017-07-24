@@ -1,4 +1,5 @@
 DBBuilder/.classpath
 DBBuilder/.project
-DBBuilder.settings/
+DBBuilder/.settings/
 DBBuilder/target
+DBBuilder/bin
