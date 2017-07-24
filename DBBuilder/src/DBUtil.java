@@ -302,7 +302,21 @@ public class DBUtil {
 	public void clearTables() {
 		setDB();
 		
-		//TODO implement
+		//omitting region and fieldsOfStudy since those are hand populated and should not be modified
+		try {
+			stmt.execute("DELETE FROM school");
+			stmt.execute("DELETE FROM user");
+			stmt.execute("DELETE FROM location");
+			stmt.execute("DELETE FROM school_loc");
+			stmt.execute("DELETE FROM residence");
+			stmt.execute("DELETE FROM genderDemographics");
+			stmt.execute("DELETE FROM ethnicDemographics");
+			stmt.execute("DELETE FROM favoriteFieldsOfStudy");
+			stmt.execute("DELETE FROM favoriteSchools");
+			stmt.execute("DELETE FROM offers");
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		}
 	}
 	
 	/**
