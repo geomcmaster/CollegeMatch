@@ -21,36 +21,48 @@ public class UserDAOTest {
 	private static final int STATE_1 = 12;
 	private static final int ZIP_1 = 12345;
 	
-	private static final String USERNAME = "cool_username_bro25";
-	private static final String PASSWORD = "tHisPWisS00safeIswear";
-	private Connection conn;
+	private static final String USERNAME_1 = "cool_username_bro25";
+	private static final String PASSWORD_1 = "tHisPWisS00safeIswear";
+	private static final String USERNAME_2 = "even_better_username";
+	private static final String PASSWORD_2 = "7h3gr34t357pw3v3r";
+	private DBUtil dbUtil;
 	private UserDAO userDAO;
 	
 	@Before
 	public void setUp() {
-		conn = DBUtil.getConnection();
+		dbUtil = new DBUtil();
 		userDAO = new UserDAO();
-		
-		//I haven't implemented createUser yet so adding to db manually for now to test with residence
+		userDAO.createUser(USERNAME_1, PASSWORD_1);
+	}
+
+	@Test
+	public void testCreateUser() {
+		assertTrue(userDAO.createUser(USERNAME_2, PASSWORD_2));
+		assertFalse(userDAO.createUser(USERNAME_2, "a_new_pw"));
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
-			pstmt.setString(1, USERNAME);
-			pstmt.setString(2, PASSWORD);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
+			pstmt = dbUtil.getConnection().prepareStatement("SELECT ID, password FROM user WHERE ID=?");
+			pstmt.setString(1, USERNAME_2);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				assertEquals("User doesn't have right password stored", PASSWORD_2, rs.getString(2));
+			}
+			assertFalse("Duplicate user created", rs.next());
+		} catch (SQLException e){
 			e.printStackTrace();
 		} finally {
+			DBUtil.closeResultSet(rs);
 			DBUtil.closeStatement(pstmt);
 		}
 	}
-
+	
 	@Test
 	public void testAddResidence() {
 		//NON-EXISTENT LOCATION
 		
 		//add residence in CITY_1
-		userDAO.addResidence(USERNAME, CITY_1, STATE_1, ZIP_1);
+		userDAO.addResidence(USERNAME_1, CITY_1, STATE_1, ZIP_1);
 		
 		PreparedStatement pstmt1 = null;
 		PreparedStatement pstmt2 = null;
@@ -58,7 +70,7 @@ public class UserDAOTest {
 		ResultSet rs2 = null;
 		try {
 			String getLoc = "SELECT ID, city, state, ZIP FROM location WHERE city=?";
-			pstmt1 = conn.prepareStatement(getLoc);
+			pstmt1 = dbUtil.getConnection().prepareStatement(getLoc);
 			pstmt1.setString(1, CITY_1);
 			rs1 = pstmt1.executeQuery();
 			int locID = -1;
@@ -69,12 +81,10 @@ public class UserDAOTest {
 			} else {
 				fail("City not found in location table");
 			}
-			if (rs1.next()) {
-				fail("Multiple location rows for this city");
-			}
+			assertFalse("Multiple location rows for this city", rs1.next());
 			
-			pstmt2 = conn.prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
-			pstmt2.setString(1, USERNAME);
+			pstmt2 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
+			pstmt2.setString(1, USERNAME_1);
 			rs2 = pstmt2.executeQuery();
 			if (rs2.next()) {
 				assertEquals("Location ID doesn't match", locID, rs2.getInt(1));
@@ -92,7 +102,7 @@ public class UserDAOTest {
 		
 		
 		//EXISTING LOCATION
-		//TODO
+		//TODO test existing location. include test where there are null values
 	}
 
 	@After
@@ -102,13 +112,13 @@ public class UserDAOTest {
 		cleanUpUser();
 		
 		//ALWAYS LAST
-		DBUtil.closeConnection();
+		dbUtil.closeConnection();
 	}
 	
 	private void cleanUpLocations() {
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = conn.prepareStatement("DELETE FROM location WHERE city=?");
+			pstmt = dbUtil.getConnection().prepareStatement("DELETE FROM location WHERE city=?");
 			pstmt.setString(1, CITY_1);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -121,7 +131,7 @@ public class UserDAOTest {
 	private void cleanUpResidence() {
 		Statement stmt = null;
 		try {
-			stmt = conn.createStatement();
+			stmt = dbUtil.getConnection().createStatement();
 			stmt.executeUpdate("DELETE FROM residence");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,7 +143,7 @@ public class UserDAOTest {
 	private void cleanUpUser() {
 		Statement stmt = null;
 		try {
-			stmt = conn.createStatement();
+			stmt = dbUtil.getConnection().createStatement();
 			stmt.executeUpdate("DELETE FROM user");
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -19,14 +19,14 @@ import java.util.Properties;
  */
 public class DBUtil {
 	private static final String URL = "jdbc:mysql://localhost/collegematch?useSSL=false";
-	private static Connection conn;
+	private Connection conn;
 	
 	/**
 	 * Retrieves connection. Opens it if one does not exist.
 	 * 
 	 * @return Database connection
 	 */
-    public static Connection getConnection() {
+    public Connection getConnection() {
     	if (conn != null) {
         	return conn;
     	}
@@ -51,7 +51,7 @@ public class DBUtil {
     /**
      * Closes the connection
      */
-    public static void closeConnection() {
+    public void closeConnection() {
     	if (conn != null) {
     		try {
     			conn.close();

@@ -11,20 +11,63 @@ import java.sql.SQLException;
  *
  */
 public class UserDAO {
-	private Connection conn;
+	private DBUtil dbUtil;
 	
 	public UserDAO() {
-		conn = DBUtil.getConnection();
+		dbUtil = new DBUtil();
 	}
 	
-	//create user
+	//TODO probably want to create classes to represent objects (or lists of objects) that could be returned.
+	
+	//USER
+	/**
+	 * Create a user
+	 * 
+	 * @param id User ID
+	 * @param password User password
+	 * @return true if successful, false if user name already in use
+	 */
+	public boolean createUser(String id, String password) {
+		PreparedStatement findUser = null;
+		ResultSet rs = null;
+		PreparedStatement insertUser = null;
+		
+		try {
+			findUser = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
+			findUser.setString(1, id);
+			rs = findUser.executeQuery();
+			if (rs.next() && rs.getInt(1) > 0) {
+				return false;	//username already in use
+			}
+			
+			insertUser = dbUtil.getConnection().prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
+			insertUser.setString(1, id);
+			insertUser.setString(2, password);
+			insertUser.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(findUser);
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(insertUser);
+		}
+		return true;
+	}
 	//get user
 	//update user
 	//delete user
 	
 	//RESIDENCE
-	//add residence
+	/**
+	 * Adds an entry in the residence table that references location table. Creates location if necessary.
+	 * 
+	 * @param stdID user ID
+	 * @param city City of residence
+	 * @param state State of residence
+	 * @param zip ZIP code of residence
+	 */
 	public void addResidence(String stdID, String city, int state, int zip) {
+		//TODO handle case where user already has a residence entry. use ON DUPLICATE KEY UPDATE?
 		PreparedStatement findLoc = null;
 		String getLocIdCnt = 
 				"SELECT id, COUNT(*) "
@@ -45,7 +88,7 @@ public class UserDAO {
 		ResultSet rs = null;
 		
 		try {
-			findLoc = conn.prepareStatement(getLocIdCnt);
+			findLoc = dbUtil.getConnection().prepareStatement(getLocIdCnt);
 			findLoc.setString(1, city);
 			findLoc.setInt(2, state);
 			findLoc.setInt(3, zip);
@@ -53,19 +96,19 @@ public class UserDAO {
 			
 			//does location already exist?
 			if (rs.next() && rs.getInt(2) > 0) {
-				insertWithID = conn.prepareStatement(insertForExistingLoc);
+				insertWithID = dbUtil.getConnection().prepareStatement(insertForExistingLoc);
 				insertWithID.setString(1, stdID);
 				insertWithID.setInt(2, rs.getInt(1));	//existing location ID
 				insertWithID.executeUpdate();
 			} else {
 				//create location
-				newLoc = conn.prepareStatement(createLoc);
+				newLoc = dbUtil.getConnection().prepareStatement(createLoc);
 				newLoc.setString(1, city);
 				newLoc.setInt(2, state);
 				newLoc.setInt(3, zip);
 				newLoc.executeUpdate();
 				//create residence
-				resWithNewLoc = conn.prepareStatement(createResForNewLoc);
+				resWithNewLoc = dbUtil.getConnection().prepareStatement(createResForNewLoc);
 				resWithNewLoc.setString(1, stdID);
 				resWithNewLoc.executeUpdate();
 			}
