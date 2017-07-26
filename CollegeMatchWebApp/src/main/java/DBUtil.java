@@ -1,3 +1,4 @@
+package main.java;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -15,7 +16,7 @@ import java.util.Properties;
  *
  */
 public class DBUtil {
-	private static final String URL = "jdbc:mysql://localhost/?useSSL=false";
+	private static final String URL = "jdbc:mysql://localhost/collegematch?useSSL=false";
 	private static Connection conn;
 	
 	/**
@@ -28,17 +29,20 @@ public class DBUtil {
             return conn;
         }
  
-        InputStream inputStream = DBUtil.class.getClassLoader().getResourceAsStream( "/db.properties" );
-        Properties properties = new Properties();
+        //InputStream inputStream = DBUtil.class.getClassLoader().getResourceAsStream("main/resources/db.properties");
+        //Properties properties = new Properties();
         try {
-            properties.load(inputStream);
-            String user = properties.getProperty("user");
-            String password = properties.getProperty("password");
+            //properties.load(inputStream);
+            //String user = properties.getProperty("user");
+            //String password = properties.getProperty("password");
+        	String user = "USER";	//must figure out correct file path for properties file
+        	String password = "PASSWORD";
             conn = DriverManager.getConnection(URL, user, password );
-        } catch (IOException e) {
-            e.toString();
-        } catch (SQLException e) {
-            e.toString();
+            
+        } /*catch (IOException e) {
+            e.printStackTrace();
+        }*/ catch (SQLException e) {
+            e.printStackTrace();
         }
  
         return conn;
@@ -52,7 +56,7 @@ public class DBUtil {
     		try {
     			conn.close();
     		} catch (SQLException e) {
-    			System.out.println(e.toString());
+    			e.printStackTrace();
     		}
     	}
     }
@@ -67,7 +71,7 @@ public class DBUtil {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				System.out.println(e.toString());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -82,7 +86,7 @@ public class DBUtil {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				System.out.println(e.toString());
+				e.printStackTrace();
 			}
 		}
 	}

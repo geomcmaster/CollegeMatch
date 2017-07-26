@@ -85,7 +85,7 @@ public class DBUtil {
 			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID) ); ";
 	private static final String USER_TBL = "CREATE TABLE user ("
 			+ "ID VARCHAR(255), "
-			+ "password INT NOT NULL, "
+			+ "password VARCHAR(255) NOT NULL, "
 			+ "SAT_SCORE INT, "
 			+ "ACT_SCORE INT, "
 			+ "PRIMARY KEY (ID) ); ";
