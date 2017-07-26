@@ -10,7 +10,9 @@ import java.util.Properties;
 
 /**
  * Utility class for getting connection, closing connection/statement/result set.
- * Assumes existence of db.properties file containing user and password.
+ * Assumes existence of db.properties file in src\main\resources\ containing user and password
+ * 	in form: 	user=[user]
+ * 				password=[password]
  * 
  * @author Geoff
  *
@@ -25,24 +27,22 @@ public class DBUtil {
 	 * @return Database connection
 	 */
     public static Connection getConnection() {
-        if (conn != null) {
-            return conn;
-        }
+    	if (conn != null) {
+        	return conn;
+    	}
  
-        //InputStream inputStream = DBUtil.class.getClassLoader().getResourceAsStream("main/resources/db.properties");
-        //Properties properties = new Properties();
+        InputStream inputStream = 
+        		DBUtil.class.getClassLoader().getResourceAsStream("main\\resources\\db.properties");
+        Properties properties = new Properties();
         try {
-            //properties.load(inputStream);
-            //String user = properties.getProperty("user");
-            //String password = properties.getProperty("password");
-        	String user = "USER";	//must figure out correct file path for properties file
-        	String password = "PASSWORD";
-            conn = DriverManager.getConnection(URL, user, password );
-            
-        } /*catch (IOException e) {
-            e.printStackTrace();
-        }*/ catch (SQLException e) {
-            e.printStackTrace();
+        	properties.load(inputStream);
+        	String user = properties.getProperty("user");
+        	String password = properties.getProperty("password");
+        	conn = DriverManager.getConnection(URL, user, password );
+        } catch (IOException e) {
+        	e.printStackTrace();
+        } catch (SQLException e) {
+        	e.printStackTrace();
         }
  
         return conn;
