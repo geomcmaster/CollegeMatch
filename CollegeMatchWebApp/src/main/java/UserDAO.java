@@ -127,6 +127,7 @@ public class UserDAO {
 	//get residence
 	
 	//FIELDS OF STUDY
+	//get all fields of study?
 	//add favorite field of study
 	//get favorite fields of study
 	//update favorite field of study
