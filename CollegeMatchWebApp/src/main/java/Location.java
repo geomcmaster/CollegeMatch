@@ -1,5 +1,7 @@
 package main.java;
 
+import java.util.HashMap;
+
 /**
  * Represents a location record
  * 
@@ -7,13 +9,37 @@ package main.java;
  *
  */
 public class Location {
-	int id;
-	String city;
-	int state;
-	int zip;
+	
+	private static HashMap<Integer, String> stateMap;
+	
+	//create stateMap
+	static {
+		stateMap = new HashMap<Integer, String>();
+		//TODO finish the map
+		stateMap.put(9, "CT");
+		stateMap.put(23, "ME");
+		stateMap.put(25, "MA");
+		stateMap.put(33, "NH");
+		stateMap.put(44, "RI");
+	}
+	
+	private int id;
+	private String city;
+	private int state;
+	private int zip;
 	//region is stored in region table. only need to set this field if you care about returning the location's
 	//region
-	String region;
+	private String region;
+	
+	/**
+	 * Returns the abbreviation for a state
+	 * 
+	 * @param stateID The state number as stored in the table
+	 * @return The abbreviation for the state
+	 */
+	public String getStateAbbreviation(Integer stateID) {
+		return stateMap.get(stateID);
+	}
 	
 	/**
 	 * @return the id

@@ -7,5 +7,9 @@ package main.java;
  *
  */
 public class School {
-	//TODO create school fields
+	//TODO finish school fields
+	String name;
+	String website;
+	Location location;
+	double admissionRate;
 }
