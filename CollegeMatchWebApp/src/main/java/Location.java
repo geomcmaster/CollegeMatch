@@ -1,5 +1,11 @@
 package main.java;
 
+/**
+ * Represents a location record
+ * 
+ * @author Geoff
+ *
+ */
 public class Location {
 	int id;
 	String city;

@@ -1,5 +1,13 @@
 package main.java;
 
+import java.util.List;
+
+/**
+ * Represents a user record
+ * 
+ * @author Geoff
+ *
+ */
 public class User {
 	private String id;
 	private String password;
@@ -8,7 +16,8 @@ public class User {
 	//location is stored in residence table. only need to set this field if you care about returning the student's
 	//residence info
 	private Location location;
-	//TODO how to store favorites??
+	private List<FavoriteSchool> favoriteSchools;
+	private List<FavoriteFieldOfStudy> favoriteFieldsOfStudy;
 	
 	/**
 	 * @return the id
@@ -69,5 +78,29 @@ public class User {
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+	/**
+	 * @return the favoriteSchools
+	 */
+	public List<FavoriteSchool> getFavoriteSchools() {
+		return favoriteSchools;
+	}
+	/**
+	 * @param favoriteSchools the favoriteSchools to set
+	 */
+	public void setFavoriteSchools(List<FavoriteSchool> favoriteSchools) {
+		this.favoriteSchools = favoriteSchools;
+	}
+	/**
+	 * @return the favoriteFieldsOfStudy
+	 */
+	public List<FavoriteFieldOfStudy> getFavoriteFieldsOfStudy() {
+		return favoriteFieldsOfStudy;
+	}
+	/**
+	 * @param favoriteFieldsOfStudy the favoriteFieldsOfStudy to set
+	 */
+	public void setFavoriteFieldsOfStudy(List<FavoriteFieldOfStudy> favoriteFieldsOfStudy) {
+		this.favoriteFieldsOfStudy = favoriteFieldsOfStudy;
 	}
 }
