@@ -68,6 +68,7 @@ public class UserDAO {
 	 */
 	public void addResidence(String stdID, String city, int state, int zip) {
 		//TODO handle case where user already has a residence entry. use ON DUPLICATE KEY UPDATE?
+		//TODO this treats empty strings as such. Do we want to consider them null instead?
 		PreparedStatement findLoc = null;
 		String getLocIdCnt = 
 				"SELECT id, COUNT(*) "
