@@ -51,7 +51,13 @@ public class UserDAO {
 		}
 		return true;
 	}
-	//get user
+	
+	/**
+	 * Get user by username
+	 * 
+	 * @param username
+	 * @return User object
+	 */
 	public User getUser(String username) {
 		//TODO where will this method be used? Do we want to conditionally get location, favorites?
 		User user = new User();
