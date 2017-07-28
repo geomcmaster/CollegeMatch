@@ -59,7 +59,8 @@ public class UserDAO {
 	 * @return User object
 	 */
 	public User getUser(String username) {
-		//TODO where will this method be used? Do we want to conditionally get location, favorites?
+		//TODO where will this method be used? Do we want to conditionally get location, favorites? Or just get those 
+		//in separate method
 		User user = new User();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -85,7 +86,36 @@ public class UserDAO {
 		}
 		return user;
 	}
-	//update user
+	
+	/**
+	 * Updates user with given password, SAT score, ACT score
+	 * 
+	 * @param userName
+	 * @param password
+	 * @param satScore
+	 * @param actScore
+	 */
+	public void updateUser(String userName, String password, int satScore, int actScore) {
+		//assuming that we won't let them change username
+		//assuming that existing values will be passed if they are to stay the same
+			//alternative is having separate methods for each
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement("UPDATE user "
+							+ "SET password=?, SAT_SCORE=?, ACT_SCORE=? "
+							+ "WHERE id=?");
+			pstmt.setString(1, password);
+			pstmt.setInt(2, satScore);
+			pstmt.setInt(3, actScore);
+			pstmt.setString(4, userName);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
 	//delete user
 	
 	//RESIDENCE

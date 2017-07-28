@@ -80,6 +80,11 @@ public class UserDAOTest {
 	}
 	
 	@Test
+	public void testUpdateUser() {
+		//TODO implement
+	}
+	
+	@Test
 	public void testAddResidence() {
 		//NON-EXISTENT LOCATION
 		
