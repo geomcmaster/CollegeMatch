@@ -13,10 +13,10 @@
 		Cookie saveLogin = new Cookie("collegeMatchLogin",username);
 		saveLogin.setMaxAge(60*60*24*7);
 		response.addCookie(saveLogin);
-		response.setStatus(response.SC_MOVED_TEMPORARILY); //OK
+		response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); //OK
 		response.setHeader("Location","userdata.jsp");
 	} else {
-		response.setStatus(response.SC_MOVED_TEMPORARILY);
+		response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
 		response.setHeader("Location","error401.jsp"); //HTTP Code Unauthorized
 	}
 %>

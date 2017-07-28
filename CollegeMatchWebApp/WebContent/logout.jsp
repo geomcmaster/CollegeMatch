@@ -8,7 +8,7 @@
 		if (cookie.getName().equals("collegeMatchLogin")) {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
-			response.setStatus(response.SC_MOVED_TEMPORARILY); //OK
+			response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); //OK
 			response.setHeader("Location","index.jsp");
 		}
 	}

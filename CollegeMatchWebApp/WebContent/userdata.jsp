@@ -33,7 +33,7 @@
 				<td class="label"><label for="edit_un">Username:</label></td>
 				<td class="input"><input class="inbox" type="text" id="edit_un" name="edit_un" value='<c:out value="${user}"/>' />
 			</tr><tr>
-				<td class="label"><label for="edit_sat">Composite (Reading/Writing & Math) SAT Score:</label></td>
+				<td class="label"><label for="edit_sat">Composite (Reading/Writing &amp; Math) SAT Score:</label></td>
 				<td class="input"><input class="number" type="number" name="edit_sat" id="edit_sat" min="400" max="1600" value="500" /> <!--[my current SAT score]-->
 			</tr><tr>
 				<td class="label"><label for="edit_act">Composite ACT Score:</label></td>

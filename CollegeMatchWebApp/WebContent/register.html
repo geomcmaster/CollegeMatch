@@ -1,20 +1,3 @@
-<!-- List o' tasks -->
-<!--
-TASK				QUERY			SCOPE	
-register user		insert			1 table
-save user data		insert/update	1 table
-delete user data	delete			1 table
-save favorites		insert/update	3+ tables (depends on user, field, school)
-search	(school)	select
- -- location						2 tables
- -- demographics					2-3 tables
- -- field of study					2 tables
- -- based on user location			3 tables, w/ subqueries
-search (field)		select			1 table
-display search results
-display user data
-display favorites
--->
 <html>
 <head>
 	<title>CollegeMatch: Register/Log In</title> <!-- this will change with each page -->
@@ -24,58 +7,62 @@ display favorites
 <body>
 
 	<div id="wrap"> <!-- open wrap -->
-	<div id="header"></div>
-	<div id="contentwrap">
+		<div id="header"></div>
+		<div id="contentwrap">
 	
-	<!-- REGISTRATION / LOG IN (NO SIDEBAR) -->
-	<div id="contentnoside">
-		<div id="title">
-			<h2>Register an Account / Log In</h2>
+			<!-- REGISTRATION / LOG IN (NO SIDEBAR) -->
+			<div id="contentnoside">
+				<div id="title">
+					<h2>Register an Account / Log In</h2>
+				</div>
+				<div class="nosidewrap">
+				<div class="left"><h4>Register</h4>
+					<form id="register" action="register" method="POST" onSubmit="return checkForm()">
+					<table>
+						<tr>
+							<td class="label"><label for="reg_un">Username:</label></td>
+							<td class="input"><input type="text" id="reg_un" name="reg_un" class="inbox" /></td>
+						</tr><tr>
+							<td class="label"><label for="reg_pw">Password:</label></td>
+							<td class="input"><input type="password" id="reg_pw" name="reg_pw" class="inbox" onBlur="comparePWs()" /></td>
+						</tr><tr>
+							<td class="label"><label for="pwcheck">Re-enter Password:</label></td>
+							<td class="input"><input type="password" id="pwcheck" name="pwcheck" class="inbox" onBlur="comparePWs()" /></td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td class="label"><span id="nomatch" class="hidden alert">!! The passwords you have entered do not match.</span></td>
+							<td class="input"><input type="submit" id="reg_submit" value="Register"></td>
+						</tr>
+					</table>
+					</form>
+				</div>
+				<div class="right"><h4>Log In</h4>
+					<form id="login" action="login.jsp" method="POST">
+					<table>
+						<tr>
+							<td class="label"><label for="log_un">Username:</label></td>
+							<td class="input"><input type="text" id="log_un" name="sb_username" class="inbox" /></td>
+						</tr>
+						<tr>
+							<td class="label"><label for="log_pw">Password:</label></td>
+							<td class="input"><input type="password" id="log_pw" name="sb_password" class="inbox" /></td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td class="label alt-action"><a href="">Forget your password?</a></td>
+							<td class="input"><input type="submit" id="log_submit" value="Log In"></td>
+						</tr>
+					</table>
+					</form>
+				</div>
+				</div>
+			</div>
+		
 		</div>
-		<div class="left"><h4>Register</h4>
-			<form id="register" action="newaccount.jsp" method="POST" onSubmit="return checkForm()">
-			<table>
-				<tr>
-					<td class="label"><label for="reg_un">Username:</label></td>
-					<td class="input"><input type="text" id="reg_un" name="reg_un" class="inbox" /></td>
-				</tr><tr>
-					<td class="label"><label for="reg_pw">Password:</label></td>
-					<td class="input"><input type="password" id="reg_pw" name="reg_pw" class="inbox" onBlur="comparePWs()" /></td>
-				</tr><tr>
-					<td class="label"><label for="pwcheck">Re-enter Password:</label></td>
-					<td class="input"><input type="password" id="pwcheck" name="pwcheck" class="inbox" onBlur="comparePWs()" /></td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<td class="label"><span id="nomatch" class="hidden alert">!! The passwords you have entered do not match.</span></td>
-					<td class="input"><input type="submit" id="reg_submit" value="Register"></td>
-				</tr>
-			</table>
-			</form>
-		</div>
-		<div class="right"><h4>Log In</h4>
-			<form id="login" action="login.jsp" method="POST">
-			<table>
-				<tr>
-					<td class="label"><label for="log_un">Username:</label></td>
-					<td class="input"><input type="text" id="log_un" name="sb_username" class="inbox" /></td>
-				</tr>
-				<tr>
-					<td class="label"><label for="log_pw">Password:</label></td>
-					<td class="input"><input type="password" id="log_pw" name="sb_password" class="inbox" /></td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<td class="label alt-action"><a href="">Forget your password?</a></td>
-					<td class="input"><input type="submit" id="log_submit" value="Log In"></td>
-				</tr>
-			</form>
-		</div>
-	</div>
-	
-	</div></div> <!-- close wrap -->
+	</div> <!-- close wrap -->
 	
 <script type="text/javascript">
 	function comparePWs() {
