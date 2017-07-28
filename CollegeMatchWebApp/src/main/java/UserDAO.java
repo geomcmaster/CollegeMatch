@@ -17,8 +17,6 @@ public class UserDAO {
 		dbUtil = new DBUtil();
 	}
 	
-	//TODO probably want to create classes to represent objects (or lists of objects) that could be returned.
-	
 	//USER
 	/**
 	 * Create a user
@@ -54,6 +52,33 @@ public class UserDAO {
 		return true;
 	}
 	//get user
+	public User getUser(String username) {
+		//TODO where will this method be used? Do we want to conditionally get location, favorites?
+		User user = new User();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement("SELECT password, SAT_SCORE, ACT_SCORE "
+							+ "FROM user WHERE ID=?");
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				user.setValid(true);
+				user.setPassword(rs.getString(1));
+				user.setSatScore(rs.getInt(2));
+				user.setActScore(rs.getInt(3));
+			} else {
+				user.setValid(false);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbUtil.closeResultSet(rs);
+			dbUtil.closeStatement(pstmt);
+		}
+		return user;
+	}
 	//update user
 	//delete user
 	

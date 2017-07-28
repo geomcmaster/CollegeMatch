@@ -18,6 +18,7 @@ public class User {
 	private Location location;
 	private List<FavoriteSchool> favoriteSchools;
 	private List<FavoriteFieldOfStudy> favoriteFieldsOfStudy;
+	private boolean isValid;
 	
 	/**
 	 * @return the id
@@ -102,5 +103,17 @@ public class User {
 	 */
 	public void setFavoriteFieldsOfStudy(List<FavoriteFieldOfStudy> favoriteFieldsOfStudy) {
 		this.favoriteFieldsOfStudy = favoriteFieldsOfStudy;
+	}
+	/**
+	 * @return the isValid
+	 */
+	public boolean isValid() {
+		return isValid;
+	}
+	/**
+	 * @param isValid the isValid to set
+	 */
+	public void setValid(boolean isValid) {
+		this.isValid = isValid;
 	}
 }
