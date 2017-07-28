@@ -8,10 +8,10 @@ import java.sql.Connection;
  *
  */
 public class SchoolDAO {
-	private Connection conn;
+	private DBUtil dbUtil;
 	
 	public SchoolDAO() {
-		conn = DBUtil.getConnection();
+		dbUtil = new DBUtil();
 	}
 
 }
