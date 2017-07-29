@@ -78,7 +78,11 @@ public class UserDAOTest {
 	
 	@Test
 	public void testVerifyPassword() {
-		//TODO implement
+		String userName = "imAuserYESiAM";
+		String password = "mYpassW0RD_#";
+		userDAO.createUser(userName, password);
+		assertFalse("Bad password validated", userDAO.verifyPassword(userName, "justmakingthisup"));
+		assertTrue("Good password rejected", userDAO.verifyPassword(userName, password));
 	}
 	
 	@Test
@@ -97,12 +101,42 @@ public class UserDAOTest {
 	
 	@Test
 	public void testUpdateUser() {
-		//TODO implement
+		String userName = "goingtoupdatethis";
+		userDAO.createUser(userName, "awesomesauce");
+		//No existing score values
+		userDAO.updateUser(userName, "newpassword", 1600, 30);
+		User user = userDAO.getUser(userName);
+		assertEquals("Password not updated", "newpassword", user.getPassword());
+		assertEquals("SAT score not updated", 1600, user.getSatScore());
+		assertEquals("ACT score not updated", 30, user.getActScore());
+		//Modify score values, keep password
+		userDAO.updateUser(userName, "newpassword", 1200, 10);
+		User userTakeTwo = userDAO.getUser(userName);
+		assertEquals("Password not updated", "newpassword", userTakeTwo.getPassword());
+		assertEquals("SAT score not updated", 1200, userTakeTwo.getSatScore());
+		assertEquals("ACT score not updated", 10, userTakeTwo.getActScore());
 	}
 	
 	@Test
 	public void testDeleteUser() {
-		//TODO implement
+		String userName = "goingtodeletethis";
+		userDAO.createUser(userName, "anotherpassword");
+		userDAO.deleteUser(userName);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			rs.next();
+			assertEquals("User not deleted", 0, rs.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
 	}
 	
 	@Test

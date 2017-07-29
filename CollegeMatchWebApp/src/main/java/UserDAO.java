@@ -66,7 +66,7 @@ public class UserDAO {
 			pstmt = dbUtil.getConnection().prepareStatement("SELECT password FROM user WHERE ID=?");
 			pstmt.setString(1, userName);
 			rs = pstmt.executeQuery();
-			if (rs.next() && rs.getString(1) == password) {
+			if (rs.next() && rs.getString(1).equals(password)) {
 				valid = true;
 			}
 		} catch (SQLException e) {
@@ -169,8 +169,11 @@ public class UserDAO {
 	 * @param zip ZIP code of residence
 	 */
 	public void addResidence(String stdID, String city, int state, int zip) {
-		//TODO handle case where user already has a residence entry. use ON DUPLICATE KEY UPDATE?
-		//TODO this treats empty strings as such. Do we want to consider them null instead?
+		//TODO do we need to handle case where user already has a residence entry (use ON DUPLICATE KEY UPDATE?)?
+		//	or can we assume this is only called if one doesn't exist? If it's the former, we don't need a 
+		//	modify method.
+		//TODO this treats empty strings as such. Do we want to consider them null instead? At the very least
+		//	we probably shouldn't add a location for "", "", "", right?
 		PreparedStatement findLoc = null;
 		String getLocIdCnt = 
 				"SELECT id, COUNT(*) "
