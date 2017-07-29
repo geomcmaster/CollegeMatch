@@ -1,5 +1,4 @@
 package main.java;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,25 +20,25 @@ public class UserDAO {
 	/**
 	 * Create a user
 	 * 
-	 * @param id User ID
+	 * @param userName User name
 	 * @param password User password
 	 * @return true if successful, false if user name already in use
 	 */
-	public boolean createUser(String id, String password) {
+	public boolean createUser(String userName, String password) {
 		PreparedStatement findUser = null;
 		ResultSet rs = null;
 		PreparedStatement insertUser = null;
 		
 		try {
 			findUser = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
-			findUser.setString(1, id);
+			findUser.setString(1, userName);
 			rs = findUser.executeQuery();
 			if (rs.next() && rs.getInt(1) > 0) {
 				return false;	//username already in use
 			}
 			
 			insertUser = dbUtil.getConnection().prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
-			insertUser.setString(1, id);
+			insertUser.setString(1, userName);
 			insertUser.setString(2, password);
 			insertUser.executeUpdate();
 		} catch (SQLException e) {
@@ -53,14 +52,39 @@ public class UserDAO {
 	}
 	
 	/**
+	 * Verifies a user's password entry
+	 * 
+	 * @param userName
+	 * @param password
+	 * @return True if password is correct, false if not
+	 */
+	public boolean verifyPassword(String userName, String password) {
+		boolean valid = false;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement("SELECT password FROM user WHERE ID=?");
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			if (rs.next() && rs.getString(1) == password) {
+				valid = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+		return valid;
+	}
+	
+	/**
 	 * Get user by username
 	 * 
-	 * @param username
+	 * @param userName
 	 * @return User object
 	 */
-	public User getUser(String username) {
-		//TODO where will this method be used? Do we want to conditionally get location, favorites? Or just get those 
-		//in separate method
+	public User getUser(String userName) {
 		User user = new User();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -68,7 +92,7 @@ public class UserDAO {
 			pstmt = 
 					dbUtil.getConnection().prepareStatement("SELECT password, SAT_SCORE, ACT_SCORE "
 							+ "FROM user WHERE ID=?");
-			pstmt.setString(1, username);
+			pstmt.setString(1, userName);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				user.setValid(true);
@@ -81,8 +105,8 @@ public class UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			dbUtil.closeResultSet(rs);
-			dbUtil.closeStatement(pstmt);
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
 		}
 		return user;
 	}
@@ -116,7 +140,24 @@ public class UserDAO {
 			DBUtil.closeStatement(pstmt);
 		}
 	}
-	//delete user
+
+	/**
+	 * Deletes a user record
+	 * 
+	 * @param userName
+	 */
+	public void deleteUser(String userName) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement("DELETE FROM user WHERE ID=?");
+			pstmt.setString(1, userName);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
 	
 	//RESIDENCE
 	/**

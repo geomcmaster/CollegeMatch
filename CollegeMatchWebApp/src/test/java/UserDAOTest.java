@@ -1,10 +1,10 @@
 package test.java;
 
-import main.java.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +14,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import main.java.DBUtil;
+import main.java.User;
+import main.java.UserDAO;
 
 public class UserDAOTest {
 	private static final String CITY_1 = "Nowheresvilletownburg";
@@ -75,6 +77,11 @@ public class UserDAOTest {
 	}
 	
 	@Test
+	public void testVerifyPassword() {
+		//TODO implement
+	}
+	
+	@Test
 	public void testGetUser() {
 		//non-existent user
 		assertFalse("Invalid user not listed as invalid", userDAO.getUser("didntcreatethisuser").isValid());
@@ -90,6 +97,11 @@ public class UserDAOTest {
 	
 	@Test
 	public void testUpdateUser() {
+		//TODO implement
+	}
+	
+	@Test
+	public void testDeleteUser() {
 		//TODO implement
 	}
 	
