@@ -238,6 +238,20 @@ public class UserDAOTest {
 			DBUtil.closeResultSet(rs6);
 		}
 	}
+	
+	@Test
+	public void testAddFavField() {
+		//TODO implement
+	}
+	
+	@Test
+	public void testGetFavFields() {
+		//TODO implement
+		//no favs
+		//one fav
+		//multiple favs
+		//	sorting
+	}
 
 	@After
 	public void cleanUp() {

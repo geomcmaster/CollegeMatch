@@ -2,6 +2,8 @@ package main.java;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Data access object for user-related queries
@@ -232,9 +234,66 @@ public class UserDAO {
 	//get residence
 	
 	//FIELDS OF STUDY
-	//get all fields of study?
-	//add favorite field of study
-	//get favorite fields of study
+	//get fields of study?
+
+	/**
+	 * Adds a favorite field of study. Does not check if it already exists. Does not check if rank already assigned.
+	 * 
+	 * @param userName User adding the favorite
+	 * @param fieldID ID of the field of study to add
+	 * @param rank Rank for this field of study
+	 */
+	public void addFavField(String userName, int fieldID, int rank) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"INSERT INTO favoriteFieldsOfStudy (std_ID, field_ID, rank) "
+							+ "VALUES (?, ?, ?)");
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, fieldID);
+			pstmt.setInt(3, rank);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
+
+	/**
+	 * Gets a user's favorite fields of study
+	 * 
+	 * @param userName The user whose favorites we are grabbing
+	 * @return A list of favorite fields of study from highest (i.e. 1) to lowest
+	 */
+	public List<FavoriteFieldOfStudy> getFavFields(String userName) {
+		LinkedList<FavoriteFieldOfStudy> favs = new LinkedList<FavoriteFieldOfStudy>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"SELECT favoriteFieldsOfStudy.rank, fieldsOfStudy.name "
+							+ "FROM favoriteFieldsOfStudy "
+							+ "JOIN fieldsOfStudy ON favoriteFieldsOfStudy.field_ID = fieldsOfStudy.ID "
+							+ "WHERE favoriteFieldsOfStudy.std_ID=? "
+							+ "ORDER BY favoriteFieldsOfStudy.rank ASC");
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				FavoriteFieldOfStudy fav = new FavoriteFieldOfStudy();
+				fav.setRank(rs.getInt(1));
+				fav.setFieldOfStudy(rs.getString(2));
+				favs.addLast(fav);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+		return favs;
+	}
 	//update favorite field of study
 	//delete favorite field of study
 	
