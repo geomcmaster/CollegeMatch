@@ -316,17 +316,17 @@ public class UserDAOTest {
 	
 	@Test
 	public void testAddFavSchool() {
-		//TODO implement
+		//TODO implement. Holding off until we have schools in our db
 	}
 	
 	@Test
 	public void testUpdateFavSchool() {
-		//TODO implement
+		//TODO implement. Holding off until we have schools in our db
 	}
 	
 	@Test
 	public void testDeleteFavSchool() {
-		//TODO implement
+		//TODO implement. Holding off until we have schools in our db
 	}
 
 	@After

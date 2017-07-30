@@ -390,7 +390,26 @@ public class UserDAO {
 	 */
 	public void updateFavSchool(String userName, int schoolID, 
 			int rank, String appStatus, int finAid, int loanAmt, int meritScholarships) {
-		//TODO implement
+		String query = 
+				"UPDATE favoriteSchools "
+				+ "SET rank=?, app_status=?, fin_aid=?, loan_amt=?, merit_scholarships=? "
+				+ "WHERE std_ID=? AND school_ID=?";
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement(query);
+			pstmt.setInt(1, rank);
+			pstmt.setString(2, appStatus);
+			pstmt.setInt(3, finAid);
+			pstmt.setInt(4, loanAmt);
+			pstmt.setInt(5, meritScholarships);
+			pstmt.setString(6, userName);
+			pstmt.setInt(7, schoolID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
 	}
 
 	/**
@@ -400,7 +419,20 @@ public class UserDAO {
 	 * @param schoolID The school entry to delete
 	 */
 	public void deleteFavSchool(String userName, int schoolID) {
-		//TODO implement
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"DELETE FROM favoriteSchools "
+							+ "WHERE std_ID=? AND school_ID=?");
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, schoolID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
 	}
 
 }
