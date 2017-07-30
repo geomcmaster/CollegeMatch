@@ -310,7 +310,19 @@ public class UserDAO {
 	 * @param schoolID The ID of the school to add
 	 */
 	public void addFavSchool(String userName, int schoolID) {
-		//TODO implement
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"INSERT INTO favoriteSchools (std_ID, school_ID) VALUES (?, ?)");
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, schoolID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
 	}
 	
 	//get favorite schools
