@@ -57,7 +57,7 @@ public class UserDAOTest {
 	public void setUp() {
 		dbUtil = new DBUtil();
 		userDAO = new UserDAO();
-		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence
+		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence, testDeleteFavField
 		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence, testAddFavField
 		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence, testGetFavFields
 	}
@@ -249,21 +249,7 @@ public class UserDAOTest {
 	
 	@Test
 	public void testAddFavField() {
-		int fieldID = -1;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = dbUtil.getConnection().prepareStatement("SELECT ID FROM fieldsOfStudy WHERE name=?");
-			pstmt.setString(1, "Psychology");
-			rs = pstmt.executeQuery();
-			assertTrue(rs.next());
-			fieldID = rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(pstmt);
-		}
+		int fieldID = userDAO.getFieldID("Psychology");
 		userDAO.addFavField(USERNAME_3, fieldID, 1);
 		FavoriteFieldOfStudy field = userDAO.getFavFields(USERNAME_3).get(0);
 		assertEquals("Added field of study name not correct", "Psychology", field.getFieldOfStudy());
@@ -276,33 +262,10 @@ public class UserDAOTest {
 		assertEquals("User without favorite fields returns list size > 0", 0, userDAO.getFavFields(USERNAME_4).size());
 		
 		//one fav
-		int fieldID = -1;
-		int fieldID2 = -1;	//use this ID later
-		int fieldID3 = -1;	//use this ID later
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = dbUtil.getConnection().prepareStatement("SELECT ID FROM fieldsOfStudy WHERE name=?");
-			pstmt.setString(1, "Mathematics and Statistics");
-			rs = pstmt.executeQuery();
-			assertTrue(rs.next());
-			fieldID = rs.getInt(1);
-			
-			pstmt.setString(1, "Engineering");
-			rs = pstmt.executeQuery();
-			assertTrue(rs.next());
-			fieldID2 = rs.getInt(1);
-			
-			pstmt.setString(1, "Computer and Information Sciences and Support Services");
-			rs = pstmt.executeQuery();
-			assertTrue(rs.next());
-			fieldID3 = rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(pstmt);
-		}
+		int fieldID = userDAO.getFieldID("Mathematics and Statistics");
+		int fieldID2 = userDAO.getFieldID("Engineering");
+		int fieldID3 = userDAO.getFieldID("Computer and Information Sciences and Support Services");
+
 		userDAO.addFavField(USERNAME_4, fieldID, 4);
 		List<FavoriteFieldOfStudy> fields = userDAO.getFavFields(USERNAME_4);
 		assertEquals("More than one favorite field of study found", 1, fields.size());
@@ -325,7 +288,30 @@ public class UserDAOTest {
 	
 	@Test
 	public void testDeleteFavField() {
+		String field1 = "Biological and Biomedical Sciences";
+		String field2 = "Foreign Languages, Literatures, and Linguistics";
+		String field3 = "Philosophy and Religious Studies";
 		
+		int fieldID = userDAO.getFieldID(field1);
+		userDAO.addFavField(USERNAME_1, fieldID, 2);
+
+		//delete only fav
+		userDAO.deleteFavField(USERNAME_1, fieldID);
+		assertEquals("Favorite field not deleted", 0, userDAO.getFavFields(USERNAME_1).size());
+
+		int fieldID2 = userDAO.getFieldID(field2);
+		int fieldID3 = userDAO.getFieldID(field3);
+		userDAO.addFavField(USERNAME_1, fieldID2, 3);
+		userDAO.addFavField(USERNAME_1, fieldID3, 1);
+		
+		//delete 1 of 2
+		userDAO.deleteFavField(USERNAME_1, fieldID3);
+		assertEquals("Wrong number of favorite fields remaining", 1, userDAO.getFavFields(USERNAME_1).size());
+		assertEquals("Wrong field deleted", field2, userDAO.getFavFields(USERNAME_1).get(0).getFieldOfStudy());
+		
+		//delete 2 of 2
+		userDAO.deleteFavField(USERNAME_1, fieldID2);
+		assertEquals("Favorite field not deleted", 0, userDAO.getFavFields(USERNAME_1).size());
 	}
 
 	@After

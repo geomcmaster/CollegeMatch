@@ -1,4 +1,6 @@
 package main.java;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -235,6 +237,34 @@ public class UserDAO {
 	
 	//FIELDS OF STUDY
 	//get fields of study?
+	
+	/**
+	 * Returns the ID for a field of study by name. Throws a runtime exception if no field matching that name is found.
+	 * 
+	 * @param fieldName Field of study
+	 * @return The ID of this field of study
+	 */
+	public int getFieldID(String fieldName) {
+		int fieldID = -1;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement("SELECT ID FROM fieldsOfStudy WHERE name=?");
+			pstmt.setString(1, fieldName);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				fieldID = rs.getInt(1);
+			} else {
+				throw new RuntimeException();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+		return fieldID;
+	}
 
 	/**
 	 * Adds a favorite field of study.
@@ -309,7 +339,19 @@ public class UserDAO {
 	 * @param fieldID The ID of the field to delete from this user's favorites
 	 */
 	public void deleteFavField(String userName, int fieldID) {
-		
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"DELETE FROM favoriteFieldsOfStudy WHERE std_ID=? AND field_ID=?");
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, fieldID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
 	}
 	
 	//SCHOOLS
