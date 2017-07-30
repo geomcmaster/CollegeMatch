@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import main.java.DBUtil;
 import main.java.FavoriteFieldOfStudy;
+import main.java.Location;
 import main.java.User;
 import main.java.UserDAO;
 
@@ -289,7 +290,24 @@ public class UserDAOTest {
 	}
 	
 	@Test
-	public void modifyAddFavField() {
+	public void testGetResidence() {
+		userDAO.createUser("resUserTest", "fleventyfive");
+		
+		//no residence yet
+		Location invalidLoc = userDAO.getResidence("resUserTest");
+		assertFalse("Non-existent residence should return false", invalidLoc.isValid());
+		
+		//created a residence
+		userDAO.modifyResidence("resUserTest", "Twin Peaks", 53, 99228);
+		Location validLoc = userDAO.getResidence("resUserTest");
+		assertTrue("Valid residence should return true", validLoc.isValid());
+		assertEquals("Correct city not returned", "Twin Peaks", validLoc.getCity());
+		assertEquals("Correct state not returned", 53, validLoc.getState());
+		assertEquals("Correct ZIP not returned", 99228, validLoc.getZip());
+	}
+	
+	@Test
+	public void testModifyFavField() {
 		int fieldID = userDAO.getFieldID("Psychology");
 		userDAO.modifyFavField(USERNAME_3, fieldID, 1);
 		FavoriteFieldOfStudy field = userDAO.getFavFields(USERNAME_3).get(0);

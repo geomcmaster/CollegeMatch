@@ -230,7 +230,43 @@ public class UserDAO {
 			DBUtil.closeResultSet(rs);
 		}
 	}
-	//get residence
+	
+	/**
+	 * Gets the current residence of a user. If none found, Location.isValid() returns false.
+	 * 
+	 * @param userName The user to get the residence for
+	 * @return A location object representing the user's residence
+	 */
+	public Location getResidence(String userName) {
+		Location loc = new Location();
+		loc.setValid(false);
+		
+		String query = 
+				"SELECT location.ID, location.city, location.state, location.zip "
+				+ "FROM residence JOIN location ON residence.loc_ID = location.ID "
+				+ "WHERE residence.std_ID=?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement(query);
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				loc.setValid(true);
+				loc.setId(rs.getInt(1));
+				loc.setCity(rs.getString(2));
+				loc.setState(rs.getInt(3));
+				loc.setZip(rs.getInt(4));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+		
+		return loc;
+	}
 	
 	//FIELDS OF STUDY
 	//get fields of study?

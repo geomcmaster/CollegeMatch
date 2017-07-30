@@ -80,6 +80,7 @@ public class Location {
 	private String city;
 	private int state;
 	private int zip;
+	private boolean valid;
 	//region is stored in region table. only need to set this field if you care about returning the location's
 	//region
 	private String region;
@@ -154,5 +155,19 @@ public class Location {
 	 */
 	public void setRegion(String region) {
 		this.region = region;
+	}
+
+	/**
+	 * @return Whether this is a valid location (fields set)
+	 */
+	public boolean isValid() {
+		return valid;
+	}
+
+	/**
+	 * @param valid Whether this is a valid location (fields set)
+	 */
+	public void setValid(boolean valid) {
+		this.valid = valid;
 	}
 }
