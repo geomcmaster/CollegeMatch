@@ -129,6 +129,9 @@ public class UserDAOTest {
 	public void testDeleteUser() {
 		String userName = "goingtodeletethis";
 		userDAO.createUser(userName, "anotherpassword");
+		//make sure it works if they added to other tables
+		userDAO.addFavField("goingtodeletethis", userDAO.getFieldID("Architecture and Related Services"), 3);
+		userDAO.modifyResidence("goingtodeletethis", "the greatest city", 48, 12345);
 		userDAO.deleteUser(userName);
 		
 		PreparedStatement pstmt = null;
