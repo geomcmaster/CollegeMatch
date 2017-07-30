@@ -320,6 +320,11 @@ public class UserDAOTest {
 	}
 	
 	@Test
+	public void testGetFavSchools() {
+		//TODO implement. Holding off until we have schools in our db
+	}
+	
+	@Test
 	public void testUpdateFavSchool() {
 		//TODO implement. Holding off until we have schools in our db
 	}
