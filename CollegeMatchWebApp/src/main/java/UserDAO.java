@@ -264,7 +264,7 @@ public class UserDAO {
 	}
 
 	/**
-	 * Adds a favorite field of study.
+	 * Modifies a favorite field of study or adds it if entry doesn't exist.
 	 * Does not check: 
 	 * 		-if ID exists in fieldsOfStudy table
 	 * 		-if entry for this field and user already exists
@@ -274,16 +274,17 @@ public class UserDAO {
 	 * @param fieldID ID of the field of study to add
 	 * @param rank Rank for this field of study
 	 */
-	public void addFavField(String userName, int fieldID, int rank) {
+	public void modifyFavField(String userName, int fieldID, int rank) {
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = 
 					dbUtil.getConnection().prepareStatement(
 							"INSERT INTO favoriteFieldsOfStudy (std_ID, field_ID, rank) "
-							+ "VALUES (?, ?, ?)");
+							+ "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rank=?");
 			pstmt.setString(1, userName);
 			pstmt.setInt(2, fieldID);
 			pstmt.setInt(3, rank);
+			pstmt.setInt(4, rank);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -326,8 +327,6 @@ public class UserDAO {
 		}
 		return favs;
 	}
-	
-	//update favorite field of study
 
 	/**
 	 * Deletes one of a user's favorites field of study
