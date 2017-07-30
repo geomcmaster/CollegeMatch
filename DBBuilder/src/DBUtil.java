@@ -98,7 +98,7 @@ public class DBUtil {
 			+ "std_ID VARCHAR(255), "
 			+ "loc_ID INT NOT NULL, "
 			+ "PRIMARY KEY (std_ID), "
-			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
 	private static final String FIELD_TBL = "CREATE TABLE fieldsOfStudy ("
 			+ "ID INT AUTO_INCREMENT, "
@@ -109,7 +109,7 @@ public class DBUtil {
 			+ "field_ID INT, "
 			+ "rank INT, "
 			+ "PRIMARY KEY (std_ID, field_ID), "
-			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
 	private static final String FAV_SCHOOL_TBL = "CREATE TABLE favoriteSchools("
 			+ "std_ID VARCHAR(255), "
@@ -120,7 +120,7 @@ public class DBUtil {
 			+ "loan_amt INT, "
 			+ "merit_scholarships INT, "
 			+ "PRIMARY KEY (std_ID, school_ID), "
-			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (school_ID) REFERENCES school(ID) ); ";
 	private static final String OFFERS_TBL = "CREATE TABLE offers ("
 			+ "school_ID INT, "
