@@ -745,7 +745,8 @@ public class DBUtil {
 		//	- use the values from the object as is
 		//  - we also need to obtain IDs (from the AUTO_INCREMENT) 
 		//		for when we populate the record in the school table 
-		//		for this school. To do so, use: SELECT LAST_INSERT_ID()
+		//		for this school. To do so, use: prepareStatement(Query, Statement.RETURN_GENERATED_KEYS); 
+		//		https://stackoverflow.com/a/14170703
 		//
 		//2. insert into school
 		//	- Top 5 fields
@@ -756,7 +757,7 @@ public class DBUtil {
 		//
 		//3. insert into location
 		//	- search for an existing match, if so use that id for school_loc
-		//	- if no match, do an insert then use SELECT LAST_INSERT_ID()
+		//	- if no match, do an insert then use Statement.RETURN_GENERATED_KEYS again
 		//
 		//4. insert into school_loc
 		//	- use ID from location and the school ID
