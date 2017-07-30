@@ -163,17 +163,15 @@ public class UserDAO {
 	
 	//RESIDENCE
 	/**
-	 * Adds an entry in the residence table that references location table. Creates location if necessary.
+	 * Modifies or adds (if it doesn't exist) an entry in the residence table that references location table. 
+	 * Creates location if necessary.
 	 * 
 	 * @param stdID user ID
 	 * @param city City of residence
 	 * @param state State of residence
 	 * @param zip ZIP code of residence
 	 */
-	public void addResidence(String stdID, String city, int state, int zip) {
-		//TODO do we need to handle case where user already has a residence entry (use ON DUPLICATE KEY UPDATE?)?
-		//	or can we assume this is only called if one doesn't exist? If it's the former, we don't need a 
-		//	modify method.
+	public void modifyResidence(String stdID, String city, int state, int zip) {
 		//TODO this treats empty strings as such. Do we want to consider them null instead? At the very least
 		//	we probably shouldn't add a location for "", "", "", right?
 		PreparedStatement findLoc = null;
@@ -184,7 +182,7 @@ public class UserDAO {
 		PreparedStatement insertWithID = null;
 		String insertForExistingLoc = 
 				"INSERT INTO residence (std_ID, loc_ID) "
-				+ "VALUES (?, ?)";
+				+ "VALUES (?, ?) ON DUPLICATE KEY UPDATE loc_ID=?";
 		PreparedStatement newLoc = null;
 		String createLoc = 
 				"INSERT INTO location (city, state, ZIP) "
@@ -192,7 +190,7 @@ public class UserDAO {
 		PreparedStatement resWithNewLoc = null;
 		String createResForNewLoc = 
 				"INSERT INTO residence (std_ID, loc_ID) "
-				+ "VALUES (?, LAST_INSERT_ID())";
+				+ "VALUES (?, LAST_INSERT_ID()) ON DUPLICATE KEY UPDATE loc_ID=LAST_INSERT_ID()";
 		ResultSet rs = null;
 		
 		try {
@@ -206,7 +204,9 @@ public class UserDAO {
 			if (rs.next() && rs.getInt(2) > 0) {
 				insertWithID = dbUtil.getConnection().prepareStatement(insertForExistingLoc);
 				insertWithID.setString(1, stdID);
-				insertWithID.setInt(2, rs.getInt(1));	//existing location ID
+				int existingID = rs.getInt(1);			//existing location ID
+				insertWithID.setInt(2, existingID);
+				insertWithID.setInt(3, existingID);
 				insertWithID.executeUpdate();
 			} else {
 				//create location
@@ -230,7 +230,6 @@ public class UserDAO {
 			DBUtil.closeResultSet(rs);
 		}
 	}
-	//modify residence
 	//get residence
 	
 	//FIELDS OF STUDY

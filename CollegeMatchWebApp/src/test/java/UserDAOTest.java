@@ -148,11 +148,11 @@ public class UserDAOTest {
 	}
 	
 	@Test
-	public void testAddResidence() {
+	public void testModifyResidence() {
 		//NON-EXISTENT LOCATION
 		
 		//add residence in CITY_1
-		userDAO.addResidence(USERNAME_1, CITY_1, STATE_1, ZIP_1);
+		userDAO.modifyResidence(USERNAME_1, CITY_1, STATE_1, ZIP_1);
 		
 		PreparedStatement pstmt1 = null;
 		PreparedStatement pstmt2 = null;
@@ -203,6 +203,9 @@ public class UserDAOTest {
 		String q2 = "INSERT INTO location (city, ZIP) VALUES (?, ?)";
 		PreparedStatement pstmt6 = null;
 		ResultSet rs6 = null;
+		
+		int id = -1;
+		
 		try {
 			pstmt3 = dbUtil.getConnection().prepareStatement(q, Statement.RETURN_GENERATED_KEYS);
 			pstmt3.setString(1, CITY_2);
@@ -211,8 +214,8 @@ public class UserDAOTest {
 			pstmt3.executeUpdate();
 			rs3 = pstmt3.getGeneratedKeys();
 			assertTrue("No key generated", rs3.next());
-			int id = rs3.getInt(1);
-			userDAO.addResidence(USERNAME_3, CITY_2, STATE_2, ZIP_2);
+			id = rs3.getInt(1);
+			userDAO.modifyResidence(USERNAME_3, CITY_2, STATE_2, ZIP_2);
 			pstmt4 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
 			pstmt4.setString(1, USERNAME_3);
 			rs4 = pstmt4.executeQuery();
@@ -227,7 +230,7 @@ public class UserDAOTest {
 			rs5 = pstmt5.getGeneratedKeys();
 			assertTrue("No key generated", rs5.next());
 			int id2 = rs5.getInt(1);
-			userDAO.addResidence(USERNAME_4, CITY_3, 41, ZIP_3);
+			userDAO.modifyResidence(USERNAME_4, CITY_3, 41, ZIP_3);
 			pstmt6 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
 			pstmt6.setString(1, USERNAME_4);
 			rs6 = pstmt6.executeQuery();
@@ -244,6 +247,41 @@ public class UserDAOTest {
 			DBUtil.closeResultSet(rs5);
 			DBUtil.closeStatement(pstmt6);
 			DBUtil.closeResultSet(rs6);
+		}
+		
+		//modify
+		userDAO.modifyResidence(USERNAME_4, CITY_2, STATE_2, ZIP_2);
+		PreparedStatement pstmt7 = null;
+		ResultSet rs7 = null;
+		PreparedStatement pstmt8 = null;
+		ResultSet rs8 = null;
+		try {
+			//modify to existing loc
+			pstmt7 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
+			pstmt7.setString(1, USERNAME_4);
+			rs7 = pstmt7.executeQuery();
+			assertTrue("Residence not found", rs7.next());
+			assertEquals("Not updated to correct location", id, rs7.getInt(1));
+			//modify to new loc
+			userDAO.modifyResidence(USERNAME_4, "Anytown", 53, 48539);
+			pstmt8 = 
+					dbUtil.getConnection().prepareStatement(
+							"SELECT city, state, ZIP "
+							+ "FROM residence JOIN location ON residence.loc_ID = location.ID "
+							+ "WHERE residence.std_ID=?");
+			pstmt8.setString(1, USERNAME_4);
+			rs8 = pstmt8.executeQuery();
+			assertTrue("Residence not found", rs8.next());
+			assertEquals("City not updated", "Anytown", rs8.getString(1));
+			assertEquals("State not updated", 53, rs8.getInt(2));
+			assertEquals("ZIP not updated", 48539, rs8.getInt(3));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs7);
+			DBUtil.closeResultSet(rs8);
+			DBUtil.closeStatement(pstmt7);
+			DBUtil.closeStatement(pstmt8);
 		}
 	}
 	
