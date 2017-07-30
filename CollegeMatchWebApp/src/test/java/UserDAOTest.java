@@ -76,7 +76,16 @@ public class UserDAOTest {
 	
 	@Test
 	public void testGetUser() {
-		//TODO implement
+		//non-existent user
+		assertFalse("Invalid user not listed as invalid", userDAO.getUser("didntcreatethisuser").isValid());
+		//existing user
+		userDAO.createUser("testingGetUser", "456abc789");
+		userDAO.updateUser("testingGetUser", "456abc789", 1555, 30);
+		User user = userDAO.getUser("testingGetUser");
+		assertTrue("Valid user not listed as valid", user.isValid());
+		assertEquals("User password not correct", "456abc789", user.getPassword());
+		assertEquals("SAT score not correct", 1555, user.getSatScore());
+		assertEquals("ACT score not correct", 30, user.getActScore());
 	}
 	
 	@Test
