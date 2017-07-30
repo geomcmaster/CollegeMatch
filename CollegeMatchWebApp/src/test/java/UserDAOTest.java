@@ -1,21 +1,31 @@
 package test.java;
 
-import main.java.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import main.java.DBUtil;
+import main.java.FavoriteFieldOfStudy;
+import main.java.User;
+import main.java.UserDAO;
 
+/**
+ * JUnit test class for UserDAO.java. Could use cleaning up.
+ * 
+ * @author Geoff
+ *
+ */
 public class UserDAOTest {
 	private static final String CITY_1 = "Nowheresvilletownburg";
 	private static final int STATE_1 = 12;
@@ -47,9 +57,9 @@ public class UserDAOTest {
 	public void setUp() {
 		dbUtil = new DBUtil();
 		userDAO = new UserDAO();
-		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence
-		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence
-		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence
+		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence, testDeleteFavField
+		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence, testAddFavField
+		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence, testGetFavFields
 	}
 
 	@Test
@@ -75,6 +85,15 @@ public class UserDAOTest {
 	}
 	
 	@Test
+	public void testVerifyPassword() {
+		String userName = "imAuserYESiAM";
+		String password = "mYpassW0RD_#";
+		userDAO.createUser(userName, password);
+		assertFalse("Bad password validated", userDAO.verifyPassword(userName, "justmakingthisup"));
+		assertTrue("Good password rejected", userDAO.verifyPassword(userName, password));
+	}
+	
+	@Test
 	public void testGetUser() {
 		//non-existent user
 		assertFalse("Invalid user not listed as invalid", userDAO.getUser("didntcreatethisuser").isValid());
@@ -90,15 +109,53 @@ public class UserDAOTest {
 	
 	@Test
 	public void testUpdateUser() {
-		//TODO implement
+		String userName = "goingtoupdatethis";
+		userDAO.createUser(userName, "awesomesauce");
+		//No existing score values
+		userDAO.updateUser(userName, "newpassword", 1600, 30);
+		User user = userDAO.getUser(userName);
+		assertEquals("Password not updated", "newpassword", user.getPassword());
+		assertEquals("SAT score not updated", 1600, user.getSatScore());
+		assertEquals("ACT score not updated", 30, user.getActScore());
+		//Modify score values, keep password
+		userDAO.updateUser(userName, "newpassword", 1200, 10);
+		User userTakeTwo = userDAO.getUser(userName);
+		assertEquals("Password not updated", "newpassword", userTakeTwo.getPassword());
+		assertEquals("SAT score not updated", 1200, userTakeTwo.getSatScore());
+		assertEquals("ACT score not updated", 10, userTakeTwo.getActScore());
 	}
 	
 	@Test
-	public void testAddResidence() {
+	public void testDeleteUser() {
+		String userName = "goingtodeletethis";
+		userDAO.createUser(userName, "anotherpassword");
+		//make sure it works if they added to other tables
+		userDAO.addFavField("goingtodeletethis", userDAO.getFieldID("Architecture and Related Services"), 3);
+		userDAO.modifyResidence("goingtodeletethis", "the greatest city", 48, 12345);
+		userDAO.deleteUser(userName);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			rs.next();
+			assertEquals("User not deleted", 0, rs.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+	}
+	
+	@Test
+	public void testModifyResidence() {
 		//NON-EXISTENT LOCATION
 		
 		//add residence in CITY_1
-		userDAO.addResidence(USERNAME_1, CITY_1, STATE_1, ZIP_1);
+		userDAO.modifyResidence(USERNAME_1, CITY_1, STATE_1, ZIP_1);
 		
 		PreparedStatement pstmt1 = null;
 		PreparedStatement pstmt2 = null;
@@ -149,6 +206,9 @@ public class UserDAOTest {
 		String q2 = "INSERT INTO location (city, ZIP) VALUES (?, ?)";
 		PreparedStatement pstmt6 = null;
 		ResultSet rs6 = null;
+		
+		int id = -1;
+		
 		try {
 			pstmt3 = dbUtil.getConnection().prepareStatement(q, Statement.RETURN_GENERATED_KEYS);
 			pstmt3.setString(1, CITY_2);
@@ -157,8 +217,8 @@ public class UserDAOTest {
 			pstmt3.executeUpdate();
 			rs3 = pstmt3.getGeneratedKeys();
 			assertTrue("No key generated", rs3.next());
-			int id = rs3.getInt(1);
-			userDAO.addResidence(USERNAME_3, CITY_2, STATE_2, ZIP_2);
+			id = rs3.getInt(1);
+			userDAO.modifyResidence(USERNAME_3, CITY_2, STATE_2, ZIP_2);
 			pstmt4 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
 			pstmt4.setString(1, USERNAME_3);
 			rs4 = pstmt4.executeQuery();
@@ -173,7 +233,7 @@ public class UserDAOTest {
 			rs5 = pstmt5.getGeneratedKeys();
 			assertTrue("No key generated", rs5.next());
 			int id2 = rs5.getInt(1);
-			userDAO.addResidence(USERNAME_4, CITY_3, 41, ZIP_3);
+			userDAO.modifyResidence(USERNAME_4, CITY_3, 41, ZIP_3);
 			pstmt6 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
 			pstmt6.setString(1, USERNAME_4);
 			rs6 = pstmt6.executeQuery();
@@ -191,12 +251,136 @@ public class UserDAOTest {
 			DBUtil.closeStatement(pstmt6);
 			DBUtil.closeResultSet(rs6);
 		}
+		
+		//modify
+		userDAO.modifyResidence(USERNAME_4, CITY_2, STATE_2, ZIP_2);
+		PreparedStatement pstmt7 = null;
+		ResultSet rs7 = null;
+		PreparedStatement pstmt8 = null;
+		ResultSet rs8 = null;
+		try {
+			//modify to existing loc
+			pstmt7 = dbUtil.getConnection().prepareStatement("SELECT loc_ID FROM residence WHERE std_ID=?");
+			pstmt7.setString(1, USERNAME_4);
+			rs7 = pstmt7.executeQuery();
+			assertTrue("Residence not found", rs7.next());
+			assertEquals("Not updated to correct location", id, rs7.getInt(1));
+			//modify to new loc
+			userDAO.modifyResidence(USERNAME_4, "Anytown", 53, 48539);
+			pstmt8 = 
+					dbUtil.getConnection().prepareStatement(
+							"SELECT city, state, ZIP "
+							+ "FROM residence JOIN location ON residence.loc_ID = location.ID "
+							+ "WHERE residence.std_ID=?");
+			pstmt8.setString(1, USERNAME_4);
+			rs8 = pstmt8.executeQuery();
+			assertTrue("Residence not found", rs8.next());
+			assertEquals("City not updated", "Anytown", rs8.getString(1));
+			assertEquals("State not updated", 53, rs8.getInt(2));
+			assertEquals("ZIP not updated", 48539, rs8.getInt(3));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs7);
+			DBUtil.closeResultSet(rs8);
+			DBUtil.closeStatement(pstmt7);
+			DBUtil.closeStatement(pstmt8);
+		}
+	}
+	
+	@Test
+	public void testAddFavField() {
+		int fieldID = userDAO.getFieldID("Psychology");
+		userDAO.addFavField(USERNAME_3, fieldID, 1);
+		FavoriteFieldOfStudy field = userDAO.getFavFields(USERNAME_3).get(0);
+		assertEquals("Added field of study name not correct", "Psychology", field.getFieldOfStudy());
+		assertEquals("Added field of study rank not correct", 1, field.getRank());
+	}
+	
+	@Test
+	public void testGetFavFields() {
+		//no favs
+		assertEquals("User without favorite fields returns list size > 0", 0, userDAO.getFavFields(USERNAME_4).size());
+		
+		//one fav
+		int fieldID = userDAO.getFieldID("Mathematics and Statistics");
+		int fieldID2 = userDAO.getFieldID("Engineering");
+		int fieldID3 = userDAO.getFieldID("Computer and Information Sciences and Support Services");
+
+		userDAO.addFavField(USERNAME_4, fieldID, 4);
+		List<FavoriteFieldOfStudy> fields = userDAO.getFavFields(USERNAME_4);
+		assertEquals("More than one favorite field of study found", 1, fields.size());
+		assertEquals("Field name not correct", "Mathematics and Statistics", fields.get(0).getFieldOfStudy());
+		assertEquals("Rank not correct", 4, fields.get(0).getRank());
+		
+		//multiple favs
+		userDAO.addFavField(USERNAME_4, fieldID2, 2);
+		userDAO.addFavField(USERNAME_4, fieldID3, 6);
+		fields = userDAO.getFavFields(USERNAME_4);
+		assertEquals("Wrong number of favorite fields", 3, fields.size());
+		assertEquals("Field name not correct", "Engineering", fields.get(0).getFieldOfStudy());
+		assertEquals("Rank not correct", 2, fields.get(0).getRank());
+		assertEquals("Field name not correct", "Mathematics and Statistics", fields.get(1).getFieldOfStudy());
+		assertEquals("Rank not correct", 4, fields.get(1).getRank());
+		assertEquals("Field name not correct", "Computer and Information Sciences and Support Services", 
+				fields.get(2).getFieldOfStudy());
+		assertEquals("Rank not correct", 6, fields.get(2).getRank());
+	}
+		
+	@Test
+	public void testDeleteFavField() {
+		String field1 = "Biological and Biomedical Sciences";
+		String field2 = "Foreign Languages, Literatures, and Linguistics";
+		String field3 = "Philosophy and Religious Studies";
+		
+		int fieldID = userDAO.getFieldID(field1);
+		userDAO.addFavField(USERNAME_1, fieldID, 2);
+
+		//delete only fav
+		userDAO.deleteFavField(USERNAME_1, fieldID);
+		assertEquals("Favorite field not deleted", 0, userDAO.getFavFields(USERNAME_1).size());
+
+		int fieldID2 = userDAO.getFieldID(field2);
+		int fieldID3 = userDAO.getFieldID(field3);
+		userDAO.addFavField(USERNAME_1, fieldID2, 3);
+		userDAO.addFavField(USERNAME_1, fieldID3, 1);
+		
+		//delete 1 of 2
+		userDAO.deleteFavField(USERNAME_1, fieldID3);
+		assertEquals("Wrong number of favorite fields remaining", 1, userDAO.getFavFields(USERNAME_1).size());
+		assertEquals("Wrong field deleted", field2, userDAO.getFavFields(USERNAME_1).get(0).getFieldOfStudy());
+		
+		//delete 2 of 2
+		userDAO.deleteFavField(USERNAME_1, fieldID2);
+		assertEquals("Favorite field not deleted", 0, userDAO.getFavFields(USERNAME_1).size());
+	}
+	
+	@Test
+	public void testAddFavSchool() {
+		//TODO implement. Holding off until we have schools in our db
+	}
+	
+	@Test
+	public void testGetFavSchools() {
+		//TODO implement. Holding off until we have schools in our db
+	}
+	
+	@Test
+	public void testUpdateFavSchool() {
+		//TODO implement. Holding off until we have schools in our db
+	}
+	
+	@Test
+	public void testDeleteFavSchool() {
+		//TODO implement. Holding off until we have schools in our db
 	}
 
 	@After
 	public void cleanUp() {
 		cleanUpResidence();
 		cleanUpLocations();
+		cleanUpFavoriteFields();
+		cleanUpFavoriteSchools();
 		cleanUpUser();
 		
 		//ALWAYS LAST
@@ -237,6 +421,30 @@ public class UserDAOTest {
 		try {
 			stmt = dbUtil.getConnection().createStatement();
 			stmt.executeUpdate("DELETE FROM user");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(stmt);
+		}
+	}
+	
+	private void cleanUpFavoriteFields() {
+		Statement stmt = null;
+		try {
+			stmt = dbUtil.getConnection().createStatement();
+			stmt.executeUpdate("DELETE FROM favoriteFieldsOfStudy");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(stmt);
+		}
+	}
+	
+	private void cleanUpFavoriteSchools() {
+		Statement stmt = null;
+		try {
+			stmt = dbUtil.getConnection().createStatement();
+			stmt.executeUpdate("DELETE FROM favoriteSchools");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
