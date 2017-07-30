@@ -237,7 +237,11 @@ public class UserDAO {
 	//get fields of study?
 
 	/**
-	 * Adds a favorite field of study. Does not check if it already exists. Does not check if rank already assigned.
+	 * Adds a favorite field of study.
+	 * Does not check: 
+	 * 		-if ID exists in fieldsOfStudy table
+	 * 		-if entry for this field and user already exists
+	 * 		-if user has already assigned this rank
 	 * 
 	 * @param userName User adding the favorite
 	 * @param fieldID ID of the field of study to add
@@ -253,6 +257,7 @@ public class UserDAO {
 			pstmt.setString(1, userName);
 			pstmt.setInt(2, fieldID);
 			pstmt.setInt(3, rank);
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
