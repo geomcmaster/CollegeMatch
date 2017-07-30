@@ -322,6 +322,11 @@ public class UserDAOTest {
 				fields.get(2).getFieldOfStudy());
 		assertEquals("Rank not correct", 6, fields.get(2).getRank());
 	}
+	
+	@Test
+	public void testDeleteFavField() {
+		
+	}
 
 	@After
 	public void cleanUp() {

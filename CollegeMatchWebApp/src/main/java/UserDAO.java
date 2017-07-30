@@ -299,8 +299,18 @@ public class UserDAO {
 		}
 		return favs;
 	}
+	
 	//update favorite field of study
-	//delete favorite field of study
+
+	/**
+	 * Deletes one of a user's favorites field of study
+	 * 
+	 * @param userName The user deleting a favorite field
+	 * @param fieldID The ID of the field to delete from this user's favorites
+	 */
+	public void deleteFavField(String userName, int fieldID) {
+		
+	}
 	
 	//SCHOOLS
 	//add favorite school
