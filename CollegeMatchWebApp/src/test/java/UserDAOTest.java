@@ -322,12 +322,28 @@ public class UserDAOTest {
 				fields.get(2).getFieldOfStudy());
 		assertEquals("Rank not correct", 6, fields.get(2).getRank());
 	}
+	
+	@Test
+	public void testAddFavSchool() {
+		//TODO implement
+	}
+	
+	@Test
+	public void testUpdateFavSchool() {
+		//TODO implement
+	}
+	
+	@Test
+	public void testDeleteFavSchool() {
+		//TODO implement
+	}
 
 	@After
 	public void cleanUp() {
 		cleanUpResidence();
 		cleanUpLocations();
 		cleanUpFavoriteFields();
+		cleanUpFavoriteSchools();
 		cleanUpUser();
 		
 		//ALWAYS LAST
@@ -380,6 +396,18 @@ public class UserDAOTest {
 		try {
 			stmt = dbUtil.getConnection().createStatement();
 			stmt.executeUpdate("DELETE FROM favoriteFieldsOfStudy");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(stmt);
+		}
+	}
+	
+	private void cleanUpFavoriteSchools() {
+		Statement stmt = null;
+		try {
+			stmt = dbUtil.getConnection().createStatement();
+			stmt.executeUpdate("DELETE FROM favoriteSchools");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

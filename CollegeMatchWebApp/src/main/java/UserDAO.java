@@ -303,9 +303,42 @@ public class UserDAO {
 	//delete favorite field of study
 	
 	//SCHOOLS
-	//add favorite school
+	/**
+	 * Adds a favorite school for this user
+	 * 
+	 * @param userName The user adding a favorite
+	 * @param schoolID The ID of the school to add
+	 */
+	public void addFavSchool(String userName, int schoolID) {
+		//TODO implement
+	}
+	
 	//get favorite schools
-	//update favorite schools
-	//delete favorite schools
+
+	/**
+	 * Updates a favorite school entry. Currently no way to update only certain columns.
+	 * 
+	 * @param userName The user making the update
+	 * @param schoolID The school entry to update
+	 * @param rank The new rank value
+	 * @param appStatus The new app_status value
+	 * @param finAid The new fin_aid value
+	 * @param loanAmt The new loan_amt value
+	 * @param meritScholarships The new merit_scholarships value
+	 */
+	public void updateFavSchool(String userName, int schoolID, 
+			int rank, String appStatus, int finAid, int loanAmt, int meritScholarships) {
+		//TODO implement
+	}
+
+	/**
+	 * Deletes a favorite school for a user
+	 * 
+	 * @param userName The user deleting the entry
+	 * @param schoolID The school entry to delete
+	 */
+	public void deleteFavSchool(String userName, int schoolID) {
+		//TODO implement
+	}
 
 }
