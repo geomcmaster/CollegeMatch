@@ -285,7 +285,7 @@ public class UserDAOTest {
 				fields.get(2).getFieldOfStudy());
 		assertEquals("Rank not correct", 6, fields.get(2).getRank());
 	}
-	
+		
 	@Test
 	public void testDeleteFavField() {
 		String field1 = "Biological and Biomedical Sciences";
@@ -313,12 +313,28 @@ public class UserDAOTest {
 		userDAO.deleteFavField(USERNAME_1, fieldID2);
 		assertEquals("Favorite field not deleted", 0, userDAO.getFavFields(USERNAME_1).size());
 	}
+	
+	@Test
+	public void testAddFavSchool() {
+		//TODO implement. Holding off until we have schools in our db
+	}
+	
+	@Test
+	public void testUpdateFavSchool() {
+		//TODO implement. Holding off until we have schools in our db
+	}
+	
+	@Test
+	public void testDeleteFavSchool() {
+		//TODO implement. Holding off until we have schools in our db
+	}
 
 	@After
 	public void cleanUp() {
 		cleanUpResidence();
 		cleanUpLocations();
 		cleanUpFavoriteFields();
+		cleanUpFavoriteSchools();
 		cleanUpUser();
 		
 		//ALWAYS LAST
@@ -371,6 +387,18 @@ public class UserDAOTest {
 		try {
 			stmt = dbUtil.getConnection().createStatement();
 			stmt.executeUpdate("DELETE FROM favoriteFieldsOfStudy");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(stmt);
+		}
+	}
+	
+	private void cleanUpFavoriteSchools() {
+		Statement stmt = null;
+		try {
+			stmt = dbUtil.getConnection().createStatement();
+			stmt.executeUpdate("DELETE FROM favoriteSchools");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

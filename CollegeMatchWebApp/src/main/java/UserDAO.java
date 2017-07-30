@@ -1,6 +1,4 @@
 package main.java;
-import static org.junit.Assert.assertTrue;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -355,9 +353,86 @@ public class UserDAO {
 	}
 	
 	//SCHOOLS
-	//add favorite school
+	/**
+	 * Adds a favorite school for this user
+	 * 
+	 * @param userName The user adding a favorite
+	 * @param schoolID The ID of the school to add
+	 */
+	public void addFavSchool(String userName, int schoolID) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"INSERT INTO favoriteSchools (std_ID, school_ID) VALUES (?, ?)");
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, schoolID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
+	
 	//get favorite schools
-	//update favorite schools
-	//delete favorite schools
+
+	/**
+	 * Updates a favorite school entry. Currently no way to update only certain columns.
+	 * 
+	 * @param userName The user making the update
+	 * @param schoolID The school entry to update
+	 * @param rank The new rank value
+	 * @param appStatus The new app_status value
+	 * @param finAid The new fin_aid value
+	 * @param loanAmt The new loan_amt value
+	 * @param meritScholarships The new merit_scholarships value
+	 */
+	public void updateFavSchool(String userName, int schoolID, 
+			int rank, String appStatus, int finAid, int loanAmt, int meritScholarships) {
+		String query = 
+				"UPDATE favoriteSchools "
+				+ "SET rank=?, app_status=?, fin_aid=?, loan_amt=?, merit_scholarships=? "
+				+ "WHERE std_ID=? AND school_ID=?";
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement(query);
+			pstmt.setInt(1, rank);
+			pstmt.setString(2, appStatus);
+			pstmt.setInt(3, finAid);
+			pstmt.setInt(4, loanAmt);
+			pstmt.setInt(5, meritScholarships);
+			pstmt.setString(6, userName);
+			pstmt.setInt(7, schoolID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
+
+	/**
+	 * Deletes a favorite school for a user
+	 * 
+	 * @param userName The user deleting the entry
+	 * @param schoolID The school entry to delete
+	 */
+	public void deleteFavSchool(String userName, int schoolID) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"DELETE FROM favoriteSchools "
+							+ "WHERE std_ID=? AND school_ID=?");
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, schoolID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
 
 }
