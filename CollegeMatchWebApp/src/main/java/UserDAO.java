@@ -375,7 +375,46 @@ public class UserDAO {
 		}
 	}
 	
-	//get favorite schools
+	/**
+	 * Gets a user's favorite schools
+	 * 
+	 * @param userName The user whose favorites we are grabbing
+	 * @return A list of favorite schools from highest (i.e. 1) to lowest
+	 */
+	public List<FavoriteSchool> getFavSchools(String userName) {
+		LinkedList<FavoriteSchool> favs = new LinkedList<FavoriteSchool>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement(
+							"SELECT school.name, rank, app_status, fin_aid, loan_amt, merit_scholarships "
+							+ "FROM favoriteSchools "
+							+ "JOIN fieldsSchools ON favoriteSchools.school_ID = school.ID "
+							+ "WHERE std_ID=? "
+							+ "ORDER BY rank ASC");
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				FavoriteSchool fav = new FavoriteSchool();
+				School school = new School();
+				school.setName(rs.getString(1));
+				fav.setSchool(school);
+				fav.setRank(rs.getInt(2));
+				fav.setStatus(rs.getString(3));
+				fav.setFinancialAid(rs.getInt(4));
+				fav.setLoan(rs.getInt(5));
+				fav.setMerit(rs.getInt(6));
+				favs.addLast(fav);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+		return favs;
+	}
 
 	/**
 	 * Updates a favorite school entry. Currently no way to update only certain columns.
