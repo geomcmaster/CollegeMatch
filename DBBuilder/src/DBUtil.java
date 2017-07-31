@@ -935,9 +935,7 @@ public class DBUtil {
 		PreparedStatement locationCheckStmt = null;
 		PreparedStatement locationStmt = null;
 		int locationID = 0;
-		//If location already exists in location table
-		
-		//If location doesn't exist yet in location table
+		//If location exists, don't insert. Otherwise, insert.
 		try {
 			
 			locationCheckStmt = conn.prepareStatement("SELECT * FROM location WHERE "
@@ -1003,7 +1001,6 @@ public class DBUtil {
 	 * Updates database with school info
 	 */
 	public void processSchool(Result result) {
-<<<<<<< HEAD
 		
 		//Fill in school table; also executes fillGenderDemographics
 		// and fillEthnicDemographics methods
@@ -1012,36 +1009,6 @@ public class DBUtil {
 		//Fill location table & school_loc table
 		fillSchool_loc(result);
 		
-=======
-		//TODO implement this method
-		//making notes on what we're going to need to do here
-		//might want helper methods for each table
-		//1. insert into demographics tables
-		//	- use the values from the object as is
-		//  - we also need to obtain IDs (from the AUTO_INCREMENT) 
-		//		for when we populate the record in the school table 
-		//		for this school. To do so, use: prepareStatement(Query, Statement.RETURN_GENERATED_KEYS); 
-		//		https://stackoverflow.com/a/14170703
-		//
-		//2. insert into school
-		//	- Top 5 fields
-		//		iterate over all fields to find top 5
-		//	- Demographics IDs
-		//		use value obtained above
-		//	- Everything else should be usable as is?
-		//
-		//3. insert into location
-		//	- search for an existing match, if so use that id for school_loc
-		//	- if no match, do an insert then use Statement.RETURN_GENERATED_KEYS again
-		//
-		//4. insert into school_loc
-		//	- use ID from location and the school ID
->>>>>>> d4fdc964d081a0e1bc9e3383b65ff8796db230f8
-		//
-		//5. insert into offers
-		//	- for each attribute, if value is 1 (or 2?), find ID for it 
-		//		in fieldsOfStudy, then insert into this table with that 
-		//		ID and the school ID
-		//
+		//TODO Offers
 	}
 }
