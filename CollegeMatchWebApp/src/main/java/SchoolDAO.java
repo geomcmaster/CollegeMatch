@@ -25,13 +25,13 @@ public class SchoolDAO {
 	}
 	
 	/**
-	 * Performs query based on user search. Does not yet support order by. Does not yet support complex conditions 
-	 * such as "OR" or subqueries. Currently schools only return name, url, in state/out of state tuition, 
-	 * city, and state, but we can modify this to be whatever we want to return to the user.
+	 * Performs query based on user search. Does not yet support order by. Currently schools 
+	 * only return name, url, in state/out of state tuition, city, and state, but we can 
+	 * modify this to be whatever we want to return to the user.
 	 * 
 	 * @param conditions The list of conditions to use in search
 	 * @param tablesToJoin Bitmap of tables to join on.
-	 * It is currently assumed that school_loc and location tables will be joined to retrieve location info.
+	 * It is currently assumed that school_loc and location tables will always be joined to retrieve location info.
 	 * @return A list of school objects returned by the query
 	 */
 	public List<School> getSchools(List<Condition> conditions, byte tablesToJoin) {
