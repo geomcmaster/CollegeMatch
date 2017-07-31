@@ -24,9 +24,12 @@ package main.java;
  * IN
  * 		IN ?
  * 
+ * OR_GROUP
+ * 		(cond1 OR cond2 OR ...)
+ * 
  * @author Geoff
  *
  */
 public enum CondType {
-	NO_COND, RANGE, EQ, GT, GE, LT, LE, NE, LIKE, IN
+	NO_COND, RANGE, EQ, GT, GE, LT, LE, NE, LIKE, IN, OR_GROUP
 }

@@ -153,6 +153,7 @@ public class UserDAOTest {
 	
 	@Test
 	public void testModifyResidence() {
+		//TODO test with strings
 		//NON-EXISTENT LOCATION
 		
 		//add residence in CITY_1
@@ -291,6 +292,7 @@ public class UserDAOTest {
 	
 	@Test
 	public void testGetResidence() {
+		//TODO test with strings
 		userDAO.createUser("resUserTest", "fleventyfive");
 		
 		//no residence yet
@@ -302,7 +304,7 @@ public class UserDAOTest {
 		Location validLoc = userDAO.getResidence("resUserTest");
 		assertTrue("Valid residence should return true", validLoc.isValid());
 		assertEquals("Correct city not returned", "Twin Peaks", validLoc.getCity());
-		assertEquals("Correct state not returned", 53, validLoc.getState());
+		assertEquals("Correct state not returned", 53, validLoc.getStateInt());
 		assertEquals("Correct ZIP not returned", 99228, validLoc.getZip());
 	}
 	

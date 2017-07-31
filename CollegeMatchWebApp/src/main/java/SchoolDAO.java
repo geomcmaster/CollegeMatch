@@ -74,8 +74,8 @@ public class SchoolDAO {
 	private String buildConditionString(Condition c, Index i) {
 		
 		CondVal val = c.getValue();
-		if (val.getType() == ValType.SUBQUERY) {
-			return buildSubqueryConditionString(c, i);
+		if (val.getType() == ValType.SINGLE_STRING_SUBQUERY) {
+			return buildSingleStringSubqueryConditionString(c, i);
 		} else if (val.getType() == ValType.OR_GROUP) {
 			//TODO handle this
 		}
@@ -113,26 +113,34 @@ public class SchoolDAO {
 		return condStr;
 	}
 	
-	private String buildSubqueryConditionString(Condition c, Index i) {
+	private String buildSingleStringSubqueryConditionString(Condition c, Index i) {
 		String condStr = c.getColumnName();
 		CondVal val = c.getValue();
 		switch (c.getConditionType()) {
 			case RANGE:	throw new RuntimeException("Subquery condition does not support range");
 			case EQ:	condStr += " = " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case GT:	condStr += " > " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case GE:	condStr += " >= " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case LT:	condStr += " < " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case LE:	condStr += " <= " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case NE:	condStr += " <> " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case LIKE:	condStr += " LIKE " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 			case IN: condStr += " IN " + val.getSubQuery();
+						val.setIndex(i.getAndIncrement());
 						break;
 		}
 		return condStr;
@@ -147,7 +155,7 @@ public class SchoolDAO {
 	private StringBuilder selectFromJoin(byte fromTables, byte tablesToJoin) {
 		String baseQuery = 
 				"SELECT school.name AS name, school.url AS url, school.tuition_out AS outOfState, "
-				+ "school.tuition_in AS inState, location.city AS city, location.state AS state FROM school";
+				+ "school.tuition_in AS inState, location.city AS city, location.state_string AS stateStr FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//FROM
 		if ((fromTables & RESIDENCE) == RESIDENCE) {
@@ -212,6 +220,8 @@ public class SchoolDAO {
 						pstmt.setDouble(val.getIndex(), val.getDoubleVal());
 					} else if (vtype == ValType.STRING) {
 						pstmt.setString(val.getIndex(), val.getStrVal());
+					} else if (vtype == ValType.SINGLE_STRING_SUBQUERY) {
+						pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
 					}
 				}
 			}
@@ -220,7 +230,7 @@ public class SchoolDAO {
 				School s = new School();
 				Location l = new Location();
 				l.setCity(rs.getString("city"));
-				l.setState(rs.getInt("state"));
+				l.setStateStr(rs.getString("stateString"));
 				s.setLocation(l);
 				s.setName(rs.getString("name"));
 				s.setWebsite(rs.getString("url"));

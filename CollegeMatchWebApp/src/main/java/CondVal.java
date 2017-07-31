@@ -13,7 +13,8 @@ public class CondVal {
 	private ValType type;
 	
 	private String strVal;
-	private String subQuery;	//assumes that the caller is setting the entire subquery string
+	private String subQuery;
+	private String subQueryStrVal;	//value to put in the subquery, such as user name
 	private int intVal;
 	private double doubleVal;
 	private List<Condition> orConditions;	//for conditions of the form ...AND (cond1 OR cond2) AND...
@@ -178,6 +179,20 @@ public class CondVal {
 	 */
 	public void setSubQuery(String subQuery) {
 		this.subQuery = subQuery;
+	}
+
+	/**
+	 * @return the String value to insert into a subquery
+	 */
+	public String getSubQueryStrVal() {
+		return subQueryStrVal;
+	}
+
+	/**
+	 * @param subQueryStrVal the String value to insert into a subquery
+	 */
+	public void setSubQueryStrVal(String subQueryStrVal) {
+		this.subQueryStrVal = subQueryStrVal;
 	}
 
 	/**
