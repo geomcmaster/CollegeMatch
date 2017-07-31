@@ -20,7 +20,7 @@ public class Main {
 		DBUtil dbutil = new DBUtil(mysqluser, mysqlpw);
 		
 		switch(Integer.parseInt(args[3])) {
-			case 1: dbutil.createDatabase();	//if creating database, fall through to create tables
+			case 1: dbutil.createDatabase();	//if creating database, no "break;" i.e. fall through to create tables
 			case 2: dbutil.createTables();
 					break;
 			case 3: dbutil.clearTables();

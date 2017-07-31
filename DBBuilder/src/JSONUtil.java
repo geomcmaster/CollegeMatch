@@ -114,7 +114,8 @@ public class JSONUtil {
 			+ "school.state_fips," 
 			+ "school.city,"
 			+ "school.zip," 
-			+ "school.region_id";
+			+ "school.region_id,"
+			+ "school.state";
 	
 	private static final String ATTRIBUTES = 
 			SCHOOL + SAT_ACT_SCORES + DEMOGRPHICS + MAJORS + FINANCES_and_LOCATION;
@@ -186,10 +187,9 @@ public class JSONUtil {
 	 */
 	private void processPage(Root root) {
 		for (Result result : root.results) {
-	    	//for now we just print the school name
-	    	//when database stuff is ready, we'll call processSchool
-	    	//		to populate db from a result
-			//dbUtil.processSchool(result);
+	    	//call dbUtil.processSchool(result) to load all tables
+			//with each school i.e. result's information
+			dbUtil.processSchool(result);
 			System.out.println(result.schoolName);
 		}
 	}

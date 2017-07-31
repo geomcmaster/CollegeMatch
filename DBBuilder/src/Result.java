@@ -1,4 +1,5 @@
 import com.google.gson.annotations.SerializedName;
+import java.util.*;
 
 /**
  * Represents a result element, i.e. a school. Fields will be expanded to include
@@ -27,28 +28,28 @@ public class Result {
 	@SerializedName("2014.admissions.admission_rate.overall")
 	double admissionRate;
 	@SerializedName("2014.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings")
-	double moneyEarnings_7yrs_avg;
+	int moneyEarnings_6yrs_avg;
 	@SerializedName("2014.cost.attendance.academic_year")
-	double moneyAvgCost;
+	int moneyAvgCost;
 	@SerializedName("2014.aid.loan_principal")
 	double moneyMedianLoan;
 	//# of undergrads seeking certification/degree
 	@SerializedName("2014.student.size")
 	int schoolStudentSize;
 	@SerializedName("2014.student.demographics.avg_family_income")
-	double moneyFamilyIncome_avg;
+	int moneyFamilyIncome_avg;
 	@SerializedName("2014.student.demographics.median_family_income")
-	double moneyFamilyIncome_median;
+	int moneyFamilyIncome_median;
 	@SerializedName("2014.cost.tuition.out_of_state")
-	double moneyTuition_out_of_state;
+	int moneyTuition_and_fees_out_of_state;
 	@SerializedName("2014.cost.tuition.in_state")
-	double moneyTuition_in_state;
+	int moneyTuition_and_fees_in_state;
 	//average age of student entry
 	@SerializedName("2014.student.demographics.age_entry")
 	int studentEntryAge;
 	//percentage share of 1st-generation students
 	@SerializedName("2014.student.demographics.first_generation")
-	double student_first_generation_students;
+	double student_first_generation_students_share;
 	@SerializedName("school.online_only")
 	int schoolDistanceLearning;
 	@SerializedName("2014.student.demographics.men")
@@ -94,11 +95,11 @@ public class Result {
 	@SerializedName("2014.admissions.sat_scores.75th_percentile.writing")
 	double SAT_75_writing;
 	@SerializedName("2014.admissions.sat_scores.midpoint.critical_reading")
-	double SAT_reading_avg;
+	double SAT_midpoint_reading;
 	@SerializedName("2014.admissions.sat_scores.midpoint.math")
-	double SAT_math_avg;
+	double SAT_midpoint_math;
 	@SerializedName("2014.admissions.sat_scores.midpoint.writing")
-	double SAT_writing_avg;
+	double SAT_midpoint_writing;
 	@SerializedName("2014.admissions.act_scores.25th_percentile.cumulative")
 	double ACT_25_cumulative;
 	@SerializedName("2014.admissions.act_scores.75th_percentile.cumulative")
@@ -218,4 +219,107 @@ public class Result {
 	@SerializedName("school.region_id")
 	int locationRegionID;
 	
+	//Method for getting an ascending sorted ArrayList<Double> with
+	//top 5 fields of study for school
+	public ArrayList<String> topFiveFields() {
+	ArrayList<Double> studyList = new ArrayList<Double>();
+	ArrayList<String> studyListString = new ArrayList<String>();
+	ArrayList<Double> topFiveFields = new ArrayList<Double>();
+	ArrayList<String> topFiveFieldsString = new ArrayList<String>();
+	studyList.add(studyAgriculture);
+	studyListString.add("Agriculture, Agriculture Operations, and Related Sciences");
+	studyList.add(studyNaturalResources);
+	studyListString.add("Natural Resources and Conservation");
+	studyList.add(studyArchitecture);
+	studyListString.add("Architecture and Related Services");
+	studyList.add(studyCultureGender);
+	studyListString.add("Area, Ethnic, Cultural, Gender, and Group Studies");
+	studyList.add(studyCommunication);
+	studyListString.add("Communication, Journalism, and Related Programs");
+	studyList.add(studyCommunicationsTechnology);
+	studyListString.add("Communications Technologies/Technicians and Support Services");
+	studyList.add(studyComputer_and_Information_Science);
+	studyListString.add("Computer and Information Sciences and Support Services");
+	studyList.add(studyPersonalCulinary);
+	studyListString.add("Personal and Culinary Services");
+	studyList.add(studyEducation);
+	studyListString.add("Education");
+	studyList.add(studyEngineering);
+	studyListString.add("Engineering");
+	studyList.add(studyEngineering_technology);
+	studyListString.add("Engineering Technologies and Engineering-Related Fields");
+	studyList.add(studyForeignLanguage_and_Linguistics);
+	studyListString.add("Foreign Languages, Literatures, and Linguistics");
+	studyList.add(studyFamilyConsumerScience);
+	studyListString.add("Family and Consumer Sciences/Human Sciences");
+	studyList.add(studyLegal);
+	studyListString.add("Legal Professions and Studies");
+	studyList.add(studyEnglish);
+	studyListString.add("English Language and Literature/Letters");
+	studyList.add(studyLiberalArtsHumanities);
+	studyListString.add("Liberal Arts and Sciences, General Studies and Humanities");
+	studyList.add(studyLibraryScience);
+	studyListString.add("Library Science");
+	studyList.add(studyBiologicalSciences);
+	studyListString.add("Biological and Biomedical Sciences");
+	studyList.add(studyMathematics_and_Statistics);
+	studyListString.add("Mathematics and Statistics");
+	studyList.add(studyMilitaryTechnologies);
+	studyListString.add("Military Technologies and Applied Sciences");
+	studyList.add(studyMultidisciplinaryStudies);
+	studyListString.add("Multi/Interdisciplinary Studies");
+	studyList.add(studyParksRecreationLeisureFitnessStudies);
+	studyListString.add("Parks, Recreation, Leisure, and Fitness Studies");
+	studyList.add(studyPhilosophy_and_Religion);
+	studyListString.add("Philosophy and Religious Studies");
+	studyList.add(studyTheologyVocation);
+	studyListString.add("Theology and Religious Vocations");
+	studyList.add(studyPhysicalScience);
+	studyListString.add("Physical Sciences");
+	studyList.add(studyScienceTechnology);
+	studyListString.add("Science Technologies/Technicians");
+	studyList.add(studyPsychology);
+	studyListString.add("Psychology");
+	studyList.add(studySecurityLawEnforcement);
+	studyListString.add("Homeland Security, Law Enforcement, Firefighting and Related Protective ");
+	studyList.add(studyPublicAdminSocialService);
+	studyListString.add("Public Administration and Social Service Professions");
+	studyList.add(studySocialScience);
+	studyListString.add("Social Sciences");
+	studyList.add(studyConstruction);
+	studyListString.add("Construction Trades");
+	studyList.add(studyMechanicRepairTechnology);
+	studyListString.add("Mechanic and Repair Technologies/Technicians");
+	studyList.add(studyPrecisionProduction);
+	studyListString.add("Precision Production");
+	studyList.add(studyTransportation);
+	studyListString.add("Transportation and Materials Moving");
+	studyList.add(studyVisualPerforming);
+	studyListString.add("Visual and Performing Arts");
+	studyList.add(studyHealth);
+	studyListString.add("Health Professions and Related Programs");
+	studyList.add(studyBusinessMarketing);
+	studyListString.add("Business, Management, Marketing, and Related Support Services");
+	studyList.add(studyHistory);
+	studyListString.add("History");
+	
+	for (int j = 0; j < 5; j++) {
+		double max = 0;
+		String maxString = "";
+		int removalInt = 0;
+		for (int i = 0; i < studyList.size(); i++) {
+			if (max < studyList.get(i)) {
+				max = studyList.get(i);
+				maxString = studyListString.get(i);
+				removalInt = i;
+			}
+		}
+		studyList.remove(removalInt);
+		studyListString.remove(removalInt);
+		topFiveFieldsString.add(maxString);
+	}
+	return topFiveFieldsString;
+	}
 }
+
+
