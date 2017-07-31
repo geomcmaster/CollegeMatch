@@ -204,7 +204,6 @@ public class Result {
 	@SerializedName("2014.academics.program_percentage.history")
 	double studyHistory;
 	
-	
 	//location entity attributes
 	//state FIPS codes e.g. 1="Alabama"
 	@SerializedName("school.state_fips")
@@ -219,106 +218,192 @@ public class Result {
 	@SerializedName("school.region_id")
 	int locationRegionID;
 	
+	//Offers fields of study attributes
+	@SerializedName("2014.academics.program.bachelors.agriculture")
+	int offersAgriculture;
+	@SerializedName("2014.academics.program.bachelors.resources")
+	int offersResources;
+	@SerializedName("2014.academics.program.bachelors.architecture")
+	int offersArchitecture;
+	@SerializedName("2014.academics.program.bachelors.ethnic_cultural_gender")
+	int offersCultureGender;
+	@SerializedName("2014.academics.program.bachelors.communication")
+	int offersCommunication;
+	@SerializedName("2014.academics.program.bachelors.communication_technology")
+	int offersCommTech;
+	@SerializedName("2014.academics.program.bachelors.computer")
+	int offersCS;
+	@SerializedName("2014.academics.program.bachelors.persona_culinary")
+	int offersCulinary;
+	@SerializedName("2014.academics.program.bachelors.education")
+	int offersEducation;
+	@SerializedName("2014.academics.program.bachelors.engineering")
+	int offersEngineering;
+	@SerializedName("2014.academics.program.bachelors.engineering_technology")
+	int offersEngineeringTech;
+	@SerializedName("2014.academics.program.bachelors.language")
+	int offersLanguage;
+	@SerializedName("2014.academics.program.bachelors.family_consumer_science")
+	int offersFamilyConsumerScience;
+	@SerializedName("2014.academics.program.bachelors.legal")
+	int offersLegal;
+	@SerializedName("2014.academics.program.bachelors.english")
+	int offersEnglish;
+	@SerializedName("2014.academics.program.bachelors.humanities")
+	int offersHumanities;
+	@SerializedName("2014.academics.program.bachelors.library")
+	int offersLibrary;
+	@SerializedName("2014.academics.program.bachelors.biological")
+	int offersBiologicalSciences;
+	@SerializedName("2014.academics.program.bachelors.mathematics")
+	int offersMath;
+	@SerializedName("2014.academics.program.bachelors.military")
+	int offersMilitary;
+	@SerializedName("2014.academics.program.bachelors.multidiscipline")
+	int offersMultidiscipline;
+	@SerializedName("2014.academics.program.bachelors.parks_recreation_fitness")
+	int offersParksAndRec;
+	@SerializedName("2014.academics.program.bachelors.philosophy_religious")
+	int offersPhilRel;
+	@SerializedName("2014.academics.program.bachelors.theology_religious_vocation")
+	int offersTheology;
+	@SerializedName("2014.academics.program.bachelors.physical_science")
+	int offersPhySci;
+	@SerializedName("2014.academics.program.bachelors.science_technology")
+	int offersSciTech;
+	@SerializedName("2014.academics.program.bachelors.psychology")
+	int offersPsych;
+	@SerializedName("2014.academics.program.bachelors.security_law_enforcement")
+	int offersLawEnforce;
+	@SerializedName("2014.academics.program.bachelors.public_administration_social_service")
+	int offersPublicAdmin;
+	@SerializedName("2014.academics.program.bachelors.social_science")
+	int offersSocialSci;
+	@SerializedName("2014.academics.program.bachelors.construction")
+	int offersConstruct;
+	@SerializedName("2014.academics.program.bachelors.mechanic_repair_technology")
+	int offersMechTech;
+	@SerializedName("2014.academics.program.bachelors.precision_production")
+	int offersPrecProd;
+	@SerializedName("2014.academics.program.bachelors.transportation")
+	int offersTransport;
+	@SerializedName("2014.academics.program.bachelors.visual_performing")
+	int offersPerforming;
+	@SerializedName("2014.academics.program.bachelors.health")
+	int offersHealth;
+	@SerializedName("2014.academics.program.bachelors.business_marketing")
+	int offersBusinessMarketing;
+	@SerializedName("2014.academics.program.bachelors.history")
+	int offersHistory;
+	
 	//Method for getting an ascending sorted ArrayList<Double> with
 	//top 5 fields of study for school
-	public ArrayList<String> topFiveFields() {
+	public ArrayList<Integer> topFiveFields() {
 	ArrayList<Double> studyList = new ArrayList<Double>();
-	ArrayList<String> studyListString = new ArrayList<String>();
-	ArrayList<Double> topFiveFields = new ArrayList<Double>();
-	ArrayList<String> topFiveFieldsString = new ArrayList<String>();
+	ArrayList<Integer> studyListInt = new ArrayList<Integer>();
+	ArrayList<Integer> topFiveFieldsInt = new ArrayList<Integer>();
 	studyList.add(studyAgriculture);
-	studyListString.add("Agriculture, Agriculture Operations, and Related Sciences");
 	studyList.add(studyNaturalResources);
-	studyListString.add("Natural Resources and Conservation");
 	studyList.add(studyArchitecture);
-	studyListString.add("Architecture and Related Services");
 	studyList.add(studyCultureGender);
-	studyListString.add("Area, Ethnic, Cultural, Gender, and Group Studies");
 	studyList.add(studyCommunication);
-	studyListString.add("Communication, Journalism, and Related Programs");
 	studyList.add(studyCommunicationsTechnology);
-	studyListString.add("Communications Technologies/Technicians and Support Services");
 	studyList.add(studyComputer_and_Information_Science);
-	studyListString.add("Computer and Information Sciences and Support Services");
-	studyList.add(studyPersonalCulinary);
-	studyListString.add("Personal and Culinary Services");
+	studyList.add(studyPersonalCulinary);;
 	studyList.add(studyEducation);
-	studyListString.add("Education");
 	studyList.add(studyEngineering);
-	studyListString.add("Engineering");
 	studyList.add(studyEngineering_technology);
-	studyListString.add("Engineering Technologies and Engineering-Related Fields");
 	studyList.add(studyForeignLanguage_and_Linguistics);
-	studyListString.add("Foreign Languages, Literatures, and Linguistics");
 	studyList.add(studyFamilyConsumerScience);
-	studyListString.add("Family and Consumer Sciences/Human Sciences");
 	studyList.add(studyLegal);
-	studyListString.add("Legal Professions and Studies");
 	studyList.add(studyEnglish);
-	studyListString.add("English Language and Literature/Letters");
 	studyList.add(studyLiberalArtsHumanities);
-	studyListString.add("Liberal Arts and Sciences, General Studies and Humanities");
 	studyList.add(studyLibraryScience);
-	studyListString.add("Library Science");
 	studyList.add(studyBiologicalSciences);
-	studyListString.add("Biological and Biomedical Sciences");
 	studyList.add(studyMathematics_and_Statistics);
-	studyListString.add("Mathematics and Statistics");
 	studyList.add(studyMilitaryTechnologies);
-	studyListString.add("Military Technologies and Applied Sciences");
 	studyList.add(studyMultidisciplinaryStudies);
-	studyListString.add("Multi/Interdisciplinary Studies");
 	studyList.add(studyParksRecreationLeisureFitnessStudies);
-	studyListString.add("Parks, Recreation, Leisure, and Fitness Studies");
 	studyList.add(studyPhilosophy_and_Religion);
-	studyListString.add("Philosophy and Religious Studies");
 	studyList.add(studyTheologyVocation);
-	studyListString.add("Theology and Religious Vocations");
 	studyList.add(studyPhysicalScience);
-	studyListString.add("Physical Sciences");
 	studyList.add(studyScienceTechnology);
-	studyListString.add("Science Technologies/Technicians");
 	studyList.add(studyPsychology);
-	studyListString.add("Psychology");
 	studyList.add(studySecurityLawEnforcement);
-	studyListString.add("Homeland Security, Law Enforcement, Firefighting and Related Protective ");
 	studyList.add(studyPublicAdminSocialService);
-	studyListString.add("Public Administration and Social Service Professions");
 	studyList.add(studySocialScience);
-	studyListString.add("Social Sciences");
 	studyList.add(studyConstruction);
-	studyListString.add("Construction Trades");
 	studyList.add(studyMechanicRepairTechnology);
-	studyListString.add("Mechanic and Repair Technologies/Technicians");
 	studyList.add(studyPrecisionProduction);
-	studyListString.add("Precision Production");
 	studyList.add(studyTransportation);
-	studyListString.add("Transportation and Materials Moving");
 	studyList.add(studyVisualPerforming);
-	studyListString.add("Visual and Performing Arts");
 	studyList.add(studyHealth);
-	studyListString.add("Health Professions and Related Programs");
 	studyList.add(studyBusinessMarketing);
-	studyListString.add("Business, Management, Marketing, and Related Support Services");
 	studyList.add(studyHistory);
-	studyListString.add("History");
-	
+	for (int counter = 1; counter <= studyList.size(); counter++) {
+		studyListInt.add(counter);
+	}
 	for (int j = 0; j < 5; j++) {
 		double max = 0;
-		String maxString = "";
+		int maxInt = 0;
 		int removalInt = 0;
 		for (int i = 0; i < studyList.size(); i++) {
 			if (max < studyList.get(i)) {
 				max = studyList.get(i);
-				maxString = studyListString.get(i);
+				maxInt = studyListInt.get(i);
 				removalInt = i;
 			}
 		}
 		studyList.remove(removalInt);
-		studyListString.remove(removalInt);
-		topFiveFieldsString.add(maxString);
+		studyListInt.remove(removalInt);
+		topFiveFieldsInt.add(maxInt);
 	}
-	return topFiveFieldsString;
+	return topFiveFieldsInt;
+	}
+	
+	//return ArrayList of fields of study that are offered
+	public ArrayList<Integer> getOffersFields() {
+		ArrayList<Integer> offersFieldsList = new ArrayList<Integer>();
+		offersFieldsList.add(offersAgriculture);
+		offersFieldsList.add(offersResources);
+		offersFieldsList.add(offersArchitecture);
+		offersFieldsList.add(offersCultureGender);
+		offersFieldsList.add(offersCommunication);
+		offersFieldsList.add(offersCommTech);
+		offersFieldsList.add(offersCS);
+		offersFieldsList.add(offersCulinary);
+		offersFieldsList.add(offersEducation);
+		offersFieldsList.add(offersEngineering);
+		offersFieldsList.add(offersEngineeringTech);
+		offersFieldsList.add(offersLanguage);
+		offersFieldsList.add(offersFamilyConsumerScience);
+		offersFieldsList.add(offersLegal);
+		offersFieldsList.add(offersEnglish);
+		offersFieldsList.add(offersHumanities);
+		offersFieldsList.add(offersLibrary);
+		offersFieldsList.add(offersBiologicalSciences);
+		offersFieldsList.add(offersMath);
+		offersFieldsList.add(offersMilitary);
+		offersFieldsList.add(offersMultidiscipline);
+		offersFieldsList.add(offersParksAndRec);
+		offersFieldsList.add(offersPhilRel);
+		offersFieldsList.add(offersTheology);
+		offersFieldsList.add(offersPhySci);
+		offersFieldsList.add(offersSciTech);
+		offersFieldsList.add(offersPsych);
+		offersFieldsList.add(offersLawEnforce);
+		offersFieldsList.add(offersPublicAdmin);
+		offersFieldsList.add(offersSocialSci);
+		offersFieldsList.add(offersConstruct);
+		offersFieldsList.add(offersMechTech);
+		offersFieldsList.add(offersPrecProd);
+		offersFieldsList.add(offersTransport);
+		offersFieldsList.add(offersPerforming);
+		offersFieldsList.add(offersHealth);
+		offersFieldsList.add(offersBusinessMarketing);
+		offersFieldsList.add(offersHistory);
+		
+		return offersFieldsList;
 	}
 }
 

@@ -85,11 +85,11 @@ public class DBUtil {
 			+ "control INT, "
 			+ "med_debt DOUBLE, "
 			+ "std_bdy_sz INT, "
-			+ "pop_prog_1 VARCHAR(255),"
-			+ "pop_prog_2 VARCHAR(255), "
-			+ "pop_prog_3 VARCHAR(255), "
-			+ "pop_prog_4 VARCHAR(255), "
-			+ "pop_prog_5 VARCHAR(255), "
+			+ "pop_prog_1 INT,"
+			+ "pop_prog_2 INT, "
+			+ "pop_prog_3 INT, "
+			+ "pop_prog_4 INT, "
+			+ "pop_prog_5 INT, "
 			+ "adm_rate DOUBLE, "
 			+ "avg_fam_inc INT, "
 			+ "med_fam_inc INT, "
@@ -281,6 +281,7 @@ public class DBUtil {
 	public void createTables() {
 		setDB();
 		Statement stmt = null;
+		CallableStatement csmt = null;
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(DROP_TABLES_PROC_1);
@@ -303,6 +304,7 @@ public class DBUtil {
 			System.out.println(e.toString());
 		} finally {
 			closeStatement(stmt);
+			closeStatement(csmt);
 		}
 		
 		populateRegion();
@@ -780,7 +782,7 @@ public class DBUtil {
 			}
 		}
 		catch (SQLException e) {
-			System.out.println(e.toString());
+			System.out.println(e.toString() + " fillGenderDemographics()");
 		}
 		finally {
 			closeStatement(genderStmt);
@@ -815,7 +817,7 @@ public class DBUtil {
 			}
 		}
 		catch (SQLException e) {
-			System.out.println(e.toString());
+			System.out.println(e.toString() + " fillEthnicDemographics()");
 		}
 		finally {
 			closeStatement(ethnicityStmt);
@@ -893,12 +895,37 @@ public class DBUtil {
 			schoolStmt.setDouble(32, result.moneyMedianLoan);
 			schoolStmt.setInt(33, result.schoolStudentSize);
 			//adding top five fields
-			ArrayList<String> topFive = result.topFiveFields();
-			schoolStmt.setString(34, topFive.get(0));
-			schoolStmt.setString(35, topFive.get(1));
-			schoolStmt.setString(36, topFive.get(2));
-			schoolStmt.setString(37, topFive.get(3));
-			schoolStmt.setString(38, topFive.get(4));
+			ArrayList<Integer> topFive = result.topFiveFields();
+			if (topFive.get(0) != 0) {
+				schoolStmt.setInt(34, topFive.get(0));
+			}
+			else {
+				schoolStmt.setNull(34, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(1) != 0) {
+				schoolStmt.setInt(35, topFive.get(1));
+			}
+			else {
+				schoolStmt.setNull(35, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(2) != 0) {
+				schoolStmt.setInt(36, topFive.get(2));
+			}
+			else {
+				schoolStmt.setNull(36, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(3) != 0) {
+				schoolStmt.setInt(37, topFive.get(3));
+			}
+			else {
+				schoolStmt.setNull(37, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(4) != 0) {
+				schoolStmt.setInt(38, topFive.get(4));
+			}
+			else {
+				schoolStmt.setNull(38, java.sql.Types.INTEGER);
+			}
 			schoolStmt.setDouble(39, result.admissionRate);
 			schoolStmt.setInt(40, result.moneyFamilyIncome_avg);
 			schoolStmt.setInt(41, result.moneyFamilyIncome_median);
@@ -921,7 +948,7 @@ public class DBUtil {
 		
 		}
 		catch (SQLException e) {
-			System.out.println(e.toString());
+			System.out.println(e.toString() + " fillSchool()");
 		}
 		finally {
 			
@@ -945,7 +972,12 @@ public class DBUtil {
 			locationCheckStmt.setInt(3, result.locationState);
 			locationCheckStmt.setInt(4, result.locationZIP);
 			ResultSet locationExists = locationCheckStmt.executeQuery();
-			if (!locationExists.next()) {
+			//Location exists. Return existing location's ID
+			if (locationExists.next()) {
+				locationID = locationExists.getInt("ID");
+			}
+			//Else location doesn't exist in database, so add it
+			else {
 				//close resultset for db resources
 				closeResultSet(locationExists);
 				locationStmt = conn.prepareStatement("INSERT INTO location "
@@ -996,6 +1028,33 @@ public class DBUtil {
 		
 	}
 	
+	public void offers(Result result) {
+		PreparedStatement offersStmt = null;
+		try {
+			//get ArrayList of fields of study that are offered
+			//Loop through each element of that ArrayList. If int value is 1,
+			//add that field_ID to the arrayList
+			ArrayList<Integer> fieldsOffered = result.getOffersFields();
+			for (int fieldCounter=0; fieldCounter < fieldsOffered.size(); fieldCounter++) {
+				if (fieldsOffered.get(fieldCounter) == 1) {
+					int fieldID = fieldCounter+1;
+					//insert school and field IDs into offers
+					offersStmt = conn.prepareStatement("INSERT INTO offers "
+							+ "(school_ID, field_ID) "
+							+ "VALUES (?, ?)");
+					offersStmt.setInt(1,  result.id);
+					offersStmt.setInt(2, fieldID);
+					offersStmt.executeUpdate();
+				}
+			}
+		}
+		catch(SQLException e) {
+			System.out.println(e.toString());
+		}
+		finally {
+			closeStatement(offersStmt);
+		}	
+	}
 	
 	/**
 	 * Updates database with school info
@@ -1009,6 +1068,7 @@ public class DBUtil {
 		//Fill location table & school_loc table
 		fillSchool_loc(result);
 		
-		//TODO Offers
+		//Fill offers table
+		offers(result);
 	}
 }
