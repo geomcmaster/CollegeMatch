@@ -153,7 +153,6 @@ public class UserDAOTest {
 	
 	@Test
 	public void testModifyResidence() {
-		//TODO test with strings
 		//NON-EXISTENT LOCATION
 		
 		//add residence in CITY_1
@@ -292,7 +291,6 @@ public class UserDAOTest {
 	
 	@Test
 	public void testGetResidence() {
-		//TODO test with strings
 		userDAO.createUser("resUserTest", "fleventyfive");
 		
 		//no residence yet

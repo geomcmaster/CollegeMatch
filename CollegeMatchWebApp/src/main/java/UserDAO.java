@@ -162,74 +162,76 @@ public class UserDAO {
 	}
 	
 	//RESIDENCE
-	/**
-	 * Modifies or adds (if it doesn't exist) an entry in the residence table that references location table. 
-	 * Creates location if necessary.
-	 * 
-	 * @param stdID user ID
-	 * @param city City of residence
-	 * @param state State of residence
-	 * @param zip ZIP code of residence
-	 */
-	public void modifyResidence(String stdID, String city, String state, int zip) {
-		//TODO this treats empty strings as such. Do we want to consider them null instead? At the very least
-		//	we probably shouldn't add a location for "", "", "", right?
-		PreparedStatement findLoc = null;
-		String getLocIdCnt = 
-				"SELECT id, COUNT(*) "
-				+ "FROM LOCATION "
-				+ "WHERE city = ? AND state_string = ? AND ZIP = ?";
-		PreparedStatement insertWithID = null;
-		String insertForExistingLoc = 
-				"INSERT INTO residence (std_ID, loc_ID) "
-				+ "VALUES (?, ?) ON DUPLICATE KEY UPDATE loc_ID=?";
-		PreparedStatement newLoc = null;
-		String createLoc = 
-				"INSERT INTO location (city, state_string, ZIP) "
-				+ "VALUES (?, ?, ?)";
-		PreparedStatement resWithNewLoc = null;
-		String createResForNewLoc = 
-				"INSERT INTO residence (std_ID, loc_ID) "
-				+ "VALUES (?, LAST_INSERT_ID()) ON DUPLICATE KEY UPDATE loc_ID=LAST_INSERT_ID()";
-		ResultSet rs = null;
-		
-		try {
-			findLoc = dbUtil.getConnection().prepareStatement(getLocIdCnt);
-			findLoc.setString(1, city);
-			findLoc.setString(2, state);
-			findLoc.setInt(3, zip);
-			rs = findLoc.executeQuery();
-			
-			//does location already exist?
-			if (rs.next() && rs.getInt(2) > 0) {
-				insertWithID = dbUtil.getConnection().prepareStatement(insertForExistingLoc);
-				insertWithID.setString(1, stdID);
-				int existingID = rs.getInt(1);			//existing location ID
-				insertWithID.setInt(2, existingID);
-				insertWithID.setInt(3, existingID);
-				insertWithID.executeUpdate();
-			} else {
-				//create location
-				newLoc = dbUtil.getConnection().prepareStatement(createLoc);
-				newLoc.setString(1, city);
-				newLoc.setString(2, state);
-				newLoc.setInt(3, zip);
-				newLoc.executeUpdate();
-				//create residence
-				resWithNewLoc = dbUtil.getConnection().prepareStatement(createResForNewLoc);
-				resWithNewLoc.setString(1, stdID);
-				resWithNewLoc.executeUpdate();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.closeStatement(findLoc);
-			DBUtil.closeStatement(insertWithID);
-			DBUtil.closeStatement(newLoc);
-			DBUtil.closeStatement(resWithNewLoc);
-			DBUtil.closeResultSet(rs);
-		}
-	}
+	//let's just stick to int values for states? 
+	//can uncomment if we change our minds, but that might require other updates
+//	/**
+//	 * Modifies or adds (if it doesn't exist) an entry in the residence table that references location table. 
+//	 * Creates location if necessary.
+//	 * 
+//	 * @param stdID user ID
+//	 * @param city City of residence
+//	 * @param state State of residence
+//	 * @param zip ZIP code of residence
+//	 */
+//	public void modifyResidence(String stdID, String city, String state, int zip) {
+//		//TODO this treats empty strings as such. Do we want to consider them null instead? At the very least
+//		//	we probably shouldn't add a location for "", "", "", right?
+//		PreparedStatement findLoc = null;
+//		String getLocIdCnt = 
+//				"SELECT id, COUNT(*) "
+//				+ "FROM LOCATION "
+//				+ "WHERE city = ? AND state_string = ? AND ZIP = ?";
+//		PreparedStatement insertWithID = null;
+//		String insertForExistingLoc = 
+//				"INSERT INTO residence (std_ID, loc_ID) "
+//				+ "VALUES (?, ?) ON DUPLICATE KEY UPDATE loc_ID=?";
+//		PreparedStatement newLoc = null;
+//		String createLoc = 
+//				"INSERT INTO location (city, state_string, ZIP) "
+//				+ "VALUES (?, ?, ?)";
+//		PreparedStatement resWithNewLoc = null;
+//		String createResForNewLoc = 
+//				"INSERT INTO residence (std_ID, loc_ID) "
+//				+ "VALUES (?, LAST_INSERT_ID()) ON DUPLICATE KEY UPDATE loc_ID=LAST_INSERT_ID()";
+//		ResultSet rs = null;
+//		
+//		try {
+//			findLoc = dbUtil.getConnection().prepareStatement(getLocIdCnt);
+//			findLoc.setString(1, city);
+//			findLoc.setString(2, state);
+//			findLoc.setInt(3, zip);
+//			rs = findLoc.executeQuery();
+//			
+//			//does location already exist?
+//			if (rs.next() && rs.getInt(2) > 0) {
+//				insertWithID = dbUtil.getConnection().prepareStatement(insertForExistingLoc);
+//				insertWithID.setString(1, stdID);
+//				int existingID = rs.getInt(1);			//existing location ID
+//				insertWithID.setInt(2, existingID);
+//				insertWithID.setInt(3, existingID);
+//				insertWithID.executeUpdate();
+//			} else {
+//				//create location
+//				newLoc = dbUtil.getConnection().prepareStatement(createLoc);
+//				newLoc.setString(1, city);
+//				newLoc.setString(2, state);
+//				newLoc.setInt(3, zip);
+//				newLoc.executeUpdate();
+//				//create residence
+//				resWithNewLoc = dbUtil.getConnection().prepareStatement(createResForNewLoc);
+//				resWithNewLoc.setString(1, stdID);
+//				resWithNewLoc.executeUpdate();
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.closeStatement(findLoc);
+//			DBUtil.closeStatement(insertWithID);
+//			DBUtil.closeStatement(newLoc);
+//			DBUtil.closeStatement(resWithNewLoc);
+//			DBUtil.closeResultSet(rs);
+//		}
+//	}
 	
 	/**
 	 * Modifies or adds (if it doesn't exist) an entry in the residence table that references location table. 
