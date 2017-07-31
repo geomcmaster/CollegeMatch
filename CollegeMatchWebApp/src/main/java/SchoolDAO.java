@@ -31,7 +31,9 @@ public class SchoolDAO {
 	}
 	
 	/**
-	 * Performs query based on user search. Does not yet support order by.
+	 * Performs query based on user search. Does not yet support order by. Does not yet support complex conditions 
+	 * such as "OR" or subqueries. Currently schools only return name, url, in state/out of state tuition, 
+	 * city, and state, but we can modify this to be whatever we want to return to the user.
 	 * 
 	 * @param conditions The list of conditions to use in search
 	 * @param fromTables Bitmap of tables (in addition to school) to include in FROM list
@@ -40,17 +42,11 @@ public class SchoolDAO {
 	 * @return A list of school objects returned by the query
 	 */
 	public List<School> getSchools(List<Condition> conditions, byte fromTables, byte tablesToJoin) {
-		List<School> schools = new LinkedList<School>();
+		LinkedList<School> schools = new LinkedList<School>();
 		
-		//TODO columns
-		String baseQuery = "SELECT ____ FROM school";
-//				+ "FROM school "
-//				+ "JOIN GenderDemographics ON school.GenderDemographics_ID = GenderDemographics.ID "
-//				+ "JOIN EthnicDemographics ON school.EthnicDemographics_ID = EthnicDemographics.ID "
-//				+ "JOIN school_loc ON school_loc.school_ID = school.ID "
-//				+ "JOIN location ON school_loc.loc_ID = location.ID "
-//				+ "JOIN region ON location.state = region.state "
-//				+ "JOIN offers ON ";
+		String baseQuery = 
+				"SELECT school.name AS name, school.url AS url, school.tuition_out AS outOfState, "
+				+ "school.tuition_in AS inState, location.city AS city, location.state AS state FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//FROM
 		if ((fromTables & RESIDENCE) == RESIDENCE) {
@@ -189,11 +185,20 @@ public class SchoolDAO {
 						pstmt.setString(val.getIndex(), val.getStrVal());
 					}
 				}
-				//call setString/Int/Double using index o
 			}
 			rs = pstmt.executeQuery();
-			
-			//TODO loop over rs
+			while (rs.next()) {
+				School s = new School();
+				Location l = new Location();
+				l.setCity(rs.getString("city"));
+				l.setState(rs.getInt("state"));
+				s.setLocation(l);
+				s.setName(rs.getString("name"));
+				s.setWebsite(rs.getString("url"));
+				s.setTuitionIn(rs.getInt("inState"));
+				s.setTuitionOut(rs.getInt("outOfState"));
+				schools.addLast(s);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
