@@ -77,7 +77,7 @@ public class SchoolDAO {
 		if (val.getType() == ValType.SINGLE_STRING_SUBQUERY) {
 			return buildSingleStringSubqueryConditionString(c, i);
 		} else if (val.getType() == ValType.OR_GROUP) {
-			//TODO handle this
+			return buildORGroupConditionString(c, i).toString();
 		}
 		String condStr = c.getColumnName();
 		switch (c.getConditionType()) {
@@ -146,6 +146,32 @@ public class SchoolDAO {
 		return condStr;
 	}
 	
+	private StringBuilder buildORGroupConditionString(Condition cond, Index i) {
+		StringBuilder queryBuilder = new StringBuilder(" (");
+		List<Condition> conditions = cond.getValue().getOrConditions();
+		ListIterator<Condition> itr = conditions.listIterator();
+		//first condition not prefaced with OR
+		while (itr.hasNext()) {
+			Condition c = itr.next();
+			CondType ctype = c.getConditionType();
+			if (ctype != CondType.NO_COND) {
+				queryBuilder.append(" ");
+				queryBuilder.append(buildConditionString(c, i));
+				break;
+			}
+		}
+		while (itr.hasNext()) {
+			Condition c = itr.next();
+			CondType ctype = c.getConditionType();
+			if (ctype != CondType.NO_COND) {
+				queryBuilder.append(" OR ");
+				queryBuilder.append(buildConditionString(c, i));
+			}
+		}
+		queryBuilder.append(")");
+		return queryBuilder;
+	}
+	
 	/**
 	 * 
 	 * @param fromTables Bitmap of tables to include in FROM
@@ -187,6 +213,16 @@ public class SchoolDAO {
 		}
 		
 		return queryBuilder;
+	}
+	
+	public Condition favsInTopFive(String userName) {
+		//TODO implement
+		return null;
+	}
+	
+	public Condition favsInOffers(String userName) {
+		//TODO implement
+		return null;
 	}
 	
 	/**
