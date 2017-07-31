@@ -24,14 +24,59 @@ public class CondVal {
 	//used for range condition (BETWEEN ? AND ?)
 	private int minInt;
 	private int maxInt;
-	private int minDouble;
-	private int maxDouble;
+	private double minDouble;
+	private double maxDouble;
 	//indices for range conditions
 	private int indexOfMin;
 	private int indexOfMax;
 	
 	public CondVal(ValType type) {
 		this.type = type;
+	}
+	
+	public static CondVal createStrVal(String val) {
+		CondVal v = new CondVal(ValType.STRING);
+		v.setStrVal(val);
+		return v;
+	}
+	
+	public static CondVal createIntVal(int val) {
+		CondVal v = new CondVal(ValType.INT);
+		v.setIntVal(val);
+		return v;
+	}
+	
+	public static CondVal createDoubleVal(double val) {
+		CondVal v = new CondVal(ValType.DOUBLE);
+		v.setDoubleVal(val);
+		return v;
+	}
+	
+	public static CondVal createIntRangeVal(int min, int max) {
+		CondVal v = new CondVal(ValType.INT_RANGE);
+		v.setMinInt(min);
+		v.setMaxInt(max);
+		return v;
+	}
+	
+	public static CondVal createDoubleRangeVal(double min, double max) {
+		CondVal v = new CondVal(ValType.DOUBLE_RANGE);
+		v.setMinDouble(min);
+		v.setMaxDouble(max);
+		return v;
+	}
+	
+	public static CondVal createSingleStringSubQueryVal(String subquery, String val) {
+		CondVal v = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		v.setSubQuery(subquery);
+		v.setSubQueryStrVal(val);
+		return v;
+	}
+	
+	public static CondVal createORGroupVal(List<Condition> conditions) {
+		CondVal v = new CondVal(ValType.OR_GROUP);
+		v.setOrConditions(conditions);
+		return v;
 	}
 	
 	/**
@@ -109,25 +154,25 @@ public class CondVal {
 	/**
 	 * @return the minDouble
 	 */
-	public int getMinDouble() {
+	public double getMinDouble() {
 		return minDouble;
 	}
 	/**
 	 * @param minDouble the minDouble to set
 	 */
-	public void setMinDouble(int minDouble) {
+	public void setMinDouble(double minDouble) {
 		this.minDouble = minDouble;
 	}
 	/**
 	 * @return the maxDouble
 	 */
-	public int getMaxDouble() {
+	public double getMaxDouble() {
 		return maxDouble;
 	}
 	/**
 	 * @param maxDouble the maxDouble to set
 	 */
-	public void setMaxDouble(int maxDouble) {
+	public void setMaxDouble(double maxDouble) {
 		this.maxDouble = maxDouble;
 	}
 	/**

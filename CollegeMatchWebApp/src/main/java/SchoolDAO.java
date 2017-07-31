@@ -15,16 +15,10 @@ import java.util.ListIterator;
  */
 public class SchoolDAO {
 	private DBUtil dbUtil;
-	//FROM tables
-	public static final byte RESIDENCE = 0x1;
-	public static final byte FAV_FIELDS = 0x2;
-	public static final byte USER = 0x4;
 	//JOIN tables
 	public static final byte GENDER = 0x1;
 	public static final byte ETHNIC = 0x2;
 	public static final byte REGION = 0x4;
-	public static final byte OFFERS = 0x8;
-	public static final byte FIELDS = 0x10;
 	
 	public SchoolDAO() {
 		dbUtil = new DBUtil();
@@ -36,14 +30,13 @@ public class SchoolDAO {
 	 * city, and state, but we can modify this to be whatever we want to return to the user.
 	 * 
 	 * @param conditions The list of conditions to use in search
-	 * @param fromTables Bitmap of tables (in addition to school) to include in FROM list
-	 * @param tablesToJoin Bitmap of tables to join on. Setting FIELDS requires that OFFERS is also set.
-	 * It is assumed that school_loc and location tables will be joined to retrieve location info.
+	 * @param tablesToJoin Bitmap of tables to join on.
+	 * It is currently assumed that school_loc and location tables will be joined to retrieve location info.
 	 * @return A list of school objects returned by the query
 	 */
-	public List<School> getSchools(List<Condition> conditions, byte fromTables, byte tablesToJoin) {
+	public List<School> getSchools(List<Condition> conditions, byte tablesToJoin) {
 		
-		StringBuilder queryBuilder = selectFromJoin(fromTables, tablesToJoin);	//SELECT ... FROM ... JOIN ... ON etc.
+		StringBuilder queryBuilder = selectAndJoin(tablesToJoin);	//SELECT ... FROM ... JOIN ... ON etc.
 		
 		//BUILD WHERE CLAUSE
 		queryBuilder.append(" WHERE");
@@ -174,26 +167,14 @@ public class SchoolDAO {
 	
 	/**
 	 * 
-	 * @param fromTables Bitmap of tables to include in FROM
 	 * @param tablesToJoin Bitmap of tables to JOIN
 	 * @return A StringBuilder for SELECT, FROM and JOIN clauses
 	 */
-	private StringBuilder selectFromJoin(byte fromTables, byte tablesToJoin) {
-		//TODO if we join offers we have multiple rows per school...
+	private StringBuilder selectAndJoin(byte tablesToJoin) {
 		String baseQuery = 
 				"SELECT school.name AS name, school.url AS url, school.tuition_out AS outOfState, "
 				+ "school.tuition_in AS inState, location.city AS city, location.state_string AS stateStr FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
-		//FROM
-		if ((fromTables & RESIDENCE) == RESIDENCE) {
-			queryBuilder.append(", residence");
-		}
-		if ((fromTables & FAV_FIELDS) == FAV_FIELDS) {
-			queryBuilder.append(", favoriteFieldsOfStudy");
-		}
-		if ((fromTables & USER) == USER) {
-			queryBuilder.append(", user");
-		}
 		//JOINS
 		queryBuilder.append(" JOIN school_loc ON school_loc.school_ID = school.ID "
 				+ "JOIN location ON school_loc.loc_ID = location.ID");
@@ -205,12 +186,6 @@ public class SchoolDAO {
 		}
 		if ((tablesToJoin & REGION) == REGION) {
 			queryBuilder.append(" JOIN region ON location.state = region.state");
-		}
-		if ((tablesToJoin & OFFERS) == OFFERS) {
-			queryBuilder.append(" JOIN offers ON offers.school_ID = school.ID");
-		}
-		if ((tablesToJoin & FIELDS) == FIELDS) {
-			queryBuilder.append(" JOIN fieldsOfStudy ON offers.field_ID = fieldsOfStudy.ID");
 		}
 		
 		return queryBuilder;
@@ -224,43 +199,32 @@ public class SchoolDAO {
 	 */
 	public Condition favsInTopFive(String userName) {
 		List<Condition> conditions = new LinkedList<Condition>();
-		String subQuery = "SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?";
+		String subQuery = "(SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?)";
 		
 		//conditions for each of the top 5 fields
 		//school.pop_prog_x IN SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?
-		CondVal cval1 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
-		cval1.setSubQuery(subQuery);
-		cval1.setSubQueryStrVal(userName);
+		CondVal cval1 = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c1 = new Condition("school.pop_prog_1", CondType.IN, cval1);
 		conditions.add(c1);
 		
-		CondVal cval2 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
-		cval2.setSubQuery(subQuery);
-		cval2.setSubQueryStrVal(userName);
+		CondVal cval2 = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c2 = new Condition("school.pop_prog_2", CondType.IN, cval2);
 		conditions.add(c2);
 		
-		CondVal cval3 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
-		cval3.setSubQuery(subQuery);
-		cval3.setSubQueryStrVal(userName);
+		CondVal cval3 = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c3 = new Condition("school.pop_prog_3", CondType.IN, cval3);
 		conditions.add(c3);
 		
-		CondVal cval4 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
-		cval4.setSubQuery(subQuery);
-		cval4.setSubQueryStrVal(userName);
+		CondVal cval4 = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c4 = new Condition("school.pop_prog_4", CondType.IN, cval4);
 		conditions.add(c4);
 		
-		CondVal cval5 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
-		cval5.setSubQuery(subQuery);
-		cval5.setSubQueryStrVal(userName);
+		CondVal cval5 = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c5 = new Condition("school.pop_prog_5", CondType.IN, cval5);
 		conditions.add(c5);
 		
 		//puts all the above conditions into OR group (c1 OR c2 OR ...)
-		CondVal orVal = new CondVal(ValType.OR_GROUP);
-		orVal.setOrConditions(conditions);
+		CondVal orVal = CondVal.createORGroupVal(conditions);
 		Condition orCondition = new Condition("", CondType.OR_GROUP, orVal);
 		return orCondition;
 	}
@@ -272,12 +236,12 @@ public class SchoolDAO {
 	 * @return condition for checking whether a school offers any of a user's favorites
 	 */
 	public Condition favsInOffers(String userName) {
-		//TODO implement
-		String subQuery = "SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?";
-		CondVal v = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
-		v.setSubQuery(subQuery);
-		v.setSubQueryStrVal(userName);
-		Condition c = new Condition("offers.field_ID", CondType.IN, v);
+		String subQuery = 
+				"(SELECT school_ID FROM offers "
+				+ "WHERE field_ID IN "
+				+ "(SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?))";
+		CondVal v = CondVal.createSingleStringSubQueryVal(subQuery, userName);
+		Condition c = new Condition("school.ID", CondType.IN, v);
 		return c;
 	}
 	
@@ -294,29 +258,7 @@ public class SchoolDAO {
 		ResultSet rs = null;
 		try {
 			pstmt = dbUtil.getConnection().prepareStatement(sb.toString());
-			for (Condition c: conditions) {
-				if (c.getConditionType() == CondType.NO_COND) {
-					continue;
-				} else {
-					CondVal val = c.getValue();
-					ValType vtype = val.getType();
-					if (vtype == ValType.INT_RANGE) {
-						pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
-						pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
-					} else if (vtype == ValType.DOUBLE_RANGE) {
-						pstmt.setDouble(val.getIndexOfMin(), val.getMinDouble());
-						pstmt.setDouble(val.getIndexOfMax(), val.getMaxDouble());
-					} else if (vtype == ValType.INT) {
-						pstmt.setInt(val.getIndex(), val.getIntVal());
-					} else if (vtype == ValType.DOUBLE) {
-						pstmt.setDouble(val.getIndex(), val.getDoubleVal());
-					} else if (vtype == ValType.STRING) {
-						pstmt.setString(val.getIndex(), val.getStrVal());
-					} else if (vtype == ValType.SINGLE_STRING_SUBQUERY) {
-						pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
-					}
-				}
-			}
+			insertIntoPrepStmt(conditions, pstmt);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				School s = new School();
@@ -339,6 +281,42 @@ public class SchoolDAO {
 
 		
 		return schools;
+	}
+	
+	/**
+	 * Takes a list of conditions and inserts them into a PreparedStatement. Assumes that the indices into the 
+	 * PreparedStatement for the values have been set
+	 * 
+	 * @param conditions A list of conditions
+	 * @param pstmt The prepared statement to insert values into
+	 * @throws SQLException
+	 */
+	private void insertIntoPrepStmt(List<Condition> conditions, PreparedStatement pstmt) throws SQLException {
+		for (Condition c: conditions) {
+			if (c.getConditionType() == CondType.NO_COND) {
+				continue;
+			} else {
+				CondVal val = c.getValue();
+				ValType vtype = val.getType();
+				if (vtype == ValType.INT_RANGE) {
+					pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
+					pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+				} else if (vtype == ValType.DOUBLE_RANGE) {
+					pstmt.setDouble(val.getIndexOfMin(), val.getMinDouble());
+					pstmt.setDouble(val.getIndexOfMax(), val.getMaxDouble());
+				} else if (vtype == ValType.INT) {
+					pstmt.setInt(val.getIndex(), val.getIntVal());
+				} else if (vtype == ValType.DOUBLE) {
+					pstmt.setDouble(val.getIndex(), val.getDoubleVal());
+				} else if (vtype == ValType.STRING) {
+					pstmt.setString(val.getIndex(), val.getStrVal());
+				} else if (vtype == ValType.SINGLE_STRING_SUBQUERY) {
+					pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
+				} else if (vtype == ValType.OR_GROUP) {
+					insertIntoPrepStmt(val.getOrConditions(), pstmt);	//recursive
+				}
+			}
+		}
 	}
 
 }
