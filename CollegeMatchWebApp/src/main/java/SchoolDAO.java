@@ -179,6 +179,7 @@ public class SchoolDAO {
 	 * @return A StringBuilder for SELECT, FROM and JOIN clauses
 	 */
 	private StringBuilder selectFromJoin(byte fromTables, byte tablesToJoin) {
+		//TODO if we join offers we have multiple rows per school...
 		String baseQuery = 
 				"SELECT school.name AS name, school.url AS url, school.tuition_out AS outOfState, "
 				+ "school.tuition_in AS inState, location.city AS city, location.state_string AS stateStr FROM school";
@@ -215,14 +216,69 @@ public class SchoolDAO {
 		return queryBuilder;
 	}
 	
+	/**
+	 * Creates a condition to select schools that have one of a user's favorite fields in their top 5 programs
+	 * 
+	 * @param userName
+	 * @return A condition to select schools that have one of a user's favorite fields in their top 5 programs
+	 */
 	public Condition favsInTopFive(String userName) {
-		//TODO implement
-		return null;
+		List<Condition> conditions = new LinkedList<Condition>();
+		String subQuery = "SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?";
+		
+		//conditions for each of the top 5 fields
+		//school.pop_prog_x IN SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?
+		CondVal cval1 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		cval1.setSubQuery(subQuery);
+		cval1.setSubQueryStrVal(userName);
+		Condition c1 = new Condition("school.pop_prog_1", CondType.IN, cval1);
+		conditions.add(c1);
+		
+		CondVal cval2 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		cval2.setSubQuery(subQuery);
+		cval2.setSubQueryStrVal(userName);
+		Condition c2 = new Condition("school.pop_prog_2", CondType.IN, cval2);
+		conditions.add(c2);
+		
+		CondVal cval3 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		cval3.setSubQuery(subQuery);
+		cval3.setSubQueryStrVal(userName);
+		Condition c3 = new Condition("school.pop_prog_3", CondType.IN, cval3);
+		conditions.add(c3);
+		
+		CondVal cval4 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		cval4.setSubQuery(subQuery);
+		cval4.setSubQueryStrVal(userName);
+		Condition c4 = new Condition("school.pop_prog_4", CondType.IN, cval4);
+		conditions.add(c4);
+		
+		CondVal cval5 = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		cval5.setSubQuery(subQuery);
+		cval5.setSubQueryStrVal(userName);
+		Condition c5 = new Condition("school.pop_prog_5", CondType.IN, cval5);
+		conditions.add(c5);
+		
+		//puts all the above conditions into OR group (c1 OR c2 OR ...)
+		CondVal orVal = new CondVal(ValType.OR_GROUP);
+		orVal.setOrConditions(conditions);
+		Condition orCondition = new Condition("", CondType.OR_GROUP, orVal);
+		return orCondition;
 	}
 	
+	/**
+	 * Returns condition for checking whether a school offers any of a user's favorites.
+	 * 
+	 * @param userName
+	 * @return condition for checking whether a school offers any of a user's favorites
+	 */
 	public Condition favsInOffers(String userName) {
 		//TODO implement
-		return null;
+		String subQuery = "SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?";
+		CondVal v = new CondVal(ValType.SINGLE_STRING_SUBQUERY);
+		v.setSubQuery(subQuery);
+		v.setSubQueryStrVal(userName);
+		Condition c = new Condition("offers.field_ID", CondType.IN, v);
+		return c;
 	}
 	
 	/**
