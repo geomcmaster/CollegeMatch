@@ -82,7 +82,12 @@ public class DBUtil {
 			+ "EthnicDemographics_ID INT NOT NULL, "
 			+ "PRIMARY KEY (ID), "
 			+ "FOREIGN KEY (GenderDemographics_ID) REFERENCES GenderDemographics(ID), "
-			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID) ); ";
+			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID), "
+			+ "FOREIGN KEY (pop_prog_1) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_2) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_3) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_4) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_5) REFERENCES fieldsOfStudy(ID) ); ";
 	private static final String USER_TBL = "CREATE TABLE user ("
 			+ "ID VARCHAR(255), "
 			+ "password VARCHAR(255) NOT NULL, "
