@@ -103,7 +103,12 @@ public class DBUtil {
 			+ "EthnicDemographics_ID INT NOT NULL, "
 			+ "PRIMARY KEY (ID), "
 			+ "FOREIGN KEY (GenderDemographics_ID) REFERENCES GenderDemographics(ID), "
-			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID) ); ";
+			+ "FOREIGN KEY (EthnicDemographics_ID) REFERENCES EthnicDemographics(ID), "
+			+ "FOREIGN KEY (pop_prog_1) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_2) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_3) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_4) REFERENCES fieldsOfStudy(ID), "
+			+ "FOREIGN KEY (pop_prog_5) REFERENCES fieldsOfStudy(ID) ); ";
 	private static final String USER_TBL = "CREATE TABLE user ("
 			+ "ID VARCHAR(255), "
 			+ "password VARCHAR(255) NOT NULL, "
@@ -119,7 +124,7 @@ public class DBUtil {
 			+ "std_ID VARCHAR(255), "
 			+ "loc_ID INT NOT NULL, "
 			+ "PRIMARY KEY (std_ID), "
-			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
 	private static final String FIELD_TBL = "CREATE TABLE fieldsOfStudy ("
 			+ "ID INT AUTO_INCREMENT, "
@@ -130,7 +135,7 @@ public class DBUtil {
 			+ "field_ID INT, "
 			+ "rank INT, "
 			+ "PRIMARY KEY (std_ID, field_ID), "
-			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
 	private static final String FAV_SCHOOL_TBL = "CREATE TABLE favoriteSchools("
 			+ "std_ID VARCHAR(255), "
@@ -141,7 +146,7 @@ public class DBUtil {
 			+ "loan_amt INT, "
 			+ "merit_scholarships INT, "
 			+ "PRIMARY KEY (std_ID, school_ID), "
-			+ "FOREIGN KEY (std_ID) REFERENCES user(ID), "
+			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (school_ID) REFERENCES school(ID) ); ";
 	private static final String OFFERS_TBL = "CREATE TABLE offers ("
 			+ "school_ID INT, "
@@ -998,6 +1003,7 @@ public class DBUtil {
 	 * Updates database with school info
 	 */
 	public void processSchool(Result result) {
+<<<<<<< HEAD
 		
 		//Fill in school table; also executes fillGenderDemographics
 		// and fillEthnicDemographics methods
@@ -1006,6 +1012,31 @@ public class DBUtil {
 		//Fill location table & school_loc table
 		fillSchool_loc(result);
 		
+=======
+		//TODO implement this method
+		//making notes on what we're going to need to do here
+		//might want helper methods for each table
+		//1. insert into demographics tables
+		//	- use the values from the object as is
+		//  - we also need to obtain IDs (from the AUTO_INCREMENT) 
+		//		for when we populate the record in the school table 
+		//		for this school. To do so, use: prepareStatement(Query, Statement.RETURN_GENERATED_KEYS); 
+		//		https://stackoverflow.com/a/14170703
+		//
+		//2. insert into school
+		//	- Top 5 fields
+		//		iterate over all fields to find top 5
+		//	- Demographics IDs
+		//		use value obtained above
+		//	- Everything else should be usable as is?
+		//
+		//3. insert into location
+		//	- search for an existing match, if so use that id for school_loc
+		//	- if no match, do an insert then use Statement.RETURN_GENERATED_KEYS again
+		//
+		//4. insert into school_loc
+		//	- use ID from location and the school ID
+>>>>>>> d4fdc964d081a0e1bc9e3383b65ff8796db230f8
 		//
 		//5. insert into offers
 		//	- for each attribute, if value is 1 (or 2?), find ID for it 
