@@ -1,5 +1,4 @@
 package main.java;
-import java.sql.Connection;
 
 /**
  * Data Access Object for school-related queries
