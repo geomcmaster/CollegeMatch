@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Utility class for db operations.
@@ -36,7 +37,8 @@ public class DBUtil {
 			+ "black DOUBLE, "
 			+ "hispanic DOUBLE, "
 			+ "asian DOUBLE, "
-			+ "american_indian DOUBLE, "
+			+ "american_indian_alaskan_native DOUBLE, "
+			+ "native_hawaiian_pacific_islander DOUBLE, "
 			+ "two_or_more DOUBLE, "
 			+ "unknown DOUBLE, "
 			+ "nonresident DOUBLE, "
@@ -44,6 +46,7 @@ public class DBUtil {
 	private static final String LOC_TBL = "CREATE TABLE location ("
 			+ "ID INT AUTO_INCREMENT, "
 			+ "city VARCHAR(255), "
+			+ "state_string VARCHAR(255), "
 			+ "state INT, "
 			+ "ZIP INT, "
 			+ "PRIMARY KEY (ID), "
@@ -53,18 +56,36 @@ public class DBUtil {
 			+ "name VARCHAR(255), "
 			+ "url VARCHAR(255), "
 			+ "alias VARCHAR(255), "
-			+ "SAT_pct_25 DOUBLE, "
-			+ "SAT_pct_75 DOUBLE, "
 			+ "SAT_avg DOUBLE, "
-			+ "ACT_pct_25 DOUBLE, "
-			+ "ACT_pct_75 DOUBLE, "
+			+ "SAT_pct_25_cumulative DOUBLE, " 
+			+ "SAT_pct_75_cumulative DOUBLE, "
+			+ "SAT_pct_25_reading DOUBLE, "
+			+ "SAT_pct_75_reading DOUBLE, "
+			+ "SAT_pct_25_math DOUBLE, "
+			+ "SAT_pct_75_math DOUBLE, "
+			+ "SAT_pct_25_writing DOUBLE, "
+			+ "SAT_pct_75_writing DOUBLE, "
+			+ "SAT_midpoint_reading DOUBLE, "
+			+ "SAT_midpoint_math DOUBLE, "
+			+ "SAT_midpoint_writing DOUBLE, "
+			+ "ACT_pct_25_cumulative DOUBLE, "
+			+ "ACT_pct_75_cumulative DOUBLE, "
+			+ "ACT_pct_25_english DOUBLE, "
+			+ "ACT_pct_75_english DOUBLE, "
+			+ "ACT_pct_25_math DOUBLE, "
+			+ "ACT_pct_75_math DOUBLE, "
+			+ "ACT_pct_25_writing DOUBLE, "
+			+ "ACT_pct_75_writing DOUBLE, "
 			+ "ACT_avg DOUBLE, "
-			+ "avg_earnings INT, "
+			+ "ACT_midpoint_english DOUBLE, "
+			+ "ACT_midpoint_math DOUBLE, "
+			+ "ACT_midpoint_writing DOUBLE, "
+			+ "avg_earnings_6_years_after_matriculation INT, "
 			+ "avg_cost INT, "
 			+ "control INT, "
 			+ "med_debt DOUBLE, "
 			+ "std_bdy_sz INT, "
-			+ "pop_prog_1 INT, "
+			+ "pop_prog_1 INT,"
 			+ "pop_prog_2 INT, "
 			+ "pop_prog_3 INT, "
 			+ "pop_prog_4 INT, "
@@ -72,10 +93,10 @@ public class DBUtil {
 			+ "adm_rate DOUBLE, "
 			+ "avg_fam_inc INT, "
 			+ "med_fam_inc INT, "
-			+ "tuition_out INT, "
-			+ "tuition_in INT, "
+			+ "tuition_and_fees_out INT, "
+			+ "tuition_and_fees_in INT, "
 			+ "avg_entry_age INT, "
-			+ "1_gen_std DOUBLE, "
+			+ "1_gen_std_share DOUBLE, "
 			+ "level INT, "
 			+ "dist_learning INT, "
 			+ "GenderDemographics_ID INT NOT NULL, "
@@ -260,7 +281,7 @@ public class DBUtil {
 	public void createTables() {
 		setDB();
 		Statement stmt = null;
-		CallableStatement cstmt = null;
+		CallableStatement csmt = null;
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(DROP_TABLES_PROC_1);
@@ -270,7 +291,7 @@ public class DBUtil {
 			stmt.execute(DROP_TABLES_PROC_3);
 			stmt.execute(CREATE_TABLES_STORED_PROC_3);
 			
-			cstmt = conn.prepareCall("{call createTables1()}");
+			CallableStatement cstmt = conn.prepareCall("{call createTables1()}");
 			cstmt.execute();
 			closeStatement(cstmt);
 			CallableStatement cstmt2 = conn.prepareCall("{call createTables2()}");
@@ -283,6 +304,7 @@ public class DBUtil {
 			System.out.println(e.toString());
 		} finally {
 			closeStatement(stmt);
+			closeStatement(csmt);
 		}
 		
 		populateRegion();
@@ -588,9 +610,12 @@ public class DBUtil {
 			pstmt.setString(2, OUTLYING_AREAS);
 			pstmt.execute();
 			
+			/* WE SHOULD DELETE THIS ONE. SEARCHING THROUGH DATABASE FOR SCHOOL
+			 * MATCHING STATE ID==68 DOESN'T RETURN ANY SCHOOL
 			pstmt.setInt(1, 68); //MH
 			pstmt.setString(2, OUTLYING_AREAS);
 			pstmt.execute();
+			*/
 			
 			pstmt.setInt(1, 69); //MP
 			pstmt.setString(2, OUTLYING_AREAS);
@@ -739,38 +764,311 @@ public class DBUtil {
 		}
 	}
 	
+	//Fill GenderDemographics table to be used by processSchool()
+	public int fillGenderDemographics(Result result) {
+		PreparedStatement genderStmt = null;
+		int GenderDemographicsID = 0; //0 by default so "uninitialized" error doesn't appear
+		try {
+			//1. Populate Gender Demographics
+			genderStmt = conn.prepareStatement("INSERT INTO GenderDemographics (female, male) "
+					+ "VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+			genderStmt.setDouble(1, result.students_female);
+			genderStmt.setDouble(2, result.students_male);
+			genderStmt.executeUpdate();
+			ResultSet getGenderDemographicsIDResultSet = genderStmt.getGeneratedKeys();
+			if(getGenderDemographicsIDResultSet.next())
+			{
+				GenderDemographicsID = getGenderDemographicsIDResultSet.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			System.out.println(e.toString() + " fillGenderDemographics()");
+		}
+		finally {
+			closeStatement(genderStmt);
+		}
+		return GenderDemographicsID;
+	}
+	
+	//Fill EthnicDemographics table, to be used in processSchool()
+	public int fillEthnicDemographics(Result result) {
+		PreparedStatement ethnicityStmt = null;
+		int EthnicDemographicsID = 0;
+		try {
+			//2. Populate Ethnicity Demographics table
+			ethnicityStmt = conn.prepareStatement("INSERT INTO EthnicDemographics (white, black,"
+					+ "hispanic, asian, american_indian_alaskan_native, native_hawaiian_pacific_islander, "
+					+ "two_or_more, unknown, nonresident) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			ethnicityStmt.setDouble(1,  result.students_white);
+			ethnicityStmt.setDouble(2, result.students_black);
+			ethnicityStmt.setDouble(3, result.students_hispanic);
+			ethnicityStmt.setDouble(4, result.students_asian);
+			ethnicityStmt.setDouble(5, result.students_aian);
+			ethnicityStmt.setDouble(6, result.students_nhpi);
+			ethnicityStmt.setDouble(7, result.students_two_or_more);
+			ethnicityStmt.setDouble(8, result.students_unknown);
+			ethnicityStmt.setDouble(9, result.students_non_resident_alien);
+			ethnicityStmt.executeUpdate();
+			ResultSet getEthnicDemographicsIDResultSet = ethnicityStmt.getGeneratedKeys();
+			if (getEthnicDemographicsIDResultSet.next())
+			{
+				EthnicDemographicsID = getEthnicDemographicsIDResultSet.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			System.out.println(e.toString() + " fillEthnicDemographics()");
+		}
+		finally {
+			closeStatement(ethnicityStmt);
+		}
+		return EthnicDemographicsID;
+	}
+	
+	//Fill school table, used in processSchool()
+	public void fillSchool(Result result) {
+		// 1. Fill in GenderDemographicsID table
+			int GenderDemographicsID_for_school = fillGenderDemographics(result);
+				
+		// 2. Fill in EthnicDemographicsID table
+			int EthnicDemographicsID_for_school = fillEthnicDemographics(result);
+				
+		PreparedStatement schoolStmt = null;
+		try {
+			//Populate school table
+			String questionMarks = "";
+			for (int i = 0; i<48; i++)
+			{
+				questionMarks += "?, ";
+			}
+			questionMarks += "?";
+			
+			//create SAT_pct_25_cumulative, SAT_pct_75_cumulative
+			double SAT_pct_25_cumulative = result.SAT_25_math + result.SAT_25_reading + result.SAT_25_writing;
+			double SAT_pct_75_cumulative = result.SAT_75_math + result.SAT_75_reading + result.SAT_75_writing;
+			
+			schoolStmt = conn.prepareStatement("INSERT INTO school (ID, name, url, "
+					+ "alias, SAT_avg, SAT_pct_25_cumulative, SAT_pct_75_cumulative,"
+					+ " SAT_pct_25_reading, SAT_pct_75_reading, "
+					+ "SAT_pct_25_math, SAT_pct_75_math, SAT_pct_25_writing,"
+					+ "SAT_pct_75_writing, SAT_midpoint_reading, SAT_midpoint_math,"
+					+ "SAT_midpoint_writing,  ACT_pct_25_cumulative, ACT_pct_75_cumulative,"
+					+ "ACT_pct_25_english, ACT_pct_75_english, ACT_pct_25_math,"
+					+ "ACT_pct_75_math, ACT_pct_25_writing, ACT_pct_75_writing,"
+					+ "ACT_avg, ACT_midpoint_english, ACT_midpoint_math, ACT_midpoint_writing,"
+					+ "avg_earnings_6_years_after_matriculation, avg_cost, control, med_debt, std_bdy_sz,"
+					+ "pop_prog_1, pop_prog_2, pop_prog_3, pop_prog_4, pop_prog_5,"
+					+ "adm_rate, avg_fam_inc, med_fam_inc, tuition_and_fees_out, tuition_and_fees_in,"
+					+ "avg_entry_age, 1_gen_std_share, level, dist_learning, GenderDemographics_ID,"
+					+ "EthnicDemographics_ID) VALUES (" + questionMarks + ")");
+			schoolStmt.setInt(1, result.id);
+			schoolStmt.setString(2, result.schoolName);
+			schoolStmt.setString(3, result.schoolURL);
+			schoolStmt.setString(4, result.schoolAlias);
+			schoolStmt.setDouble(5, result.SAT_avg);
+			schoolStmt.setDouble(6, SAT_pct_25_cumulative);
+			schoolStmt.setDouble(7, SAT_pct_75_cumulative);
+			schoolStmt.setDouble(8,  result.SAT_25_reading);
+			schoolStmt.setDouble(9,  result.SAT_75_reading);
+			schoolStmt.setDouble(10, result.SAT_25_math);
+			schoolStmt.setDouble(11, result.SAT_75_math);
+			schoolStmt.setDouble(12, result.SAT_25_writing);
+			schoolStmt.setDouble(13, result.SAT_75_writing);
+			schoolStmt.setDouble(14, result.SAT_midpoint_reading);
+			schoolStmt.setDouble(15, result.SAT_midpoint_math);
+			schoolStmt.setDouble(16, result.SAT_midpoint_writing);
+			schoolStmt.setDouble(17, result.ACT_25_cumulative);
+			schoolStmt.setDouble(18, result.ACT_75_cumulative);
+			schoolStmt.setDouble(19, result.ACT_25_english);
+			schoolStmt.setDouble(20, result.ACT_75_english);
+			schoolStmt.setDouble(21, result.ACT_25_math);
+			schoolStmt.setDouble(22, result.ACT_75_math);
+			schoolStmt.setDouble(23, result.ACT_25_writing);
+			schoolStmt.setDouble(24, result.ACT_75_writing);
+			schoolStmt.setDouble(25, result.ACT_avg);
+			schoolStmt.setDouble(26, result.ACT_midpoint_english);
+			schoolStmt.setDouble(27, result.ACT_midpoint_math);
+			schoolStmt.setDouble(28, result.ACT_midpoint_writing);
+			schoolStmt.setInt(29, result.moneyEarnings_6yrs_avg);
+			schoolStmt.setInt(30, result.moneyAvgCost);
+			schoolStmt.setInt(31, result.schoolOwnership);
+			schoolStmt.setDouble(32, result.moneyMedianLoan);
+			schoolStmt.setInt(33, result.schoolStudentSize);
+			//adding top five fields
+			ArrayList<Integer> topFive = result.topFiveFields();
+			if (topFive.get(0) != 0) {
+				schoolStmt.setInt(34, topFive.get(0));
+			}
+			else {
+				schoolStmt.setNull(34, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(1) != 0) {
+				schoolStmt.setInt(35, topFive.get(1));
+			}
+			else {
+				schoolStmt.setNull(35, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(2) != 0) {
+				schoolStmt.setInt(36, topFive.get(2));
+			}
+			else {
+				schoolStmt.setNull(36, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(3) != 0) {
+				schoolStmt.setInt(37, topFive.get(3));
+			}
+			else {
+				schoolStmt.setNull(37, java.sql.Types.INTEGER);
+			}
+			if (topFive.get(4) != 0) {
+				schoolStmt.setInt(38, topFive.get(4));
+			}
+			else {
+				schoolStmt.setNull(38, java.sql.Types.INTEGER);
+			}
+			schoolStmt.setDouble(39, result.admissionRate);
+			schoolStmt.setInt(40, result.moneyFamilyIncome_avg);
+			schoolStmt.setInt(41, result.moneyFamilyIncome_median);
+			schoolStmt.setInt(42, result.moneyTuition_and_fees_out_of_state);
+			schoolStmt.setInt(43, result.moneyTuition_and_fees_in_state);
+			schoolStmt.setInt(44, result.studentEntryAge);
+			schoolStmt.setDouble(45, result.student_first_generation_students_share);
+			schoolStmt.setInt(46, result.schoolLevel);
+			schoolStmt.setInt(47, result.schoolDistanceLearning);
+			//get IDs of GenderDemographics and EthnicDemographics tables
+			//The IDs are identical because they have 1-to-1 relationship to
+			//school
+			if (GenderDemographicsID_for_school != 0)
+			schoolStmt.setInt(48, GenderDemographicsID_for_school);
+			if (EthnicDemographicsID_for_school != 0)
+			schoolStmt.setInt(49, EthnicDemographicsID_for_school);
+			
+			//Execute the prepared statement to populate school table
+			schoolStmt.execute();
+		
+		}
+		catch (SQLException e) {
+			System.out.println(e.toString() + " fillSchool()");
+		}
+		finally {
+			
+			//close
+			closeStatement(schoolStmt);	
+		}
+		
+	}
+	
+	public int fillLocation(Result result) {
+		PreparedStatement locationCheckStmt = null;
+		PreparedStatement locationStmt = null;
+		int locationID = 0;
+		//If location exists, don't insert. Otherwise, insert.
+		try {
+			
+			locationCheckStmt = conn.prepareStatement("SELECT * FROM location WHERE "
+					+ "city=? AND state_string=? AND state=? AND ZIP=?;");
+			locationCheckStmt.setString(1, result.locationCity);
+			locationCheckStmt.setString(2, result.locationStateString);
+			locationCheckStmt.setInt(3, result.locationState);
+			locationCheckStmt.setInt(4, result.locationZIP);
+			ResultSet locationExists = locationCheckStmt.executeQuery();
+			//Location exists. Return existing location's ID
+			if (locationExists.next()) {
+				locationID = locationExists.getInt("ID");
+			}
+			//Else location doesn't exist in database, so add it
+			else {
+				//close resultset for db resources
+				closeResultSet(locationExists);
+				locationStmt = conn.prepareStatement("INSERT INTO location "
+						+ "(city, state_string, state, ZIP) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				locationStmt.setString(1, result.locationCity);
+				locationStmt.setString(2, result.locationStateString);
+				locationStmt.setInt(3, result.locationState);
+				locationStmt.setInt(4, result.locationZIP);
+				locationStmt.executeUpdate();
+				ResultSet getLocationIDResultSet = locationStmt.getGeneratedKeys();
+				if (getLocationIDResultSet.next())
+				{
+					locationID = getLocationIDResultSet.getInt(1);
+				}
+				closeResultSet(getLocationIDResultSet);
+			}
+		}
+		catch (SQLException e) {
+			System.out.println(e.toString());
+		}
+		finally {
+			closeStatement(locationCheckStmt);
+			closeStatement(locationStmt);
+		}
+		return locationID;
+	}
+	
+	
+	public void fillSchool_loc(Result result) {
+		//execute fillLocation()
+		int locationID_for_School_loc = fillLocation(result);
+		PreparedStatement school_locStmt = null;
+		if (locationID_for_School_loc != 0) {
+			try {
+				school_locStmt = conn.prepareStatement("INSERT INTO school_loc (school_ID, loc_ID) "
+						+ "VALUES (?, ?)");
+				school_locStmt.setInt(1, result.id);
+				school_locStmt.setInt(2, locationID_for_School_loc);
+				school_locStmt.executeUpdate();
+			}
+			catch (SQLException e) {
+				System.out.println(e.toString());
+			}
+			finally {
+				closeStatement(school_locStmt);
+			}
+		}
+		
+	}
+	
+	public void offers(Result result) {
+		PreparedStatement offersStmt = null;
+		try {
+			//get ArrayList of fields of study that are offered
+			//Loop through each element of that ArrayList. If int value is 1,
+			//add that field_ID to the arrayList
+			ArrayList<Integer> fieldsOffered = result.getOffersFields();
+			for (int fieldCounter=0; fieldCounter < fieldsOffered.size(); fieldCounter++) {
+				if (fieldsOffered.get(fieldCounter) == 1) {
+					int fieldID = fieldCounter+1;
+					//insert school and field IDs into offers
+					offersStmt = conn.prepareStatement("INSERT INTO offers "
+							+ "(school_ID, field_ID) "
+							+ "VALUES (?, ?)");
+					offersStmt.setInt(1,  result.id);
+					offersStmt.setInt(2, fieldID);
+					offersStmt.executeUpdate();
+				}
+			}
+		}
+		catch(SQLException e) {
+			System.out.println(e.toString());
+		}
+		finally {
+			closeStatement(offersStmt);
+		}	
+	}
+	
 	/**
 	 * Updates database with school info
 	 */
 	public void processSchool(Result result) {
-		//TODO implement this method
-		//making notes on what we're going to need to do here
-		//might want helper methods for each table
-		//1. insert into demographics tables
-		//	- use the values from the object as is
-		//  - we also need to obtain IDs (from the AUTO_INCREMENT) 
-		//		for when we populate the record in the school table 
-		//		for this school. To do so, use: prepareStatement(Query, Statement.RETURN_GENERATED_KEYS); 
-		//		https://stackoverflow.com/a/14170703
-		//
-		//2. insert into school
-		//	- Top 5 fields
-		//		iterate over all fields to find top 5
-		//	- Demographics IDs
-		//		use value obtained above
-		//	- Everything else should be usable as is?
-		//
-		//3. insert into location
-		//	- search for an existing match, if so use that id for school_loc
-		//	- if no match, do an insert then use Statement.RETURN_GENERATED_KEYS again
-		//
-		//4. insert into school_loc
-		//	- use ID from location and the school ID
-		//
-		//5. insert into offers
-		//	- for each attribute, if value is 1 (or 2?), find ID for it 
-		//		in fieldsOfStudy, then insert into this table with that 
-		//		ID and the school ID
-		//
+		
+		//Fill in school table; also executes fillGenderDemographics
+		// and fillEthnicDemographics methods
+		fillSchool(result);
+		
+		//Fill location table & school_loc table
+		fillSchool_loc(result);
+		
+		//Fill offers table
+		offers(result);
 	}
 }

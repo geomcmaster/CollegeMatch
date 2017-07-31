@@ -1,4 +1,5 @@
 import com.google.gson.annotations.SerializedName;
+import java.util.*;
 
 /**
  * Represents a result element, i.e. a school. Fields will be expanded to include
@@ -27,28 +28,28 @@ public class Result {
 	@SerializedName("2014.admissions.admission_rate.overall")
 	double admissionRate;
 	@SerializedName("2014.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings")
-	double moneyEarnings_7yrs_avg;
+	int moneyEarnings_6yrs_avg;
 	@SerializedName("2014.cost.attendance.academic_year")
-	double moneyAvgCost;
+	int moneyAvgCost;
 	@SerializedName("2014.aid.loan_principal")
 	double moneyMedianLoan;
 	//# of undergrads seeking certification/degree
 	@SerializedName("2014.student.size")
 	int schoolStudentSize;
 	@SerializedName("2014.student.demographics.avg_family_income")
-	double moneyFamilyIncome_avg;
+	int moneyFamilyIncome_avg;
 	@SerializedName("2014.student.demographics.median_family_income")
-	double moneyFamilyIncome_median;
+	int moneyFamilyIncome_median;
 	@SerializedName("2014.cost.tuition.out_of_state")
-	double moneyTuition_out_of_state;
+	int moneyTuition_and_fees_out_of_state;
 	@SerializedName("2014.cost.tuition.in_state")
-	double moneyTuition_in_state;
+	int moneyTuition_and_fees_in_state;
 	//average age of student entry
 	@SerializedName("2014.student.demographics.age_entry")
 	int studentEntryAge;
 	//percentage share of 1st-generation students
 	@SerializedName("2014.student.demographics.first_generation")
-	double student_first_generation_students;
+	double student_first_generation_students_share;
 	@SerializedName("school.online_only")
 	int schoolDistanceLearning;
 	@SerializedName("2014.student.demographics.men")
@@ -94,11 +95,11 @@ public class Result {
 	@SerializedName("2014.admissions.sat_scores.75th_percentile.writing")
 	double SAT_75_writing;
 	@SerializedName("2014.admissions.sat_scores.midpoint.critical_reading")
-	double SAT_reading_avg;
+	double SAT_midpoint_reading;
 	@SerializedName("2014.admissions.sat_scores.midpoint.math")
-	double SAT_math_avg;
+	double SAT_midpoint_math;
 	@SerializedName("2014.admissions.sat_scores.midpoint.writing")
-	double SAT_writing_avg;
+	double SAT_midpoint_writing;
 	@SerializedName("2014.admissions.act_scores.25th_percentile.cumulative")
 	double ACT_25_cumulative;
 	@SerializedName("2014.admissions.act_scores.75th_percentile.cumulative")
@@ -203,7 +204,6 @@ public class Result {
 	@SerializedName("2014.academics.program_percentage.history")
 	double studyHistory;
 	
-	
 	//location entity attributes
 	//state FIPS codes e.g. 1="Alabama"
 	@SerializedName("school.state_fips")
@@ -218,4 +218,193 @@ public class Result {
 	@SerializedName("school.region_id")
 	int locationRegionID;
 	
+	//Offers fields of study attributes
+	@SerializedName("2014.academics.program.bachelors.agriculture")
+	int offersAgriculture;
+	@SerializedName("2014.academics.program.bachelors.resources")
+	int offersResources;
+	@SerializedName("2014.academics.program.bachelors.architecture")
+	int offersArchitecture;
+	@SerializedName("2014.academics.program.bachelors.ethnic_cultural_gender")
+	int offersCultureGender;
+	@SerializedName("2014.academics.program.bachelors.communication")
+	int offersCommunication;
+	@SerializedName("2014.academics.program.bachelors.communication_technology")
+	int offersCommTech;
+	@SerializedName("2014.academics.program.bachelors.computer")
+	int offersCS;
+	@SerializedName("2014.academics.program.bachelors.persona_culinary")
+	int offersCulinary;
+	@SerializedName("2014.academics.program.bachelors.education")
+	int offersEducation;
+	@SerializedName("2014.academics.program.bachelors.engineering")
+	int offersEngineering;
+	@SerializedName("2014.academics.program.bachelors.engineering_technology")
+	int offersEngineeringTech;
+	@SerializedName("2014.academics.program.bachelors.language")
+	int offersLanguage;
+	@SerializedName("2014.academics.program.bachelors.family_consumer_science")
+	int offersFamilyConsumerScience;
+	@SerializedName("2014.academics.program.bachelors.legal")
+	int offersLegal;
+	@SerializedName("2014.academics.program.bachelors.english")
+	int offersEnglish;
+	@SerializedName("2014.academics.program.bachelors.humanities")
+	int offersHumanities;
+	@SerializedName("2014.academics.program.bachelors.library")
+	int offersLibrary;
+	@SerializedName("2014.academics.program.bachelors.biological")
+	int offersBiologicalSciences;
+	@SerializedName("2014.academics.program.bachelors.mathematics")
+	int offersMath;
+	@SerializedName("2014.academics.program.bachelors.military")
+	int offersMilitary;
+	@SerializedName("2014.academics.program.bachelors.multidiscipline")
+	int offersMultidiscipline;
+	@SerializedName("2014.academics.program.bachelors.parks_recreation_fitness")
+	int offersParksAndRec;
+	@SerializedName("2014.academics.program.bachelors.philosophy_religious")
+	int offersPhilRel;
+	@SerializedName("2014.academics.program.bachelors.theology_religious_vocation")
+	int offersTheology;
+	@SerializedName("2014.academics.program.bachelors.physical_science")
+	int offersPhySci;
+	@SerializedName("2014.academics.program.bachelors.science_technology")
+	int offersSciTech;
+	@SerializedName("2014.academics.program.bachelors.psychology")
+	int offersPsych;
+	@SerializedName("2014.academics.program.bachelors.security_law_enforcement")
+	int offersLawEnforce;
+	@SerializedName("2014.academics.program.bachelors.public_administration_social_service")
+	int offersPublicAdmin;
+	@SerializedName("2014.academics.program.bachelors.social_science")
+	int offersSocialSci;
+	@SerializedName("2014.academics.program.bachelors.construction")
+	int offersConstruct;
+	@SerializedName("2014.academics.program.bachelors.mechanic_repair_technology")
+	int offersMechTech;
+	@SerializedName("2014.academics.program.bachelors.precision_production")
+	int offersPrecProd;
+	@SerializedName("2014.academics.program.bachelors.transportation")
+	int offersTransport;
+	@SerializedName("2014.academics.program.bachelors.visual_performing")
+	int offersPerforming;
+	@SerializedName("2014.academics.program.bachelors.health")
+	int offersHealth;
+	@SerializedName("2014.academics.program.bachelors.business_marketing")
+	int offersBusinessMarketing;
+	@SerializedName("2014.academics.program.bachelors.history")
+	int offersHistory;
+	
+	//Method for getting an ascending sorted ArrayList<Double> with
+	//top 5 fields of study for school
+	public ArrayList<Integer> topFiveFields() {
+	ArrayList<Double> studyList = new ArrayList<Double>();
+	ArrayList<Integer> studyListInt = new ArrayList<Integer>();
+	ArrayList<Integer> topFiveFieldsInt = new ArrayList<Integer>();
+	studyList.add(studyAgriculture);
+	studyList.add(studyNaturalResources);
+	studyList.add(studyArchitecture);
+	studyList.add(studyCultureGender);
+	studyList.add(studyCommunication);
+	studyList.add(studyCommunicationsTechnology);
+	studyList.add(studyComputer_and_Information_Science);
+	studyList.add(studyPersonalCulinary);;
+	studyList.add(studyEducation);
+	studyList.add(studyEngineering);
+	studyList.add(studyEngineering_technology);
+	studyList.add(studyForeignLanguage_and_Linguistics);
+	studyList.add(studyFamilyConsumerScience);
+	studyList.add(studyLegal);
+	studyList.add(studyEnglish);
+	studyList.add(studyLiberalArtsHumanities);
+	studyList.add(studyLibraryScience);
+	studyList.add(studyBiologicalSciences);
+	studyList.add(studyMathematics_and_Statistics);
+	studyList.add(studyMilitaryTechnologies);
+	studyList.add(studyMultidisciplinaryStudies);
+	studyList.add(studyParksRecreationLeisureFitnessStudies);
+	studyList.add(studyPhilosophy_and_Religion);
+	studyList.add(studyTheologyVocation);
+	studyList.add(studyPhysicalScience);
+	studyList.add(studyScienceTechnology);
+	studyList.add(studyPsychology);
+	studyList.add(studySecurityLawEnforcement);
+	studyList.add(studyPublicAdminSocialService);
+	studyList.add(studySocialScience);
+	studyList.add(studyConstruction);
+	studyList.add(studyMechanicRepairTechnology);
+	studyList.add(studyPrecisionProduction);
+	studyList.add(studyTransportation);
+	studyList.add(studyVisualPerforming);
+	studyList.add(studyHealth);
+	studyList.add(studyBusinessMarketing);
+	studyList.add(studyHistory);
+	for (int counter = 1; counter <= studyList.size(); counter++) {
+		studyListInt.add(counter);
+	}
+	for (int j = 0; j < 5; j++) {
+		double max = 0;
+		int maxInt = 0;
+		int removalInt = 0;
+		for (int i = 0; i < studyList.size(); i++) {
+			if (max < studyList.get(i)) {
+				max = studyList.get(i);
+				maxInt = studyListInt.get(i);
+				removalInt = i;
+			}
+		}
+		studyList.remove(removalInt);
+		studyListInt.remove(removalInt);
+		topFiveFieldsInt.add(maxInt);
+	}
+	return topFiveFieldsInt;
+	}
+	
+	//return ArrayList of fields of study that are offered
+	public ArrayList<Integer> getOffersFields() {
+		ArrayList<Integer> offersFieldsList = new ArrayList<Integer>();
+		offersFieldsList.add(offersAgriculture);
+		offersFieldsList.add(offersResources);
+		offersFieldsList.add(offersArchitecture);
+		offersFieldsList.add(offersCultureGender);
+		offersFieldsList.add(offersCommunication);
+		offersFieldsList.add(offersCommTech);
+		offersFieldsList.add(offersCS);
+		offersFieldsList.add(offersCulinary);
+		offersFieldsList.add(offersEducation);
+		offersFieldsList.add(offersEngineering);
+		offersFieldsList.add(offersEngineeringTech);
+		offersFieldsList.add(offersLanguage);
+		offersFieldsList.add(offersFamilyConsumerScience);
+		offersFieldsList.add(offersLegal);
+		offersFieldsList.add(offersEnglish);
+		offersFieldsList.add(offersHumanities);
+		offersFieldsList.add(offersLibrary);
+		offersFieldsList.add(offersBiologicalSciences);
+		offersFieldsList.add(offersMath);
+		offersFieldsList.add(offersMilitary);
+		offersFieldsList.add(offersMultidiscipline);
+		offersFieldsList.add(offersParksAndRec);
+		offersFieldsList.add(offersPhilRel);
+		offersFieldsList.add(offersTheology);
+		offersFieldsList.add(offersPhySci);
+		offersFieldsList.add(offersSciTech);
+		offersFieldsList.add(offersPsych);
+		offersFieldsList.add(offersLawEnforce);
+		offersFieldsList.add(offersPublicAdmin);
+		offersFieldsList.add(offersSocialSci);
+		offersFieldsList.add(offersConstruct);
+		offersFieldsList.add(offersMechTech);
+		offersFieldsList.add(offersPrecProd);
+		offersFieldsList.add(offersTransport);
+		offersFieldsList.add(offersPerforming);
+		offersFieldsList.add(offersHealth);
+		offersFieldsList.add(offersBusinessMarketing);
+		offersFieldsList.add(offersHistory);
+		
+		return offersFieldsList;
+	}
 }
+
+

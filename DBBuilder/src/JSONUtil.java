@@ -114,7 +114,48 @@ public class JSONUtil {
 			+ "school.state_fips," 
 			+ "school.city,"
 			+ "school.zip," 
-			+ "school.region_id";
+			+ "school.region_id,"
+			+ "school.state,";
+	
+	private static final String OFFERS =
+			"2014.academics.program.bachelors.agriculture,"
+			+ "2014.academics.program.bachelors.resources,"
+			+ "2014.academics.program.bachelors.architecture,"
+			+ "2014.academics.program.bachelors.ethnic_cultural_gender,"
+			+ "2014.academics.program.bachelors.communication,"
+			+ "2014.academics.program.bachelors.communication_technology,"
+			+ "2014.academics.program.bachelors.computer,"
+			+ "2014.academics.program.bachelors.persona_culinary,"
+			+ "2014.academics.program.bachelors.education," 
+			+ "2014.academics.program.bachelors.engineering,"
+			+ "2014.academics.program.bachelors.engineering_technology,"
+			+ "2014.academics.program.bachelors.language,"
+			+ "2014.academics.program.bachelors.family_consumer_science,"
+			+ "2014.academics.program.bachelors.legal,"
+			+ "2014.academics.program.bachelors.english,"
+			+ "2014.academics.program.bachelors.humanities,"
+			+ "2014.academics.program.bachelors.library,"
+			+ "2014.academics.program.bachelors.biological,"
+			+ "2014.academics.program.bachelors.mathematics,"
+			+ "2014.academics.program.bachelors.military,"
+			+ "2014.academics.program.bachelors.multidiscipline,"
+			+ "2014.academics.program.bachelors.parks_recreation_fitness,"
+			+ "2014.academics.program.bachelors.philosophy_religious,"
+			+ "2014.academics.program.bachelors.theology_religious_vocation,"
+			+ "2014.academics.program.bachelors.physical_science,"
+			+ "2014.academics.program.bachelors.science_technology,"
+			+ "2014.academics.program.bachelors.psychology,"
+			+ "2014.academics.program.bachelors.security_law_enforcement,"
+			+ "2014.academics.program.bachelors.public_administration_social_service,"
+			+ "2014.academics.program.bachelors.social_science,"
+			+ "2014.academics.program.bachelors.construction,"
+			+ "2014.academics.program.bachelors.mechanic_repair_technology,"
+			+ "2014.academics.program.bachelors.precision_production,"
+			+ "2014.academics.program.bachelors.transportation,"
+			+ "2014.academics.program.bachelors.visual_performing,"
+			+ "2014.academics.program.bachelors.health,"
+			+ "2014.academics.program.bachelors.business_marketing,"
+			+ "2014.academics.program.bachelors.history";
 	
 	private static final String ATTRIBUTES = 
 			SCHOOL + SAT_ACT_SCORES + DEMOGRPHICS + MAJORS + FINANCES_and_LOCATION;
@@ -186,10 +227,9 @@ public class JSONUtil {
 	 */
 	private void processPage(Root root) {
 		for (Result result : root.results) {
-	    	//for now we just print the school name
-	    	//when database stuff is ready, we'll call processSchool
-	    	//		to populate db from a result
-			//dbUtil.processSchool(result);
+	    	//call dbUtil.processSchool(result) to load all tables
+			//with each school i.e. result's information
+			dbUtil.processSchool(result);
 			System.out.println(result.schoolName);
 		}
 	}
