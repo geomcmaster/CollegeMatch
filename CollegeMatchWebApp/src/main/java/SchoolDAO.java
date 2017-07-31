@@ -72,11 +72,14 @@ public class SchoolDAO {
 	}
 	
 	private String buildConditionString(Condition c, Index i) {
-		String condStr = c.getColumnName();
-		CondVal val = c.getValue();
-		//TODO will have to handle more complex conditions
-		//TODO if val type is OR GROUP or subquery, handle it differently
 		
+		CondVal val = c.getValue();
+		if (val.getType() == ValType.SUBQUERY) {
+			return buildSubqueryConditionString(c, i);
+		} else if (val.getType() == ValType.OR_GROUP) {
+			//TODO handle this
+		}
+		String condStr = c.getColumnName();
 		switch (c.getConditionType()) {
 			case RANGE:	condStr += " BETWEEN ? AND ?";
 						val.setIndexOfMin(i.getAndIncrement());
@@ -105,6 +108,31 @@ public class SchoolDAO {
 						break;
 			case IN: condStr += " IN ?";
 						val.setIndex(i.getAndIncrement());
+						break;
+		}
+		return condStr;
+	}
+	
+	private String buildSubqueryConditionString(Condition c, Index i) {
+		String condStr = c.getColumnName();
+		CondVal val = c.getValue();
+		switch (c.getConditionType()) {
+			case RANGE:	throw new RuntimeException("Subquery condition does not support range");
+			case EQ:	condStr += " = " + val.getSubQuery();
+						break;
+			case GT:	condStr += " > " + val.getSubQuery();
+						break;
+			case GE:	condStr += " >= " + val.getSubQuery();
+						break;
+			case LT:	condStr += " < " + val.getSubQuery();
+						break;
+			case LE:	condStr += " <= " + val.getSubQuery();
+						break;
+			case NE:	condStr += " <> " + val.getSubQuery();
+						break;
+			case LIKE:	condStr += " LIKE " + val.getSubQuery();
+						break;
+			case IN: condStr += " IN " + val.getSubQuery();
 						break;
 		}
 		return condStr;
