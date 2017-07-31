@@ -21,11 +21,12 @@ package main.java;
  * 		<> ?
  * LIKE
  * 		LIKE ?
- * 
+ * IN
+ * 		IN ?
  * 
  * @author Geoff
  *
  */
 public enum CondType {
-	NO_COND, RANGE, EQ, GT, GE, LT, LE, NE, LIKE
+	NO_COND, RANGE, EQ, GT, GE, LT, LE, NE, LIKE, IN
 }

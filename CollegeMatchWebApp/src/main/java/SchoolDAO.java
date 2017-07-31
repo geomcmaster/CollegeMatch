@@ -42,8 +42,81 @@ public class SchoolDAO {
 	 * @return A list of school objects returned by the query
 	 */
 	public List<School> getSchools(List<Condition> conditions, byte fromTables, byte tablesToJoin) {
-		LinkedList<School> schools = new LinkedList<School>();
 		
+		StringBuilder queryBuilder = selectFromJoin(fromTables, tablesToJoin);	//SELECT ... FROM ... JOIN ... ON etc.
+		
+		//BUILD WHERE CLAUSE
+		queryBuilder.append(" WHERE");
+		ListIterator<Condition> itr = conditions.listIterator();
+		Index index = new Index();	//index in PreparedStatement
+		//first condition not prefaced with AND
+		while (itr.hasNext()) {
+			Condition c = itr.next();
+			CondType ctype = c.getConditionType();
+			if (ctype != CondType.NO_COND) {
+				queryBuilder.append(" ");
+				queryBuilder.append(buildConditionString(c, index));
+				break;
+			}
+		}
+		while (itr.hasNext()) {
+			Condition c = itr.next();
+			CondType ctype = c.getConditionType();
+			if (ctype != CondType.NO_COND) {
+				queryBuilder.append(" AND ");
+				queryBuilder.append(buildConditionString(c, index));
+			}
+		}
+
+		return processResults(queryBuilder, conditions);
+	}
+	
+	private String buildConditionString(Condition c, Index i) {
+		String condStr = c.getColumnName();
+		CondVal val = c.getValue();
+		//TODO will have to handle more complex conditions
+		//TODO if val type is OR GROUP or subquery, handle it differently
+		
+		switch (c.getConditionType()) {
+			case RANGE:	condStr += " BETWEEN ? AND ?";
+						val.setIndexOfMin(i.getAndIncrement());
+						val.setIndexOfMax(i.getAndIncrement());
+						break;
+			case EQ:	condStr += " = ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case GT:	condStr += " > ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case GE:	condStr += " >= ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case LT:	condStr += " < ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case LE:	condStr += " <= ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case NE:	condStr += " <> ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case LIKE:	condStr += " LIKE ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+			case IN: condStr += " IN ?";
+						val.setIndex(i.getAndIncrement());
+						break;
+		}
+		return condStr;
+	}
+	
+	/**
+	 * 
+	 * @param fromTables Bitmap of tables to include in FROM
+	 * @param tablesToJoin Bitmap of tables to JOIN
+	 * @return A StringBuilder for SELECT, FROM and JOIN clauses
+	 */
+	private StringBuilder selectFromJoin(byte fromTables, byte tablesToJoin) {
 		String baseQuery = 
 				"SELECT school.name AS name, school.url AS url, school.tuition_out AS outOfState, "
 				+ "school.tuition_in AS inState, location.city AS city, location.state AS state FROM school";
@@ -76,95 +149,23 @@ public class SchoolDAO {
 		if ((tablesToJoin & FIELDS) == FIELDS) {
 			queryBuilder.append(" JOIN fieldsOfStudy ON offers.field_ID = fieldsOfStudy.ID");
 		}
-		//BUILD WHERE CLAUSE
-		queryBuilder.append(" WHERE");
-		ListIterator<Condition> itr = conditions.listIterator();
-		int index = 1;	//index in PreparedStatement
-		//first condition not prefaced with AND
-		while (itr.hasNext()) {
-			Condition c = itr.next();
-			CondType ctype = c.getConditionType();
-			if (ctype != CondType.NO_COND) {
-				queryBuilder.append(" ");
-				//TODO will have to handle more complex conditions
-				queryBuilder.append(c.getColumnName());
-				String operator = "";
-				CondVal val = c.getValue();
-				switch (ctype) {
-					case RANGE:	operator = " BETWEEN ? AND ?";
-								val.setIndexOfMin(index++);
-								val.setIndexOfMax(index++);
-								break;
-					case EQ:	operator = " = ?";
-								val.setIndex(index++);
-								break;
-					case GT:	operator = " > ?";
-								val.setIndex(index++);
-								break;
-					case GE:	operator = " >= ?";
-								val.setIndex(index++);
-								break;
-					case LT:	operator = " < ?";
-								val.setIndex(index++);
-								break;
-					case LE:	operator = " <= ?";
-								val.setIndex(index++);
-								break;
-					case NE:	operator = " <> ?";
-								val.setIndex(index++);
-								break;
-					case LIKE:	operator = " LIKE ?";
-								val.setIndex(index++);
-								break;
-				}
-				queryBuilder.append(operator);
-				break;
-			}
-		}
-		while (itr.hasNext()) {
-			Condition c = itr.next();
-			CondType ctype = c.getConditionType();
-			if (ctype != CondType.NO_COND) {
-				queryBuilder.append(" AND ");
-				//TODO will have to handle more complex conditions
-				queryBuilder.append(c.getColumnName());
-				String operator = "";
-				CondVal val = c.getValue();
-				switch (ctype) {
-					case RANGE:	operator = " BETWEEN ? AND ?";
-								val.setIndexOfMin(index++);
-								val.setIndexOfMax(index++);
-								break;
-					case EQ:	operator = " = ?";
-								val.setIndex(index++);
-								break;
-					case GT:	operator = " > ?";
-								val.setIndex(index++);
-								break;
-					case GE:	operator = " >= ?";
-								val.setIndex(index++);
-								break;
-					case LT:	operator = " < ?";
-								val.setIndex(index++);
-								break;
-					case LE:	operator = " <= ?";
-								val.setIndex(index++);
-								break;
-					case NE:	operator = " <> ?";
-								val.setIndex(index++);
-								break;
-					case LIKE:	operator = " LIKE ?";
-								val.setIndex(index++);
-								break;
-				}
-				queryBuilder.append(operator);
-			}
-		}
+		
+		return queryBuilder;
+	}
+	
+	/**
+	 * 
+	 * @param sb StringBuilder for the PreparedStatement
+	 * @param conditions The list of search criteria
+	 * @return A list of school objects resulting from the query
+	 */
+	private List<School> processResults(StringBuilder sb, List<Condition> conditions) {
+		LinkedList<School> schools = new LinkedList<School>();
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			pstmt = dbUtil.getConnection().prepareStatement(queryBuilder.toString());
+			pstmt = dbUtil.getConnection().prepareStatement(sb.toString());
 			for (Condition c: conditions) {
 				if (c.getConditionType() == CondType.NO_COND) {
 					continue;

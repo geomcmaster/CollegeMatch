@@ -7,5 +7,5 @@ package main.java;
  *
  */
 public enum ValType {
-	STRING, INT, DOUBLE, INT_RANGE, DOUBLE_RANGE
+	STRING, INT, DOUBLE, INT_RANGE, DOUBLE_RANGE, SUBQUERY, OR_GROUP
 }

@@ -1,5 +1,7 @@
 package main.java;
 
+import java.util.List;
+
 /**
  * Represents a value to use in a condition. Can be a String, int, double, pair of ints, or pair of doubles. 
  * Check the type to know which field to get.
@@ -9,10 +11,15 @@ package main.java;
  */
 public class CondVal {
 	private ValType type;
+	
 	private String strVal;
+	private String subQuery;	//assumes that the caller is setting the entire subquery string
 	private int intVal;
 	private double doubleVal;
+	private List<Condition> orConditions;	//for conditions of the form ...AND (cond1 OR cond2) AND...
+	
 	private int index;	//the index of the wildcard in the PreparedStatement
+	
 	//used for range condition (BETWEEN ? AND ?)
 	private int minInt;
 	private int maxInt;
@@ -21,6 +28,11 @@ public class CondVal {
 	//indices for range conditions
 	private int indexOfMin;
 	private int indexOfMax;
+	
+	public CondVal(ValType type) {
+		this.type = type;
+	}
+	
 	/**
 	 * @return the type of value to insert into the condition
 	 */
@@ -152,5 +164,33 @@ public class CondVal {
 	 */
 	public void setIndexOfMax(int indexOfMax) {
 		this.indexOfMax = indexOfMax;
+	}
+
+	/**
+	 * @return the subQuery
+	 */
+	public String getSubQuery() {
+		return subQuery;
+	}
+
+	/**
+	 * @param subQuery the subQuery to set
+	 */
+	public void setSubQuery(String subQuery) {
+		this.subQuery = subQuery;
+	}
+
+	/**
+	 * @return the list of OR'd conditions
+	 */
+	public List<Condition> getOrConditions() {
+		return orConditions;
+	}
+
+	/**
+	 * @param orConditions List of conditions that should be OR'd
+	 */
+	public void setOrConditions(List<Condition> orConditions) {
+		this.orConditions = orConditions;
 	}
 }
