@@ -1,3 +1,6 @@
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -9,6 +12,45 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Result {
 	int id;
+	
+	public static final int AGRICULTURE = 1;
+	public static final int NATURALRESOURCES = 3;
+	public static final int ARCHITECTURE = 4;
+	public static final int CULTUREGENDER = 5;
+	public static final int COMMUNICATION = 9;
+	public static final int COMMUNICATIONSTECHNOLOGY = 10;
+	public static final int COMPUTER_AND_INFORMATION_SCIENCE = 11;
+	public static final int PERSONALCULINARY = 12;
+	public static final int EDUCATION = 13;
+	public static final int ENGINEERING = 14;
+	public static final int ENGINEERING_TECHNOLOGY = 15;
+	public static final int FOREIGNLANGUAGE_AND_LINGUISTICS = 16;
+	public static final int FAMILYCONSUMERSCIENCE = 19;
+	public static final int LEGAL = 22;
+	public static final int ENGLISH = 23;
+	public static final int LIBERALARTSHUMANITIES = 24;
+	public static final int LIBRARYSCIENCE = 25;
+	public static final int BIOLOGICALSCIENCES = 26;
+	public static final int MATHEMATICS_AND_STATISTICS = 27;
+	public static final int MILITARYTECHNOLOGIES = 29;
+	public static final int MULTIDISCIPLINARYSTUDIES = 30;
+	public static final int PARKSRECREATIONLEISUREFITNESSSTUDIES = 31;
+	public static final int PHILOSOPHY_AND_RELIGION = 38;
+	public static final int THEOLOGYVOCATION = 39;
+	public static final int PHYSICALSCIENCE = 40;
+	public static final int SCIENCETECHNOLOGY = 41;
+	public static final int PSYCHOLOGY = 42;
+	public static final int SECURITYLAWENFORCEMENT = 43;
+	public static final int PUBLICADMINSOCIALSERVICE = 44;
+	public static final int SOCIALSCIENCE = 45;
+	public static final int CONSTRUCTION = 46;
+	public static final int MECHANICREPAIRTECHNOLOGY = 47;
+	public static final int PRECISIONPRODUCTION = 48;
+	public static final int TRANSPORTATION = 49;
+	public static final int VISUALPERFORMING = 50;
+	public static final int HEALTH = 51;
+	public static final int BUSINESSMARKETING = 52;
+	public static final int HISTORY = 54;
 	
 	//must use annotation for attribute names with dots so gson can parse it
 	
@@ -27,28 +69,28 @@ public class Result {
 	@SerializedName("2014.admissions.admission_rate.overall")
 	double admissionRate;
 	@SerializedName("2014.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings")
-	double moneyEarnings_7yrs_avg;
+	int moneyEarnings_6yrs_avg;
 	@SerializedName("2014.cost.attendance.academic_year")
-	double moneyAvgCost;
+	int moneyAvgCost;
 	@SerializedName("2014.aid.loan_principal")
 	double moneyMedianLoan;
 	//# of undergrads seeking certification/degree
 	@SerializedName("2014.student.size")
 	int schoolStudentSize;
 	@SerializedName("2014.student.demographics.avg_family_income")
-	double moneyFamilyIncome_avg;
+	int moneyFamilyIncome_avg;
 	@SerializedName("2014.student.demographics.median_family_income")
-	double moneyFamilyIncome_median;
+	int moneyFamilyIncome_median;
 	@SerializedName("2014.cost.tuition.out_of_state")
-	double moneyTuition_out_of_state;
+	int moneyTuition_and_fees_out_of_state;
 	@SerializedName("2014.cost.tuition.in_state")
-	double moneyTuition_in_state;
+	int moneyTuition_and_fees_in_state;
 	//average age of student entry
 	@SerializedName("2014.student.demographics.age_entry")
 	int studentEntryAge;
 	//percentage share of 1st-generation students
 	@SerializedName("2014.student.demographics.first_generation")
-	double student_first_generation_students;
+	double student_first_generation_students_share;
 	@SerializedName("school.online_only")
 	int schoolDistanceLearning;
 	@SerializedName("2014.student.demographics.men")
@@ -94,11 +136,11 @@ public class Result {
 	@SerializedName("2014.admissions.sat_scores.75th_percentile.writing")
 	double SAT_75_writing;
 	@SerializedName("2014.admissions.sat_scores.midpoint.critical_reading")
-	double SAT_reading_avg;
+	double SAT_midpoint_reading;
 	@SerializedName("2014.admissions.sat_scores.midpoint.math")
-	double SAT_math_avg;
+	double SAT_midpoint_math;
 	@SerializedName("2014.admissions.sat_scores.midpoint.writing")
-	double SAT_writing_avg;
+	double SAT_midpoint_writing;
 	@SerializedName("2014.admissions.act_scores.25th_percentile.cumulative")
 	double ACT_25_cumulative;
 	@SerializedName("2014.admissions.act_scores.75th_percentile.cumulative")
@@ -203,7 +245,6 @@ public class Result {
 	@SerializedName("2014.academics.program_percentage.history")
 	double studyHistory;
 	
-	
 	//location entity attributes
 	//state FIPS codes e.g. 1="Alabama"
 	@SerializedName("school.state_fips")
@@ -218,4 +259,145 @@ public class Result {
 	@SerializedName("school.region_id")
 	int locationRegionID;
 	
+	//Offers fields of study attributes
+	@SerializedName("2014.academics.program.bachelors.agriculture")
+	int offersAgriculture;
+	@SerializedName("2014.academics.program.bachelors.resources")
+	int offersResources;
+	@SerializedName("2014.academics.program.bachelors.architecture")
+	int offersArchitecture;
+	@SerializedName("2014.academics.program.bachelors.ethnic_cultural_gender")
+	int offersCultureGender;
+	@SerializedName("2014.academics.program.bachelors.communication")
+	int offersCommunication;
+	@SerializedName("2014.academics.program.bachelors.communications_technology")
+	int offersCommTech;
+	@SerializedName("2014.academics.program.bachelors.computer")
+	int offersCS;
+	@SerializedName("2014.academics.program.bachelors.personal_culinary")
+	int offersCulinary;
+	@SerializedName("2014.academics.program.bachelors.education")
+	int offersEducation;
+	@SerializedName("2014.academics.program.bachelors.engineering")
+	int offersEngineering;
+	@SerializedName("2014.academics.program.bachelors.engineering_technology")
+	int offersEngineeringTech;
+	@SerializedName("2014.academics.program.bachelors.language")
+	int offersLanguage;
+	@SerializedName("2014.academics.program.bachelors.family_consumer_science")
+	int offersFamilyConsumerScience;
+	@SerializedName("2014.academics.program.bachelors.legal")
+	int offersLegal;
+	@SerializedName("2014.academics.program.bachelors.english")
+	int offersEnglish;
+	@SerializedName("2014.academics.program.bachelors.humanities")
+	int offersHumanities;
+	@SerializedName("2014.academics.program.bachelors.library")
+	int offersLibrary;
+	@SerializedName("2014.academics.program.bachelors.biological")
+	int offersBiologicalSciences;
+	@SerializedName("2014.academics.program.bachelors.mathematics")
+	int offersMath;
+	@SerializedName("2014.academics.program.bachelors.military")
+	int offersMilitary;
+	@SerializedName("2014.academics.program.bachelors.multidiscipline")
+	int offersMultidiscipline;
+	@SerializedName("2014.academics.program.bachelors.parks_recreation_fitness")
+	int offersParksAndRec;
+	@SerializedName("2014.academics.program.bachelors.philosophy_religious")
+	int offersPhilRel;
+	@SerializedName("2014.academics.program.bachelors.theology_religious_vocation")
+	int offersTheology;
+	@SerializedName("2014.academics.program.bachelors.physical_science")
+	int offersPhySci;
+	@SerializedName("2014.academics.program.bachelors.science_technology")
+	int offersSciTech;
+	@SerializedName("2014.academics.program.bachelors.psychology")
+	int offersPsych;
+	@SerializedName("2014.academics.program.bachelors.security_law_enforcement")
+	int offersLawEnforce;
+	@SerializedName("2014.academics.program.bachelors.public_administration_social_service")
+	int offersPublicAdmin;
+	@SerializedName("2014.academics.program.bachelors.social_science")
+	int offersSocialSci;
+	@SerializedName("2014.academics.program.bachelors.construction")
+	int offersConstruct;
+	@SerializedName("2014.academics.program.bachelors.mechanic_repair_technology")
+	int offersMechTech;
+	@SerializedName("2014.academics.program.bachelors.precision_production")
+	int offersPrecProd;
+	@SerializedName("2014.academics.program.bachelors.transportation")
+	int offersTransport;
+	@SerializedName("2014.academics.program.bachelors.visual_performing")
+	int offersPerforming;
+	@SerializedName("2014.academics.program.bachelors.health")
+	int offersHealth;
+	@SerializedName("2014.academics.program.bachelors.business_marketing")
+	int offersBusinessMarketing;
+	@SerializedName("2014.academics.program.bachelors.history")
+	int offersHistory;
+	
+	//Method for getting an ascending sorted ArrayList<Double> with
+	//top 5 fields of study for school
+	public int[] topFiveFields() {
+		int[] topFiveIDs = new int[5];
+		LinkedHashMap<Integer, Double> map = new LinkedHashMap<Integer, Double>();
+		//put key(ID), value(pct) in map
+		map.put(AGRICULTURE, studyAgriculture);
+		map.put(NATURALRESOURCES, studyNaturalResources);
+		map.put(ARCHITECTURE, studyArchitecture);
+		map.put(CULTUREGENDER, studyCultureGender);
+		map.put(COMMUNICATION, studyCommunication);
+		map.put(COMMUNICATIONSTECHNOLOGY, studyCommunicationsTechnology);
+		map.put(COMPUTER_AND_INFORMATION_SCIENCE, studyComputer_and_Information_Science);
+		map.put(PERSONALCULINARY, studyPersonalCulinary);
+		map.put(EDUCATION, studyEducation);
+		map.put(ENGINEERING, studyEngineering);
+		map.put(ENGINEERING_TECHNOLOGY, studyEngineering_technology);
+		map.put(FOREIGNLANGUAGE_AND_LINGUISTICS, studyForeignLanguage_and_Linguistics);
+		map.put(FAMILYCONSUMERSCIENCE, studyFamilyConsumerScience);
+		map.put(LEGAL, studyLegal);
+		map.put(ENGLISH, studyEnglish);
+		map.put(LIBERALARTSHUMANITIES, studyLiberalArtsHumanities);
+		map.put(LIBRARYSCIENCE, studyLibraryScience);
+		map.put(BIOLOGICALSCIENCES, studyBiologicalSciences);
+		map.put(MATHEMATICS_AND_STATISTICS, studyMathematics_and_Statistics);
+		map.put(MILITARYTECHNOLOGIES, studyMilitaryTechnologies);
+		map.put(MULTIDISCIPLINARYSTUDIES, studyMultidisciplinaryStudies);
+		map.put(PARKSRECREATIONLEISUREFITNESSSTUDIES, studyParksRecreationLeisureFitnessStudies);
+		map.put(PHILOSOPHY_AND_RELIGION, studyPhilosophy_and_Religion);
+		map.put(THEOLOGYVOCATION, studyTheologyVocation);
+		map.put(PHYSICALSCIENCE, studyPhysicalScience);
+		map.put(SCIENCETECHNOLOGY, studyScienceTechnology);
+		map.put(PSYCHOLOGY, studyPsychology);
+		map.put(SECURITYLAWENFORCEMENT, studySecurityLawEnforcement);
+		map.put(PUBLICADMINSOCIALSERVICE, studyPublicAdminSocialService);
+		map.put(SOCIALSCIENCE, studySocialScience);
+		map.put(CONSTRUCTION, studyConstruction);
+		map.put(MECHANICREPAIRTECHNOLOGY, studyMechanicRepairTechnology);
+		map.put(PRECISIONPRODUCTION, studyPrecisionProduction);
+		map.put(TRANSPORTATION, studyTransportation);
+		map.put(VISUALPERFORMING, studyVisualPerforming);
+		map.put(HEALTH, studyHealth);
+		map.put(BUSINESSMARKETING, studyBusinessMarketing);
+		map.put(HISTORY, studyHistory);
+		
+		//on each iteration get the max from the set then remove the max
+		for (int i = 0; i < 5; i++) {
+			double max = 0;
+			int maxID = 0;
+			for (Entry<Integer, Double> e : map.entrySet()) {
+				Double v = e.getValue();
+				if (v > max) {
+					max = v;
+					maxID = e.getKey();
+				}
+			}
+			map.remove(maxID);
+			topFiveIDs[i] = maxID;
+		}
+		return topFiveIDs;
+	}
 }
+
+
