@@ -1,9 +1,5 @@
 package main.java;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * Represents a school record
  * 
@@ -31,7 +27,6 @@ public class School {
 	private String popProg5;
 	private int tuitionIn;
 	private int tuitionOut;
-	private List<FieldOfStudy> offeredFieldsOfStudy;
 	private double medDebt;
 	private int avgFamIncome;
 	private int medFamIncome;
@@ -40,8 +35,6 @@ public class School {
 	//Maybe include distance learning as boolean variable?
 	private double maleShare;
 	private double femaleShare;
-	//Ethnicities as a hashmap? List<ethnicity>? Would need to make ethnicity class
-	private HashMap<String,Double> ethnicityMap;
 	/**
 	 * @return the name
 	 */
@@ -283,18 +276,6 @@ public class School {
 		this.tuitionOut = tuitionOut;
 	}
 	/*
-	 * @param studyField
-	 */
-	public void setOfferedFields(List<FieldOfStudy> studyField) {
-		this.offeredFieldsOfStudy = studyField;
-	}
-	/*
-	 * @return offeredFieldsOfStudy
-	 */
-	public List<FieldOfStudy> getOfferedFields() {
-		return this.offeredFieldsOfStudy;
-	}
-	/*
 	 * @param debt
 	 */
 	public void setMedianDebt(double debt) {
@@ -369,28 +350,5 @@ public class School {
 	}
 	public double getFemaleShare() {
 		return this.femaleShare;
-	}
-	/*
-	 * @param all race percentage doubles
-	 */
-	public void setEthnicities(double White, double Black, double Hispanic,
-			double Asian, double AmericanIndian_AlaskanNative,
-			double NativeHawaiian_PacificIslander, double Two_or_more,
-			double Unknown, double Nonresident) {
-		ethnicityMap.put("WHITE", White);
-		ethnicityMap.put("BLACK", Black);
-		ethnicityMap.put("HISPANIC", Hispanic);
-		ethnicityMap.put("ASIAN", Asian);
-		ethnicityMap.put("AMERICAN_INDIAN_ALASKAN_NATIVE", AmericanIndian_AlaskanNative);
-		ethnicityMap.put("NATIVE_HAWAIIAN_PACIFIC_ISLANDER", NativeHawaiian_PacificIslander);
-		ethnicityMap.put("TWO_OR_MORE_ETHNICITIES", Two_or_more);
-		ethnicityMap.put("UNKNOWN_ETHNICITY", Unknown);
-		ethnicityMap.put("NONRESIDENT", Nonresident);
-	}
-	/*
-	 * @return all race percentages as doubles
-	 */
-	public HashMap<String,Double> getEthnicities() {
-		return this.ethnicityMap;
 	}
 }
