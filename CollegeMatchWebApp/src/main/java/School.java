@@ -1,5 +1,9 @@
 package main.java;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Represents a school record
  * 
@@ -27,6 +31,17 @@ public class School {
 	private String popProg5;
 	private int tuitionIn;
 	private int tuitionOut;
+	private List<FieldOfStudy> offeredFieldsOfStudy;
+	private double medDebt;
+	private int avgFamIncome;
+	private int medFamIncome;
+	private int avgAge;
+	private double firstGenStudentShare;
+	//Maybe include distance learning as boolean variable?
+	private double maleShare;
+	private double femaleShare;
+	//Ethnicities as a hashmap? List<ethnicity>? Would need to make ethnicity class
+	private HashMap<String,Double> ethnicityMap;
 	/**
 	 * @return the name
 	 */
@@ -266,5 +281,116 @@ public class School {
 	 */
 	public void setTuitionOut(int tuitionOut) {
 		this.tuitionOut = tuitionOut;
+	}
+	/*
+	 * @param studyField
+	 */
+	public void setOfferedFields(List<FieldOfStudy> studyField) {
+		this.offeredFieldsOfStudy = studyField;
+	}
+	/*
+	 * @return offeredFieldsOfStudy
+	 */
+	public List<FieldOfStudy> getOfferedFields() {
+		return this.offeredFieldsOfStudy;
+	}
+	/*
+	 * @param debt
+	 */
+	public void setMedianDebt(double debt) {
+		this.medDebt = debt;
+	}
+	/*
+	 * @return medDebt
+	 */
+	public double getMedianDebt() {
+		return this.medDebt;
+	}
+	/*
+	 * @param avgIncome
+	 */
+	public void setAvgFamilyIncome(int avgIncome) {
+		this.avgFamIncome = avgIncome;
+	}
+	/*
+	 * @return avgFamIncome
+	 */
+	public int getAvgFamilyIncome() {
+		return this.avgFamIncome;
+	}
+	/*
+	 * @param medIncome
+	 */
+	public void setMedianFamIncome(int medIncome) {
+		this.medFamIncome = medIncome;
+	}
+	/*
+	 * @return medFamIncome
+	 */
+	public int getMedianFamIncome(int medIncome) {
+		return this.medFamIncome;
+	}
+	/*
+	 * @param avg entry age
+	 */
+	public void setEntryAge(int age) {
+		this.avgAge = age;
+	}
+	/*
+	 * @return avg entry age
+	 */
+	public int getEntryAge() {
+		return this.avgAge;
+	}
+	/*
+	 * @param 1st generation student share of student body
+	 */
+	public void setFirstGenStudentShare(double firstGen) {
+		this.firstGenStudentShare = firstGen;
+	}
+	/*
+	 * @return 1st generation student double
+	 */
+	public double getFirstGenStudentShare() {
+		return this.firstGenStudentShare;
+	}
+	/*
+	 * @param male student share
+	 */
+	public void setGenderShare(double maleStudentShare, double femaleStudentShare) {
+		this.maleShare = maleStudentShare;
+		this.femaleShare = femaleStudentShare;
+	}
+	/*
+	 * @return male student share
+	 */
+	public double getMaleShare() {
+		return this.maleShare;
+	}
+	public double getFemaleShare() {
+		return this.femaleShare;
+	}
+	/*
+	 * @param all race percentage doubles
+	 */
+	public void setEthnicities(double White, double Black, double Hispanic,
+			double Asian, double AmericanIndian_AlaskanNative,
+			double NativeHawaiian_PacificIslander, double Two_or_more,
+			double Unknown, double Nonresident) {
+		ethnicityMap.put("WHITE", White);
+		ethnicityMap.put("BLACK", Black);
+		ethnicityMap.put("HISPANIC", Hispanic);
+		ethnicityMap.put("ASIAN", Asian);
+		ethnicityMap.put("AMERICAN_INDIAN_ALASKAN_NATIVE", AmericanIndian_AlaskanNative);
+		ethnicityMap.put("NATIVE_HAWAIIAN_PACIFIC_ISLANDER", NativeHawaiian_PacificIslander);
+		ethnicityMap.put("TWO_OR_MORE_ETHNICITIES", Two_or_more);
+		ethnicityMap.put("UNKNOWN_ETHNICITY", Unknown);
+		ethnicityMap.put("NONRESIDENT", Nonresident);
+	}
+	/*
+	 * @return all race percentages as doubles
+	 */
+	public HashMap<String,Double> getEthnicities() {
+		return this.ethnicityMap;
 	}
 }
