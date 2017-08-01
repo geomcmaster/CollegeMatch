@@ -127,7 +127,7 @@ public class DBUtil {
 			+ "FOREIGN KEY (std_ID) REFERENCES user(ID) ON DELETE CASCADE, "
 			+ "FOREIGN KEY (loc_ID) REFERENCES location(ID) ); ";
 	private static final String FIELD_TBL = "CREATE TABLE fieldsOfStudy ("
-			+ "ID INT AUTO_INCREMENT, "
+			+ "ID INT, "
 			+ "name VARCHAR(255) NOT NULL, "
 			+ "PRIMARY KEY (ID) ); ";
 	private static final String FAV_FIELD_TBL = "CREATE TABLE favoriteFieldsOfStudy ("
@@ -642,120 +642,158 @@ public class DBUtil {
 	private void populateFieldsOfStudy() {
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO fieldsOfStudy (name) VALUES (?)");
+			pstmt = conn.prepareStatement("INSERT INTO fieldsOfStudy (ID, name) VALUES (?, ?)");
 			
-			pstmt.setString(1, "Agriculture, Agriculture Operations, and Related Sciences");
+			pstmt.setInt(1, Result.AGRICULTURE);
+			pstmt.setString(2, "Agriculture, Agriculture Operations, and Related Sciences");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Natural Resources and Conservation");
+			pstmt.setInt(1, Result.NATURALRESOURCES);
+			pstmt.setString(2, "Natural Resources and Conservation");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Architecture and Related Services");
+			pstmt.setInt(1, Result.ARCHITECTURE);
+			pstmt.setString(2, "Architecture and Related Services");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Area, Ethnic, Cultural, Gender, and Group Studies");
+			pstmt.setInt(1, Result.CULTUREGENDER);
+			pstmt.setString(2, "Area, Ethnic, Cultural, Gender, and Group Studies");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Communication, Journalism, and Related Programs");
+			pstmt.setInt(1, Result.COMMUNICATION);
+			pstmt.setString(2, "Communication, Journalism, and Related Programs");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Communications Technologies/Technicians and Support Services");
+			pstmt.setInt(1, Result.COMMUNICATIONSTECHNOLOGY);
+			pstmt.setString(2, "Communications Technologies/Technicians and Support Services");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Computer and Information Sciences and Support Services");
+			pstmt.setInt(1, Result.COMPUTER_AND_INFORMATION_SCIENCE);
+			pstmt.setString(2, "Computer and Information Sciences and Support Services");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Personal and Culinary Services");
+			pstmt.setInt(1, Result.PERSONALCULINARY);
+			pstmt.setString(2, "Personal and Culinary Services");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Education");
+			pstmt.setInt(1, Result.EDUCATION);
+			pstmt.setString(2, "Education");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Engineering");
+			pstmt.setInt(1, Result.ENGINEERING);
+			pstmt.setString(2, "Engineering");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Engineering Technologies and Engineering-Related Fields");
+			pstmt.setInt(1, Result.ENGINEERING_TECHNOLOGY);
+			pstmt.setString(2, "Engineering Technologies and Engineering-Related Fields");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Foreign Languages, Literatures, and Linguistics");
+			pstmt.setInt(1, Result.FOREIGNLANGUAGE_AND_LINGUISTICS);
+			pstmt.setString(2, "Foreign Languages, Literatures, and Linguistics");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Family and Consumer Sciences/Human Sciences");
+			pstmt.setInt(1, Result.FAMILYCONSUMERSCIENCE);
+			pstmt.setString(2, "Family and Consumer Sciences/Human Sciences");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Legal Professions and Studies");
+			pstmt.setInt(1, Result.LEGAL);
+			pstmt.setString(2, "Legal Professions and Studies");
 			pstmt.execute();
 			
-			pstmt.setString(1, "English Language and Literature/Letters");
+			pstmt.setInt(1, Result.ENGLISH);
+			pstmt.setString(2, "English Language and Literature/Letters");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Liberal Arts and Sciences, General Studies and Humanities");
+			pstmt.setInt(1, Result.LIBERALARTSHUMANITIES);
+			pstmt.setString(2, "Liberal Arts and Sciences, General Studies and Humanities");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Library Science");
+			pstmt.setInt(1, Result.LIBRARYSCIENCE);
+			pstmt.setString(2, "Library Science");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Biological and Biomedical Sciences");
+			pstmt.setInt(1, Result.BIOLOGICALSCIENCES);
+			pstmt.setString(2, "Biological and Biomedical Sciences");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Mathematics and Statistics");
+			pstmt.setInt(1, Result.MATHEMATICS_AND_STATISTICS);
+			pstmt.setString(2, "Mathematics and Statistics");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Military Technologies and Applied Sciences");
+			pstmt.setInt(1, Result.MILITARYTECHNOLOGIES);
+			pstmt.setString(2, "Military Technologies and Applied Sciences");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Multi/Interdisciplinary Studies");
+			pstmt.setInt(1, Result.MULTIDISCIPLINARYSTUDIES);
+			pstmt.setString(2, "Multi/Interdisciplinary Studies");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Parks, Recreation, Leisure, and Fitness Studies");
+			pstmt.setInt(1, Result.PARKSRECREATIONLEISUREFITNESSSTUDIES);
+			pstmt.setString(2, "Parks, Recreation, Leisure, and Fitness Studies");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Philosophy and Religious Studies");
+			pstmt.setInt(1, Result.PHILOSOPHY_AND_RELIGION);
+			pstmt.setString(2, "Philosophy and Religious Studies");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Theology and Religious Vocations");
+			pstmt.setInt(1, Result.THEOLOGYVOCATION);
+			pstmt.setString(2, "Theology and Religious Vocations");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Physical Sciences");
+			pstmt.setInt(1, Result.PHYSICALSCIENCE);
+			pstmt.setString(2, "Physical Sciences");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Science Technologies/Technicians");
+			pstmt.setInt(1, Result.SCIENCETECHNOLOGY);
+			pstmt.setString(2, "Science Technologies/Technicians");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Psychology");
+			pstmt.setInt(1, Result.PSYCHOLOGY);
+			pstmt.setString(2, "Psychology");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Homeland Security, Law Enforcement, Firefighting and Related Protective ");
+			pstmt.setInt(1, Result.SECURITYLAWENFORCEMENT);
+			pstmt.setString(2, "Homeland Security, Law Enforcement, Firefighting and Related Protective ");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Public Administration and Social Service Professions");
+			pstmt.setInt(1, Result.PUBLICADMINSOCIALSERVICE);
+			pstmt.setString(2, "Public Administration and Social Service Professions");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Social Sciences");
+			pstmt.setInt(1, Result.SOCIALSCIENCE);
+			pstmt.setString(2, "Social Sciences");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Construction Trades");
+			pstmt.setInt(1, Result.CONSTRUCTION);
+			pstmt.setString(2, "Construction Trades");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Mechanic and Repair Technologies/Technicians");
+			pstmt.setInt(1, Result.MECHANICREPAIRTECHNOLOGY);
+			pstmt.setString(2, "Mechanic and Repair Technologies/Technicians");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Precision Production");
+			pstmt.setInt(1, Result.PRECISIONPRODUCTION);
+			pstmt.setString(2, "Precision Production");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Transportation and Materials Moving");
+			pstmt.setInt(1, Result.TRANSPORTATION);
+			pstmt.setString(2, "Transportation and Materials Moving");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Visual and Performing Arts");
+			pstmt.setInt(1, Result.VISUALPERFORMING);
+			pstmt.setString(2, "Visual and Performing Arts");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Health Professions and Related Programs");
+			pstmt.setInt(1, Result.HEALTH);
+			pstmt.setString(2, "Health Professions and Related Programs");
 			pstmt.execute();
 			
-			pstmt.setString(1, "Business, Management, Marketing, and Related Support Services");
+			pstmt.setInt(1, Result.BUSINESSMARKETING);
+			pstmt.setString(2, "Business, Management, Marketing, and Related Support Services");
 			pstmt.execute();
 			
-			pstmt.setString(1, "History");
+			pstmt.setInt(1, Result.HISTORY);
+			pstmt.setString(2, "History");
 			pstmt.execute();
 		} catch (SQLException e) {
 			System.out.println(e.toString());
@@ -1029,31 +1067,231 @@ public class DBUtil {
 	}
 	
 	public void offers(Result result) {
-		PreparedStatement offersStmt = null;
+		PreparedStatement pstmt = null;
 		try {
-			//get ArrayList of fields of study that are offered
-			//Loop through each element of that ArrayList. If int value is 1,
-			//add that field_ID to the arrayList
-			ArrayList<Integer> fieldsOffered = result.getOffersFields();
-			for (int fieldCounter=0; fieldCounter < fieldsOffered.size(); fieldCounter++) {
-				if (fieldsOffered.get(fieldCounter) == 1) {
-					int fieldID = fieldCounter+1;
-					//insert school and field IDs into offers
-					offersStmt = conn.prepareStatement("INSERT INTO offers "
-							+ "(school_ID, field_ID) "
-							+ "VALUES (?, ?)");
-					offersStmt.setInt(1,  result.id);
-					offersStmt.setInt(2, fieldID);
-					offersStmt.executeUpdate();
-				}
+			pstmt = conn.prepareStatement("INSERT INTO offers (school_ID, field_ID) VALUES (?, ?)");;
+			if (result.offersAgriculture == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.AGRICULTURE);
+				pstmt.executeUpdate();
 			}
+			if (result.offersResources == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.NATURALRESOURCES);
+				pstmt.executeUpdate();
+			}
+			if (result.offersArchitecture == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.ARCHITECTURE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersCultureGender == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.CULTUREGENDER);
+				pstmt.executeUpdate();
+			}
+			if (result.offersCommunication == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.COMMUNICATION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersCommTech == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.COMMUNICATIONSTECHNOLOGY);
+				pstmt.executeUpdate();
+			}
+			if (result.offersCS == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.COMPUTER_AND_INFORMATION_SCIENCE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersCulinary == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PERSONALCULINARY);
+				pstmt.executeUpdate();
+			}
+			if (result.offersEducation == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.EDUCATION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersEngineering == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.ENGINEERING);
+				pstmt.executeUpdate();
+			}
+			if (result.offersEngineeringTech == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.ENGINEERING_TECHNOLOGY);
+				pstmt.executeUpdate();
+			}
+			if (result.offersLanguage == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.FOREIGNLANGUAGE_AND_LINGUISTICS);
+				pstmt.executeUpdate();
+			}
+			if (result.offersFamilyConsumerScience == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.FAMILYCONSUMERSCIENCE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersLegal == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.LEGAL);
+				pstmt.executeUpdate();
+			}
+			if (result.offersEnglish == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.ENGLISH);
+				pstmt.executeUpdate();
+			}
+			if (result.offersHumanities == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.LIBERALARTSHUMANITIES);
+				pstmt.executeUpdate();
+			}
+			if (result.offersLibrary == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.LIBRARYSCIENCE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersBiologicalSciences == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.BIOLOGICALSCIENCES);
+				pstmt.executeUpdate();
+			}
+			if (result.offersMath == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.MATHEMATICS_AND_STATISTICS);
+				pstmt.executeUpdate();
+			}
+			if (result.offersMilitary == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.MILITARYTECHNOLOGIES);
+				pstmt.executeUpdate();
+			}
+			if (result.offersMultidiscipline == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.MULTIDISCIPLINARYSTUDIES);
+				pstmt.executeUpdate();
+			}
+			if (result.offersParksAndRec == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PARKSRECREATIONLEISUREFITNESSSTUDIES);
+				pstmt.executeUpdate();
+			}
+			if (result.offersPhilRel == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PHILOSOPHY_AND_RELIGION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersTheology == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.THEOLOGYVOCATION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersPhySci == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PHYSICALSCIENCE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersSciTech == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.SCIENCETECHNOLOGY);
+				pstmt.executeUpdate();
+			}
+			if (result.offersPsych == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PSYCHOLOGY);
+				pstmt.executeUpdate();
+			}
+			if (result.offersLawEnforce == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.SECURITYLAWENFORCEMENT);
+				pstmt.executeUpdate();
+			}
+			if (result.offersPublicAdmin == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PUBLICADMINSOCIALSERVICE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersSocialSci == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.SOCIALSCIENCE);
+				pstmt.executeUpdate();
+			}
+			if (result.offersConstruct == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.CONSTRUCTION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersMechTech == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.MECHANICREPAIRTECHNOLOGY);
+				pstmt.executeUpdate();
+			}
+			if (result.offersPrecProd == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.PRECISIONPRODUCTION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersTransport == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.TRANSPORTATION);
+				pstmt.executeUpdate();
+			}
+			if (result.offersPerforming == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.VISUALPERFORMING);
+				pstmt.executeUpdate();
+			}
+			if (result.offersHealth == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.HEALTH);
+				pstmt.executeUpdate();
+			}
+			if (result.offersBusinessMarketing == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.BUSINESSMARKETING);
+				pstmt.executeUpdate();
+			}
+			if (result.offersHistory == 1) {
+				pstmt.setInt(1, result.id);
+				pstmt.setInt(2, Result.HISTORY);
+				pstmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			
+		} finally {
+			closeStatement(pstmt);
 		}
-		catch(SQLException e) {
-			System.out.println(e.toString());
-		}
-		finally {
-			closeStatement(offersStmt);
-		}	
+//		PreparedStatement offersStmt = null;
+//		try {
+//			//get ArrayList of fields of study that are offered
+//			//Loop through each element of that ArrayList. If int value is 1,
+//			//add that field_ID to the arrayList
+//			ArrayList<Integer> fieldsOffered = result.getOffersFields();
+//			for (int fieldCounter=0; fieldCounter < fieldsOffered.size(); fieldCounter++) {
+//				if (fieldsOffered.get(fieldCounter) == 1) {
+//					int fieldID = fieldCounter+1;
+//					//insert school and field IDs into offers
+//					offersStmt = conn.prepareStatement("INSERT INTO offers "
+//							+ "(school_ID, field_ID) "
+//							+ "VALUES (?, ?)");
+//					offersStmt.setInt(1,  result.id);
+//					offersStmt.setInt(2, fieldID);
+//					offersStmt.executeUpdate();
+//				}
+//			}
+//		}
+//		catch(SQLException e) {
+//			System.out.println(e.toString());
+//		}
+//		finally {
+//			closeStatement(offersStmt);
+//		}	
 	}
 	
 	/**

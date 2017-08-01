@@ -11,6 +11,45 @@ import java.util.*;
 public class Result {
 	int id;
 	
+	public static final int AGRICULTURE = 1;
+	public static final int NATURALRESOURCES = 3;
+	public static final int ARCHITECTURE = 4;
+	public static final int CULTUREGENDER = 5;
+	public static final int COMMUNICATION = 9;
+	public static final int COMMUNICATIONSTECHNOLOGY = 10;
+	public static final int COMPUTER_AND_INFORMATION_SCIENCE = 11;
+	public static final int PERSONALCULINARY = 12;
+	public static final int EDUCATION = 13;
+	public static final int ENGINEERING = 14;
+	public static final int ENGINEERING_TECHNOLOGY = 15;
+	public static final int FOREIGNLANGUAGE_AND_LINGUISTICS = 16;
+	public static final int FAMILYCONSUMERSCIENCE = 19;
+	public static final int LEGAL = 22;
+	public static final int ENGLISH = 23;
+	public static final int LIBERALARTSHUMANITIES = 24;
+	public static final int LIBRARYSCIENCE = 25;
+	public static final int BIOLOGICALSCIENCES = 26;
+	public static final int MATHEMATICS_AND_STATISTICS = 27;
+	public static final int MILITARYTECHNOLOGIES = 29;
+	public static final int MULTIDISCIPLINARYSTUDIES = 30;
+	public static final int PARKSRECREATIONLEISUREFITNESSSTUDIES = 31;
+	public static final int PHILOSOPHY_AND_RELIGION = 38;
+	public static final int THEOLOGYVOCATION = 39;
+	public static final int PHYSICALSCIENCE = 40;
+	public static final int SCIENCETECHNOLOGY = 41;
+	public static final int PSYCHOLOGY = 42;
+	public static final int SECURITYLAWENFORCEMENT = 43;
+	public static final int PUBLICADMINSOCIALSERVICE = 44;
+	public static final int SOCIALSCIENCE = 45;
+	public static final int CONSTRUCTION = 46;
+	public static final int MECHANICREPAIRTECHNOLOGY = 47;
+	public static final int PRECISIONPRODUCTION = 48;
+	public static final int TRANSPORTATION = 49;
+	public static final int VISUALPERFORMING = 50;
+	public static final int HEALTH = 51;
+	public static final int BUSINESSMARKETING = 52;
+	public static final int HISTORY = 54;
+	
 	//must use annotation for attribute names with dots so gson can parse it
 	
 	/*School entity attributes
@@ -359,51 +398,6 @@ public class Result {
 		topFiveFieldsInt.add(maxInt);
 	}
 	return topFiveFieldsInt;
-	}
-	
-	//return ArrayList of fields of study that are offered
-	public ArrayList<Integer> getOffersFields() {
-		ArrayList<Integer> offersFieldsList = new ArrayList<Integer>();
-		offersFieldsList.add(offersAgriculture);
-		offersFieldsList.add(offersResources);
-		offersFieldsList.add(offersArchitecture);
-		offersFieldsList.add(offersCultureGender);
-		offersFieldsList.add(offersCommunication);
-		offersFieldsList.add(offersCommTech);
-		offersFieldsList.add(offersCS);
-		offersFieldsList.add(offersCulinary);
-		offersFieldsList.add(offersEducation);
-		offersFieldsList.add(offersEngineering);
-		offersFieldsList.add(offersEngineeringTech);
-		offersFieldsList.add(offersLanguage);
-		offersFieldsList.add(offersFamilyConsumerScience);
-		offersFieldsList.add(offersLegal);
-		offersFieldsList.add(offersEnglish);
-		offersFieldsList.add(offersHumanities);
-		offersFieldsList.add(offersLibrary);
-		offersFieldsList.add(offersBiologicalSciences);
-		offersFieldsList.add(offersMath);
-		offersFieldsList.add(offersMilitary);
-		offersFieldsList.add(offersMultidiscipline);
-		offersFieldsList.add(offersParksAndRec);
-		offersFieldsList.add(offersPhilRel);
-		offersFieldsList.add(offersTheology);
-		offersFieldsList.add(offersPhySci);
-		offersFieldsList.add(offersSciTech);
-		offersFieldsList.add(offersPsych);
-		offersFieldsList.add(offersLawEnforce);
-		offersFieldsList.add(offersPublicAdmin);
-		offersFieldsList.add(offersSocialSci);
-		offersFieldsList.add(offersConstruct);
-		offersFieldsList.add(offersMechTech);
-		offersFieldsList.add(offersPrecProd);
-		offersFieldsList.add(offersTransport);
-		offersFieldsList.add(offersPerforming);
-		offersFieldsList.add(offersHealth);
-		offersFieldsList.add(offersBusinessMarketing);
-		offersFieldsList.add(offersHistory);
-		
-		return offersFieldsList;
 	}
 }
 
