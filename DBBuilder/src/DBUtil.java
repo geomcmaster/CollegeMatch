@@ -980,7 +980,7 @@ public class DBUtil {
 			schoolStmt.setInt(49, EthnicDemographicsID_for_school);
 			
 			//Execute the prepared statement to populate school table
-			schoolStmt.execute();
+			schoolStmt.executeUpdate();
 		
 		}
 		catch (SQLException e) {
