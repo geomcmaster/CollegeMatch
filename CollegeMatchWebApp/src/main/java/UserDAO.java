@@ -47,30 +47,6 @@ public class UserDAO {
 			DBUtil.closeStatement(cstmt);
 		}
 		return success;
-//		PreparedStatement findUser = null;
-//		ResultSet rs = null;
-//		PreparedStatement insertUser = null;
-//		
-//		try {
-//			findUser = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
-//			findUser.setString(1, userName);
-//			rs = findUser.executeQuery();
-//			if (rs.next() && rs.getInt(1) > 0) {
-//				return false;	//username already in use
-//			}
-//			
-//			insertUser = dbUtil.getConnection().prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
-//			insertUser.setString(1, userName);
-//			insertUser.setString(2, password);
-//			insertUser.executeUpdate();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			DBUtil.closeStatement(findUser);
-//			DBUtil.closeResultSet(rs);
-//			DBUtil.closeStatement(insertUser);
-//		}
-//		return true;
 	}
 	
 	/**
@@ -108,14 +84,12 @@ public class UserDAO {
 	 */
 	public User getUser(String userName) {
 		User user = new User();
-		PreparedStatement pstmt = null;
+		CallableStatement cstmt = null;
 		ResultSet rs = null;
 		try {
-			pstmt = 
-					dbUtil.getConnection().prepareStatement("SELECT password, SAT_SCORE, ACT_SCORE "
-							+ "FROM user WHERE ID=?");
-			pstmt.setString(1, userName);
-			rs = pstmt.executeQuery();
+			cstmt = dbUtil.getConnection().prepareCall("{call get_user(?)}");
+			cstmt.setString(1, userName);
+			rs = cstmt.executeQuery();
 			if (rs.next()) {
 				user.setValid(true);
 				user.setPassword(rs.getString(1));
@@ -128,7 +102,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(pstmt);
+			DBUtil.closeStatement(cstmt);
 		}
 		return user;
 	}
