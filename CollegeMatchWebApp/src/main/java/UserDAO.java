@@ -495,7 +495,7 @@ public class UserDAO {
 					dbUtil.getConnection().prepareStatement(
 							"SELECT school.name, rank, app_status, fin_aid, loan_amt, merit_scholarships "
 							+ "FROM favoriteSchools "
-							+ "JOIN fieldsSchools ON favoriteSchools.school_ID = school.ID "
+							+ "JOIN school ON favoriteSchools.school_ID = school.ID "
 							+ "WHERE std_ID=? "
 							+ "ORDER BY rank ASC");
 			pstmt.setString(1, userName);
