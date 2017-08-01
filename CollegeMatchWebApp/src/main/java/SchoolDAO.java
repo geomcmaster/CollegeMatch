@@ -179,10 +179,10 @@ public class SchoolDAO {
 		queryBuilder.append(" JOIN school_loc ON school_loc.school_ID = school.ID "
 				+ "JOIN location ON school_loc.loc_ID = location.ID");
 		if ((tablesToJoin & GENDER) == GENDER) {
-			queryBuilder.append(" JOIN GenderDemographics ON GenderDemographics_ID = school.ID");
+			queryBuilder.append(" JOIN GenderDemographics ON school.GenderDemographics_ID = GenderDemographics.ID");
 		}
 		if ((tablesToJoin & ETHNIC) == ETHNIC) {
-			queryBuilder.append(" JOIN EthnicDemographics ON EthnicDemographics_ID = school.ID");
+			queryBuilder.append(" JOIN EthnicDemographics ON school.EthnicDemographics_ID = EthnicDemographics.ID");
 		}
 		if ((tablesToJoin & REGION) == REGION) {
 			queryBuilder.append(" JOIN region ON location.state = region.state");
