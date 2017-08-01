@@ -482,18 +482,12 @@ public class UserDAO {
 	 */
 	public List<FavoriteSchool> getFavSchools(String userName) {
 		LinkedList<FavoriteSchool> favs = new LinkedList<FavoriteSchool>();
-		PreparedStatement pstmt = null;
+		CallableStatement cstmt = null;
 		ResultSet rs = null;
 		try {
-			pstmt = 
-					dbUtil.getConnection().prepareStatement(
-							"SELECT school.name, rank, app_status, fin_aid, loan_amt, merit_scholarships "
-							+ "FROM favoriteSchools "
-							+ "JOIN school ON favoriteSchools.school_ID = school.ID "
-							+ "WHERE std_ID=? "
-							+ "ORDER BY rank ASC");
-			pstmt.setString(1, userName);
-			rs = pstmt.executeQuery();
+			cstmt = dbUtil.getConnection().prepareCall("{call get_favorite_schools(?)}");
+			cstmt.setString(1, userName);
+			rs = cstmt.executeQuery();
 			while (rs.next()) {
 				FavoriteSchool fav = new FavoriteSchool();
 				School school = new School();
@@ -510,7 +504,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(pstmt);
+			DBUtil.closeStatement(cstmt);
 		}
 		return favs;
 	}
