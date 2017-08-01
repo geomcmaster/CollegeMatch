@@ -1067,7 +1067,7 @@ public class DBUtil {
 	public void offers(Result result) {
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO offers (school_ID, field_ID) VALUES (?, ?)");;
+			pstmt = conn.prepareStatement("INSERT INTO offers (school_ID, field_ID) VALUES (?, ?)");
 			if (result.offersAgriculture == 1) {
 				pstmt.setInt(1, result.id);
 				pstmt.setInt(2, Result.AGRICULTURE);
