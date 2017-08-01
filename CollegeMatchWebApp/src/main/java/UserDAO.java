@@ -1,7 +1,9 @@
 package main.java;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,30 +29,48 @@ public class UserDAO {
 	 * @return true if successful, false if user name already in use
 	 */
 	public boolean createUser(String userName, String password) {
-		PreparedStatement findUser = null;
-		ResultSet rs = null;
-		PreparedStatement insertUser = null;
-		
+		CallableStatement cstmt = null;
+		boolean success = false;
 		try {
-			findUser = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
-			findUser.setString(1, userName);
-			rs = findUser.executeQuery();
-			if (rs.next() && rs.getInt(1) > 0) {
-				return false;	//username already in use
+			cstmt = dbUtil.getConnection().prepareCall("{call create_user(?, ?, ?)}");
+			cstmt.setString(1, userName);
+			cstmt.setString(2, password);
+			cstmt.registerOutParameter(3, Types.INTEGER);
+			cstmt.execute();
+			int valid = cstmt.getInt(3);
+			if (valid == 1) {
+				success = true;
 			}
-			
-			insertUser = dbUtil.getConnection().prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
-			insertUser.setString(1, userName);
-			insertUser.setString(2, password);
-			insertUser.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.closeStatement(findUser);
-			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(insertUser);
+			DBUtil.closeStatement(cstmt);
 		}
-		return true;
+		return success;
+//		PreparedStatement findUser = null;
+//		ResultSet rs = null;
+//		PreparedStatement insertUser = null;
+//		
+//		try {
+//			findUser = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
+//			findUser.setString(1, userName);
+//			rs = findUser.executeQuery();
+//			if (rs.next() && rs.getInt(1) > 0) {
+//				return false;	//username already in use
+//			}
+//			
+//			insertUser = dbUtil.getConnection().prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
+//			insertUser.setString(1, userName);
+//			insertUser.setString(2, password);
+//			insertUser.executeUpdate();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.closeStatement(findUser);
+//			DBUtil.closeResultSet(rs);
+//			DBUtil.closeStatement(insertUser);
+//		}
+//		return true;
 	}
 	
 	/**
@@ -313,7 +333,7 @@ public class UserDAO {
 		loc.setValid(false);
 		
 		String query = 
-				"SELECT location.ID, location.city, location.state_str, location.zip "
+				"SELECT location.ID, location.city, location.state, location.zip "
 				+ "FROM residence JOIN location ON residence.loc_ID = location.ID "
 				+ "WHERE residence.std_ID=?";
 		PreparedStatement pstmt = null;
@@ -326,7 +346,7 @@ public class UserDAO {
 				loc.setValid(true);
 				loc.setId(rs.getInt(1));
 				loc.setCity(rs.getString(2));
-				loc.setStateStr(rs.getString(3));
+				loc.setStateInt(rs.getInt(3));
 				loc.setZip(rs.getInt(4));
 			}
 		} catch (SQLException e) {
