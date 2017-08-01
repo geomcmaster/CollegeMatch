@@ -18,7 +18,8 @@ public class JSONUtil {
 	private static final String BASE_DATA_URL = 
 			"https://api.data.gov/ed/collegescorecard/v1/schools.json";
 	//limiting results by predominant degree for now, we can change this
-	private static final String CONDITIONS = "school.degrees_awarded.predominant=3";
+	//school.degrees_awarded.predominant=3
+	private static final String CONDITIONS = "";
 	
 	//all test score attributes
 	private static final String SAT_ACT_SCORES = "2014.admissions.sat_scores.average.overall," 

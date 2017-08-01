@@ -933,35 +933,33 @@ public class DBUtil {
 			schoolStmt.setDouble(32, result.moneyMedianLoan);
 			schoolStmt.setInt(33, result.schoolStudentSize);
 			//adding top five fields
-			ArrayList<Integer> topFive = result.topFiveFields();
-			if (topFive.get(0) != 0) {
-				schoolStmt.setInt(34, topFive.get(0));
-			}
-			else {
+			int[] topFive = result.topFiveFields();
+			int one = topFive[0];
+			int two = topFive[1];
+			int three = topFive[2];
+			int four = topFive[3];
+			int five = topFive[4];
+			if (one != 0) {
+				schoolStmt.setInt(34, one);
+			} else {
 				schoolStmt.setNull(34, java.sql.Types.INTEGER);
-			}
-			if (topFive.get(1) != 0) {
-				schoolStmt.setInt(35, topFive.get(1));
-			}
-			else {
+			} if (two != 0) {
+				schoolStmt.setInt(35, two);
+			} else {
 				schoolStmt.setNull(35, java.sql.Types.INTEGER);
-			}
-			if (topFive.get(2) != 0) {
-				schoolStmt.setInt(36, topFive.get(2));
-			}
-			else {
+			} if (three != 0) {
+				schoolStmt.setInt(36, three);
+			} else {
 				schoolStmt.setNull(36, java.sql.Types.INTEGER);
 			}
-			if (topFive.get(3) != 0) {
-				schoolStmt.setInt(37, topFive.get(3));
-			}
-			else {
+			if (four != 0) {
+				schoolStmt.setInt(37, four);
+			} else {
 				schoolStmt.setNull(37, java.sql.Types.INTEGER);
 			}
-			if (topFive.get(4) != 0) {
-				schoolStmt.setInt(38, topFive.get(4));
-			}
-			else {
+			if (five != 0) {
+				schoolStmt.setInt(38, five);
+			} else {
 				schoolStmt.setNull(38, java.sql.Types.INTEGER);
 			}
 			schoolStmt.setDouble(39, result.admissionRate);
@@ -1266,32 +1264,7 @@ public class DBUtil {
 			
 		} finally {
 			closeStatement(pstmt);
-		}
-//		PreparedStatement offersStmt = null;
-//		try {
-//			//get ArrayList of fields of study that are offered
-//			//Loop through each element of that ArrayList. If int value is 1,
-//			//add that field_ID to the arrayList
-//			ArrayList<Integer> fieldsOffered = result.getOffersFields();
-//			for (int fieldCounter=0; fieldCounter < fieldsOffered.size(); fieldCounter++) {
-//				if (fieldsOffered.get(fieldCounter) == 1) {
-//					int fieldID = fieldCounter+1;
-//					//insert school and field IDs into offers
-//					offersStmt = conn.prepareStatement("INSERT INTO offers "
-//							+ "(school_ID, field_ID) "
-//							+ "VALUES (?, ?)");
-//					offersStmt.setInt(1,  result.id);
-//					offersStmt.setInt(2, fieldID);
-//					offersStmt.executeUpdate();
-//				}
-//			}
-//		}
-//		catch(SQLException e) {
-//			System.out.println(e.toString());
-//		}
-//		finally {
-//			closeStatement(offersStmt);
-//		}	
+		}	
 	}
 	
 	/**

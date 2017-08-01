@@ -1,5 +1,7 @@
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
 import com.google.gson.annotations.SerializedName;
-import java.util.*;
 
 /**
  * Represents a result element, i.e. a school. Fields will be expanded to include
@@ -337,67 +339,64 @@ public class Result {
 	
 	//Method for getting an ascending sorted ArrayList<Double> with
 	//top 5 fields of study for school
-	public ArrayList<Integer> topFiveFields() {
-	ArrayList<Double> studyList = new ArrayList<Double>();
-	ArrayList<Integer> studyListInt = new ArrayList<Integer>();
-	ArrayList<Integer> topFiveFieldsInt = new ArrayList<Integer>();
-	studyList.add(studyAgriculture);
-	studyList.add(studyNaturalResources);
-	studyList.add(studyArchitecture);
-	studyList.add(studyCultureGender);
-	studyList.add(studyCommunication);
-	studyList.add(studyCommunicationsTechnology);
-	studyList.add(studyComputer_and_Information_Science);
-	studyList.add(studyPersonalCulinary);;
-	studyList.add(studyEducation);
-	studyList.add(studyEngineering);
-	studyList.add(studyEngineering_technology);
-	studyList.add(studyForeignLanguage_and_Linguistics);
-	studyList.add(studyFamilyConsumerScience);
-	studyList.add(studyLegal);
-	studyList.add(studyEnglish);
-	studyList.add(studyLiberalArtsHumanities);
-	studyList.add(studyLibraryScience);
-	studyList.add(studyBiologicalSciences);
-	studyList.add(studyMathematics_and_Statistics);
-	studyList.add(studyMilitaryTechnologies);
-	studyList.add(studyMultidisciplinaryStudies);
-	studyList.add(studyParksRecreationLeisureFitnessStudies);
-	studyList.add(studyPhilosophy_and_Religion);
-	studyList.add(studyTheologyVocation);
-	studyList.add(studyPhysicalScience);
-	studyList.add(studyScienceTechnology);
-	studyList.add(studyPsychology);
-	studyList.add(studySecurityLawEnforcement);
-	studyList.add(studyPublicAdminSocialService);
-	studyList.add(studySocialScience);
-	studyList.add(studyConstruction);
-	studyList.add(studyMechanicRepairTechnology);
-	studyList.add(studyPrecisionProduction);
-	studyList.add(studyTransportation);
-	studyList.add(studyVisualPerforming);
-	studyList.add(studyHealth);
-	studyList.add(studyBusinessMarketing);
-	studyList.add(studyHistory);
-	for (int counter = 1; counter <= studyList.size(); counter++) {
-		studyListInt.add(counter);
-	}
-	for (int j = 0; j < 5; j++) {
-		double max = 0;
-		int maxInt = 0;
-		int removalInt = 0;
-		for (int i = 0; i < studyList.size(); i++) {
-			if (max < studyList.get(i)) {
-				max = studyList.get(i);
-				maxInt = studyListInt.get(i);
-				removalInt = i;
+	public int[] topFiveFields() {
+		int[] topFiveIDs = new int[5];
+		LinkedHashMap<Integer, Double> map = new LinkedHashMap<Integer, Double>();
+		//put key(ID), value(pct) in map
+		map.put(AGRICULTURE, studyAgriculture);
+		map.put(NATURALRESOURCES, studyNaturalResources);
+		map.put(ARCHITECTURE, studyArchitecture);
+		map.put(CULTUREGENDER, studyCultureGender);
+		map.put(COMMUNICATION, studyCommunication);
+		map.put(COMMUNICATIONSTECHNOLOGY, studyCommunicationsTechnology);
+		map.put(COMPUTER_AND_INFORMATION_SCIENCE, studyComputer_and_Information_Science);
+		map.put(PERSONALCULINARY, studyPersonalCulinary);
+		map.put(EDUCATION, studyEducation);
+		map.put(ENGINEERING, studyEngineering);
+		map.put(ENGINEERING_TECHNOLOGY, studyEngineering_technology);
+		map.put(FOREIGNLANGUAGE_AND_LINGUISTICS, studyForeignLanguage_and_Linguistics);
+		map.put(FAMILYCONSUMERSCIENCE, studyFamilyConsumerScience);
+		map.put(LEGAL, studyLegal);
+		map.put(ENGLISH, studyEnglish);
+		map.put(LIBERALARTSHUMANITIES, studyLiberalArtsHumanities);
+		map.put(LIBRARYSCIENCE, studyLibraryScience);
+		map.put(BIOLOGICALSCIENCES, studyBiologicalSciences);
+		map.put(MATHEMATICS_AND_STATISTICS, studyMathematics_and_Statistics);
+		map.put(MILITARYTECHNOLOGIES, studyMilitaryTechnologies);
+		map.put(MULTIDISCIPLINARYSTUDIES, studyMultidisciplinaryStudies);
+		map.put(PARKSRECREATIONLEISUREFITNESSSTUDIES, studyParksRecreationLeisureFitnessStudies);
+		map.put(PHILOSOPHY_AND_RELIGION, studyPhilosophy_and_Religion);
+		map.put(THEOLOGYVOCATION, studyTheologyVocation);
+		map.put(PHYSICALSCIENCE, studyPhysicalScience);
+		map.put(SCIENCETECHNOLOGY, studyScienceTechnology);
+		map.put(PSYCHOLOGY, studyPsychology);
+		map.put(SECURITYLAWENFORCEMENT, studySecurityLawEnforcement);
+		map.put(PUBLICADMINSOCIALSERVICE, studyPublicAdminSocialService);
+		map.put(SOCIALSCIENCE, studySocialScience);
+		map.put(CONSTRUCTION, studyConstruction);
+		map.put(MECHANICREPAIRTECHNOLOGY, studyMechanicRepairTechnology);
+		map.put(PRECISIONPRODUCTION, studyPrecisionProduction);
+		map.put(TRANSPORTATION, studyTransportation);
+		map.put(VISUALPERFORMING, studyVisualPerforming);
+		map.put(HEALTH, studyHealth);
+		map.put(BUSINESSMARKETING, studyBusinessMarketing);
+		map.put(HISTORY, studyHistory);
+		
+		//on each iteration get the max from the set then remove the max
+		for (int i = 0; i < 5; i++) {
+			double max = 0;
+			int maxID = 0;
+			for (Entry<Integer, Double> e : map.entrySet()) {
+				Double v = e.getValue();
+				if (v > max) {
+					max = v;
+					maxID = e.getKey();
+				}
 			}
+			map.remove(maxID);
+			topFiveIDs[i] = maxID;
 		}
-		studyList.remove(removalInt);
-		studyListInt.remove(removalInt);
-		topFiveFieldsInt.add(maxInt);
-	}
-	return topFiveFieldsInt;
+		return topFiveIDs;
 	}
 }
 
