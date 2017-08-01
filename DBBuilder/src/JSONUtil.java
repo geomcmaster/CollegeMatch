@@ -124,9 +124,9 @@ public class JSONUtil {
 			+ "2014.academics.program.bachelors.architecture,"
 			+ "2014.academics.program.bachelors.ethnic_cultural_gender,"
 			+ "2014.academics.program.bachelors.communication,"
-			+ "2014.academics.program.bachelors.communication_technology,"
+			+ "2014.academics.program.bachelors.communications_technology,"
 			+ "2014.academics.program.bachelors.computer,"
-			+ "2014.academics.program.bachelors.persona_culinary,"
+			+ "2014.academics.program.bachelors.personal_culinary,"
 			+ "2014.academics.program.bachelors.education," 
 			+ "2014.academics.program.bachelors.engineering,"
 			+ "2014.academics.program.bachelors.engineering_technology,"
@@ -159,7 +159,7 @@ public class JSONUtil {
 			+ "2014.academics.program.bachelors.history";
 	
 	private static final String ATTRIBUTES = 
-			SCHOOL + SAT_ACT_SCORES + DEMOGRPHICS + MAJORS + FINANCES_and_LOCATION;
+			SCHOOL + SAT_ACT_SCORES + DEMOGRPHICS + MAJORS + FINANCES_and_LOCATION + OFFERS;
 	
 	private final String API_KEY;
 	private DBUtil dbUtil;

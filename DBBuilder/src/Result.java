@@ -270,11 +270,11 @@ public class Result {
 	int offersCultureGender;
 	@SerializedName("2014.academics.program.bachelors.communication")
 	int offersCommunication;
-	@SerializedName("2014.academics.program.bachelors.communication_technology")
+	@SerializedName("2014.academics.program.bachelors.communications_technology")
 	int offersCommTech;
 	@SerializedName("2014.academics.program.bachelors.computer")
 	int offersCS;
-	@SerializedName("2014.academics.program.bachelors.persona_culinary")
+	@SerializedName("2014.academics.program.bachelors.personal_culinary")
 	int offersCulinary;
 	@SerializedName("2014.academics.program.bachelors.education")
 	int offersEducation;
