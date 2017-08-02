@@ -58,11 +58,13 @@ function showKids(source) {
 		case "programs":
 			document.getElementById(strOpen + "sel2").classList.remove("hidden");
 			break;
+		case "region":
+			document.getElementById(strOpen + "sel3").classList.remove("hidden");
+			break;
 		case "name":
 			document.getElementById(strOpen + "text").classList.remove("hidden");
 			break;
 		case "cost":
-		case "price":
 		case "sat":
 		case "act":
 		case "earnings":
@@ -91,6 +93,7 @@ function showKids(source) {
 			document.getElementById(strOpen + "level").classList.remove("hidden");
 			break;
 		case "favorites":
+		case "fav5":
 		case "online":
 			document.getElementById(strOpen + "check").classList.remove("hidden");
 			break;

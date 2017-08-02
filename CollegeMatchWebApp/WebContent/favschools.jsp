@@ -29,7 +29,7 @@
 			<h2>My Favorite Colleges</h2>
 		</div>
 		<!-- link to search for more->find schools -->
-		<p>Want to find more? Go to <a href="schoolsearch.html">search</a>!</p>
+		<p>Want to find more? Go to <a href="schoolsearch">search</a>!</p>
 		<table class="college_list">
 		
 			<!-- loop through list w/ edit buttons->edit individual favorite, delete buttons -->
