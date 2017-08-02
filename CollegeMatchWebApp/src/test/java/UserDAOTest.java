@@ -61,7 +61,7 @@ public class UserDAOTest {
 		userDAO = new UserDAO();
 		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence, testDeleteFavField, testUpdateFavSchool
 		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence, testModifyFavField, testAddFavSchool
-		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence, testGetFavFields, testGetFavFields
+		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence, testGetFavFields, testGetFavSchools
 	}
 
 	@Test
@@ -432,7 +432,30 @@ public class UserDAOTest {
 	
 	@Test
 	public void testDeleteFavSchool() {
-		//TODO implement. Holding off until we have schools in our db
+		String user = "anotheruseruseruser";
+		userDAO.createUser(user, "sadfsafsdfs1111");
+		int SUNYPurchase = 196219;
+		int SUNYGeneseo = 196167;
+		int SUNYBinghamton = 196079;
+		
+		userDAO.addFavSchool(user, SUNYPurchase);
+
+		//delete only fav
+		userDAO.deleteFavSchool(user, SUNYPurchase);
+		assertEquals("Favorite school not deleted", 0, userDAO.getFavSchools(user).size());
+
+		userDAO.addFavSchool(user, SUNYGeneseo);
+		userDAO.addFavSchool(user, SUNYBinghamton);
+		
+		//delete 1 of 2
+		userDAO.deleteFavSchool(user, SUNYBinghamton);
+		assertEquals("Wrong number of favorite schools remaining", 1, userDAO.getFavSchools(user).size());
+		assertEquals("Wrong field deleted", 
+				"SUNY College at Geneseo", userDAO.getFavSchools(user).get(0).getSchool().getName());
+		
+		//delete 2 of 2
+		userDAO.deleteFavSchool(user, SUNYGeneseo);
+		assertEquals("Favorite school not deleted", 0, userDAO.getFavSchools(user).size());
 	}
 
 	@After
