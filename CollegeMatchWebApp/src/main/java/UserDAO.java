@@ -108,27 +108,45 @@ public class UserDAO {
 	}
 	
 	/**
-	 * Updates user with given password, SAT score, ACT score
+	 * Updates user with new password
 	 * 
 	 * @param userName
-	 * @param password
-	 * @param satScore
-	 * @param actScore
+	 * @param newPassword
 	 */
-	public void updateUser(String userName, String password, int satScore, int actScore) {
-		//assuming that we won't let them change username
-		//assuming that existing values will be passed if they are to stay the same
-			//alternative is having separate methods for each
+	public void updatePassword(String userName, String newPassword) {
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = 
 					dbUtil.getConnection().prepareStatement("UPDATE user "
-							+ "SET password=?, SAT_SCORE=?, ACT_SCORE=? "
+							+ "SET password=? "
 							+ "WHERE id=?");
-			pstmt.setString(1, password);
-			pstmt.setInt(2, satScore);
-			pstmt.setInt(3, actScore);
-			pstmt.setString(4, userName);
+			pstmt.setString(1, newPassword);
+			pstmt.setString(2, userName);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
+	
+	/**
+	 * Updates user with given SAT score, ACT score
+	 * 
+	 * @param userName
+	 * @param satScore
+	 * @param actScore
+	 */
+	public void updateUser(String userName, int satScore, int actScore) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement("UPDATE user "
+							+ "SET SAT_SCORE=?, ACT_SCORE=? "
+							+ "WHERE id=?");
+			pstmt.setInt(1, satScore);
+			pstmt.setInt(2, actScore);
+			pstmt.setString(3, userName);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
