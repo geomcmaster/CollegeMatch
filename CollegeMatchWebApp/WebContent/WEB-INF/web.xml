@@ -34,6 +34,38 @@
 	<servlet-name>ViewFavoriteSchools</servlet-name>
 	<servlet-class>com.servlets.ViewFavorites</servlet-class>
   </servlet>
+  <servlet>
+	<servlet-name>OpenSearch</servlet-name>
+	<servlet-class>com.servlets.OpenSearchForm</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>Logout</servlet-name>
+	<servlet-class>com.servlets.Logout</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>EditFavoriteForm</servlet-name>
+	<servlet-class>com.servlets.EditFavoriteForm</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>SchoolDetails</servlet-name>
+	<servlet-class>com.servlets.SchoolDetails</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>SaveFavoriteData</servlet-name>
+	<servlet-class>com.servlets.SaveFavorite</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>DeleteFavorite</servlet-name>
+	<servlet-class>com.servlets.DeleteFavorite</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>AddFavorite</servlet-name>
+	<servlet-class>com.servlets.AddFavorite</servlet-class>
+  </servlet>
+  <servlet>
+	<servlet-name>SchoolSearch</servlet-name>
+	<servlet-class>com.servlets.Search</servlet-class>
+  </servlet>
   
   
   <servlet-mapping>
@@ -59,5 +91,37 @@
   <servlet-mapping>
 	<servlet-name>ViewFavoriteSchools</servlet-name>
 	<url-pattern>/myfavorites</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>OpenSearch</servlet-name>
+	<url-pattern>/schoolsearch</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>Logout</servlet-name>
+	<url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>EditFavoriteForm</servlet-name>
+	<url-pattern>/editFav*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>SchoolDetails</servlet-name>
+	<url-pattern>/viewSchool*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>SaveFavoriteData</servlet-name>
+	<url-pattern>/saveFav</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>DeleteFavorite</servlet-name>
+	<url-pattern>/deleteFav*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>AddFavorite</servlet-name>
+	<url-pattern>/addFav*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>SchoolSearch</servlet-name>
+	<url-pattern>/advsearch</url-pattern>
   </servlet-mapping>
 </web-app>
