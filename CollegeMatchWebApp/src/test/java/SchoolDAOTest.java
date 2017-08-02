@@ -1,12 +1,12 @@
 package test.java;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,22 +18,50 @@ import main.java.Condition;
 import main.java.DBUtil;
 import main.java.School;
 import main.java.SchoolDAO;
+import main.java.UserDAO;
 
 public class SchoolDAOTest {
 	private DBUtil dbUtil;
 	private SchoolDAO schoolDAO;
+	private UserDAO userDAO;
 	
 	@Before
 	public void setUp() {
 		dbUtil = new DBUtil();
 		schoolDAO = new SchoolDAO();
+		userDAO = new UserDAO();
 	}
 	
 	@Test
 	public void testGetSchools() {
 		testOneCondition();
 		testSimpleConditions();
-		//TODO complex condition test cases
+
+		//favs in top 5
+		//create user
+		String user1 = "favtestuser";
+		String pw = "favtestpw";
+		userDAO.createUser(user1, pw);
+		userDAO.modifyFavField(user1, 47, 1);
+		userDAO.modifyFavField(user1, 3, 2);
+		//create conditions
+		List<Condition> conditions = new LinkedList<Condition>();
+		Condition suny = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("SUNY%"));
+		Condition top5 = schoolDAO.favsInTopFive(user1);
+		conditions.add(suny);
+		conditions.add(top5);
+		//execute
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
+		assertEquals("More than three schools returned", 3, schools.size());
+		for (School school : schools) {
+			assertTrue("Wrong school returned", school.getName().equals("SUNY College of Technology at Alfred") 
+					|| school.getName().equals("SUNY College of Environmental Science and Forestry") 
+					|| school.getName().equals("SUNY College of Agriculture and Technology at Cobleskill"));
+		}
+		
+		//offers favs
+		//TODO
+		
 	}
 	
 	private void testOneCondition() {
@@ -66,4 +94,36 @@ public class SchoolDAOTest {
 		}
 	}
 	
+	@After
+	public void cleanUp() {
+		cleanUpFavoriteFields();
+		cleanUpUser();
+		
+		//ALWAYS LAST
+		dbUtil.closeConnection();
+	}
+	
+	private void cleanUpUser() {
+		Statement stmt = null;
+		try {
+			stmt = dbUtil.getConnection().createStatement();
+			stmt.executeUpdate("DELETE FROM user");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(stmt);
+		}
+	}
+	
+	private void cleanUpFavoriteFields() {
+		Statement stmt = null;
+		try {
+			stmt = dbUtil.getConnection().createStatement();
+			stmt.executeUpdate("DELETE FROM favoriteFieldsOfStudy");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(stmt);
+		}
+	}
 }
