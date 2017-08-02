@@ -36,32 +36,7 @@ public class SchoolDAOTest {
 	public void testGetSchools() {
 		testOneCondition();
 		testSimpleConditions();
-
-		//favs in top 5
-		//create user
-		String user1 = "favtestuser";
-		String pw = "favtestpw";
-		userDAO.createUser(user1, pw);
-		userDAO.modifyFavField(user1, 47, 1);
-		userDAO.modifyFavField(user1, 3, 2);
-		//create conditions
-		List<Condition> conditions = new LinkedList<Condition>();
-		Condition suny = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("SUNY%"));
-		Condition top5 = schoolDAO.favsInTopFive(user1);
-		conditions.add(suny);
-		conditions.add(top5);
-		//execute
-		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
-		assertEquals("More than three schools returned", 3, schools.size());
-		for (School school : schools) {
-			assertTrue("Wrong school returned", school.getName().equals("SUNY College of Technology at Alfred") 
-					|| school.getName().equals("SUNY College of Environmental Science and Forestry") 
-					|| school.getName().equals("SUNY College of Agriculture and Technology at Cobleskill"));
-		}
-		
-		//offers favs
-		//TODO
-		
+		testWithFavs();
 	}
 	
 	private void testOneCondition() {
@@ -91,6 +66,54 @@ public class SchoolDAOTest {
 		for (School school : schools) {
 			assertEquals("School not in CA", school.getLocation().getStateStr(), "CA");
 			assertTrue("In state tuition not less than 20000", school.getTuitionIn() < 20000);
+		}
+	}
+	
+	private void testWithFavs() {
+		String SUNYAlfred = "SUNY College of Technology at Alfred";
+		String SUNYEnvSci = "SUNY College of Environmental Science and Forestry";
+		String SUNYCobleskill = "SUNY College of Agriculture and Technology at Cobleskill";
+		
+		////favs in top 5//
+		//create user
+		String user1 = "favtestuser";
+		String pw = "favtestpw";
+		userDAO.createUser(user1, pw);
+		userDAO.modifyFavField(user1, 47, 1);
+		userDAO.modifyFavField(user1, 3, 2);
+		//create conditions
+		List<Condition> conditions = new LinkedList<Condition>();
+		Condition suny = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("SUNY%"));
+		Condition top5 = schoolDAO.favsInTopFive(user1);
+		conditions.add(suny);
+		conditions.add(top5);
+		//execute
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
+		assertEquals("More than three schools returned", 3, schools.size());
+		for (School school : schools) {
+			assertTrue("Wrong school returned", school.getName().equals(SUNYAlfred) 
+					|| school.getName().equals(SUNYEnvSci) 
+					|| school.getName().equals(SUNYCobleskill));
+		}
+		
+		////offers favs////
+		//update favs
+		userDAO.deleteFavField(user1, 47);
+		userDAO.deleteFavField(user1, 3);
+		userDAO.modifyFavField(user1, 1, 2);
+		userDAO.modifyFavField(user1, 46, 1);
+		//create conditions
+		List<Condition> conditionsOffers = new LinkedList<Condition>();
+		Condition offers = schoolDAO.favsInOffers(user1);
+		conditionsOffers.add(suny);	//reuse from above
+		conditionsOffers.add(offers);
+		//execute
+		List<School> schoolsOffers = schoolDAO.getSchools(conditionsOffers, SchoolDAO.NONE);
+		assertEquals("More than three schools returned", 3, schoolsOffers.size());
+		for (School school : schoolsOffers) {
+			assertTrue("Wrong school returned", school.getName().equals(SUNYAlfred) 
+					|| school.getName().equals(SUNYEnvSci) 
+					|| school.getName().equals(SUNYCobleskill));
 		}
 	}
 	
