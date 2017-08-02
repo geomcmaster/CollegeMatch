@@ -41,7 +41,7 @@ public class SchoolDAOTest {
 						CondType.GT, CondVal.createIntVal(40000));
 		List<Condition> conditions = new LinkedList<Condition>();
 		conditions.add(c);
-		List<School> schools = schoolDAO.getSchools(conditions, schoolDAO.NONE);
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
 		for (School school : schools) {
 			assertTrue("Out of state tuition not greater than 40000", school.getTuitionOut() > 40000);
 		}
@@ -58,7 +58,7 @@ public class SchoolDAOTest {
 		List<Condition> conditions = new LinkedList<Condition>();
 		conditions.add(c1);
 		conditions.add(c2);
-		List<School> schools = schoolDAO.getSchools(conditions, schoolDAO.NONE);
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
 		for (School school : schools) {
 			assertEquals("School not in CA", school.getLocation().getStateStr(), "CA");
 			assertTrue("In state tuition not less than 20000", school.getTuitionIn() < 20000);

@@ -59,7 +59,7 @@ public class UserDAOTest {
 		dbUtil = new DBUtil();
 		userDAO = new UserDAO();
 		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence, testDeleteFavField
-		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence, testAddFavField
+		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence, testModifyFavField, testAddFavSchool
 		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence, testGetFavFields
 	}
 
@@ -379,7 +379,12 @@ public class UserDAOTest {
 	
 	@Test
 	public void testAddFavSchool() {
-		//TODO implement. Holding off until we have schools in our db
+		userDAO.addFavSchool(USERNAME_3, 197133);
+		assertEquals(
+				"Favorite school ID not present", 
+				"Vassar College", 
+				userDAO.getFavSchools(USERNAME_3).get(0).getSchool().getName());
+		assertFalse("Doesn't return false when trying to readd school", userDAO.addFavSchool(USERNAME_3, 197133));
 	}
 	
 	@Test

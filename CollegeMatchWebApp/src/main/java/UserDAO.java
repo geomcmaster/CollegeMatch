@@ -457,21 +457,40 @@ public class UserDAO {
 	 * 
 	 * @param userName The user adding a favorite
 	 * @param schoolID The ID of the school to add
+	 * @return Whether insertion was successful. If school was already a favorite, this returns false.
 	 */
-	public void addFavSchool(String userName, int schoolID) {
+	public boolean addFavSchool(String userName, int schoolID) {
+		boolean success = true;
+		PreparedStatement checkExistence = null;
+		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = 
+			checkExistence = 
 					dbUtil.getConnection().prepareStatement(
-							"INSERT INTO favoriteSchools (std_ID, school_ID) VALUES (?, ?)");
-			pstmt.setString(1, userName);
-			pstmt.setInt(2, schoolID);
-			pstmt.executeUpdate();
+							"SELECT school_ID FROM favoriteSchools WHERE std_ID = ?");
+			checkExistence.setString(1, userName);
+			rs = checkExistence.executeQuery();
+			while (rs.next()) {
+				if (rs.getInt(1) == schoolID) {
+					success = false;
+				}
+			}
+			if (success) {
+				pstmt = 
+						dbUtil.getConnection().prepareStatement(
+								"INSERT INTO favoriteSchools (std_ID, school_ID) VALUES (?, ?)");
+				pstmt.setString(1, userName);
+				pstmt.setInt(2, schoolID);
+				pstmt.executeUpdate();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(checkExistence);
 			DBUtil.closeStatement(pstmt);
 		}
+		return success;
 	}
 	
 	/**
