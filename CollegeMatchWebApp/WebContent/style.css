@@ -1,0 +1,339 @@
+/**************************/
+/**** OVERALL ELEMENTS ****/
+/**************************/
+	html {
+		box-sizing: border-box;
+	}
+	
+	*, *:before, *:after {
+		box-sizing: inherit;
+	}
+	
+	body {
+		background-color: #190b05;
+	}
+
+/***************/
+/**** WRAPS ****/
+/***************/
+	div#wrap {
+		width:900px;
+		margin-left:auto;
+		margin-right:auto;
+		position: relative;
+	}
+	
+	div#contentwrap {
+		position: absolute;
+		background-color: #f5f5f5;
+		border-radius: 5px;
+		border: 1px black;
+		min-height:100%;
+		width: 100%;
+	}
+	
+	div#sidebar {
+		width: 250px;
+		background-color: #e6efff;
+		padding-left: 5px;
+		padding-right: 5px;
+		margin-left: 10px;
+		min-height:100%;
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		padding-bottom:5px;
+		position:absolute;
+		right:0px;
+	}
+	
+	div#content {
+		padding: 5 260 5 10;
+	}
+	
+	div#contentnoside {
+		padding: 5 10 5 10;
+	}
+	
+	div.nosidewrap {
+		width: 80%;
+		margin: auto;
+	}
+
+/****************/
+/**** HEADER ****/
+/****************/
+	div#header {
+		height: 200px;
+		margin-bottom: 20px;
+		background-image: url("images/header.jpg");
+		border-radius: 5px;
+	}
+
+/****************/
+/**** INPUTS ****/
+/****************/
+	.inbox {
+		width: 150px;
+	}
+	
+	.number {
+		width: 75px;
+		padding-left: 2px;
+	}
+
+	.sel_type {
+		width: 300px;
+	}
+	
+	.fav_item select {
+		float: left;
+	}
+
+/****************/
+/**** TABLES ****/
+/****************/
+	table {
+		width:100%;
+	}
+	
+	table#userdata, table#editfav {
+		width: 75%;
+		margin: auto;
+	}
+	
+	table.college_list > tbody > tr:nth-child(even),table.fav_list > tbody > tr:nth-child(even) {
+		background-color: #e2e7ca; /*#daf0e1;*/
+	}
+	
+	table.college_list > tbody > tr:nth-child(odd),table.fav_list > tbody > tr:nth-child(odd) {
+		background-color: #f5f7ed; /*#e9f6ed;*/
+	}
+	
+	table.college_list > tbody > tr > td {
+		border-top: 1px black solid;
+		border-left: 1px black solid;
+		border-right: 1px black solid;
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	
+	table.college_list > tbody > tr:last-child > td,table.fav_list > tbody > tr:last-child > td {
+		border-bottom: 1px black solid;
+	}
+	
+	table.college_list,table.fav_list {
+		border-collapse: collapse;
+	}
+	
+	table.fav_list td {
+		border-top: 1px black solid;
+		border-bottom: 1px black solid;
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	table.fav_list td:first-child {
+		border-left: 1px black solid;
+	}
+	table.fav_list td:last-child {
+		border-right: 1px black solid;
+	}
+	
+	table.college {
+		border-collapse: inherit;
+	}
+	
+	table.college td {
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	
+	table.college tr:first-child td:first-child a { /* college name */
+		font-weight: bold;
+		font-variant:small-caps;
+		text-decoration: none;
+		color: #000;
+	}
+	
+	table.college tr:first-child td:first-child a:hover {
+		font-weight: bold;
+		font-variant:small-caps;
+		text-decoration: underline;
+		color: #000;
+	}
+	
+	table.college td:first-child {
+		width:55%;
+	}
+	
+	table.college td:last-child {
+		width:45%;
+	}
+	
+	table.college td {
+		border-bottom: 1px darkgray solid;
+		vertical-align: top;
+	}
+	
+	table.college tr:last-child td {
+		border-bottom: 0;
+	}
+	
+	td.label {
+		text-align:left;
+	}
+	
+	td.input {
+		text-align:right;
+	}
+
+	.college_list ul, .college_list ol {
+		margin-bottom: 0;
+	}
+	
+	table#userdata {
+		border-collapse: collapse;
+	}
+	
+	tr.newsection td {
+		border-top: 1px darkgray solid;
+	}
+	
+	tr.newsection:first-child td {
+		border-top: 0;
+	}
+	
+	td#fieldlist {
+		max-width: 250px;
+	}
+
+/********************/
+/**** TEXT/LINKS ****/
+/********************/
+	.alt-action {
+		font-size: 0.7em;
+	}
+	
+	span.alt-action {
+		padding-left: 10px;
+	}
+	
+	span.alt-action a {
+		color: #b3b3ff;
+	}
+	
+	span.alt-action a:visited {
+		color: #CDA9EF;
+	}
+	
+	h2 {
+		margin-top: 5px;
+	}
+	
+	h4 {
+		margin-bottom:0px;
+		font-variant: small-caps;
+		margin-top: 10px;
+	}
+	
+	dl {
+		width: 100%;
+		overflow: hidden;
+	}
+	
+	dt {
+		font-style:italic;
+		float: left;
+		width: 45%;
+		padding: 0;
+		margin: 0;
+		clear: left;
+	}
+	
+	dt::after {
+		content: ":";
+	}
+	
+	dd {
+		float: left;
+		width: 55%;
+		padding: 0;
+		margin: 0;
+		word-wrap: break-word;
+	}
+
+	.alert {
+		font-weight: bold;
+		color: #F04040;
+	}
+	
+	.fav_item {
+		margin: 0;
+		padding: 2;
+		border: 1px darkgray solid;
+		background-color: lightgray;
+	}
+
+/****************/
+/**** BLOCKS ****/
+/****************/
+	div.left {
+		float: left;
+		width: 47%;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	
+	.left, .right {
+		border: 1px black solid;
+		margin-bottom: 10px;
+	}
+	
+	div.right {
+		float:right;
+		width: 47%;
+		padding-right: 20px;
+		padding-left: 20px;
+	}
+	
+	div#topbar {
+		width: 100%;
+		background: #5060C0;
+		border: 2px #202880 solid;
+		border-radius: 2px;
+		padding: 4;
+		text-align: center;
+		margin-bottom: 10px;
+	}
+	
+	div#topbar form {
+		margin: 0;
+	}
+	
+	div.warning {
+		border: 1px black solid;
+		background-color: #fdc968;
+		padding: 3px;
+		margin-bottom: 10px;
+	}
+	
+	div.warning:before {
+		content: url(images/warning1.png);
+		background-color: #fdc968;
+		padding: 3px;
+	}
+
+/***********************/
+/**** MISCELLANEOUS ****/
+/***********************/
+	img {
+		margin: auto;
+	}
+	
+	img.star {
+		width: 21px;
+		height: 20px;
+	}
+	
+	.hidden {
+		display: none;
+	}
