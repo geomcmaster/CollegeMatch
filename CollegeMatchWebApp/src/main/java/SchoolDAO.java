@@ -299,22 +299,23 @@ public class SchoolDAO {
 			} else {
 				CondVal val = c.getValue();
 				ValType vtype = val.getType();
-				if (vtype == ValType.INT_RANGE) {
-					pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
-					pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
-				} else if (vtype == ValType.DOUBLE_RANGE) {
-					pstmt.setDouble(val.getIndexOfMin(), val.getMinDouble());
-					pstmt.setDouble(val.getIndexOfMax(), val.getMaxDouble());
-				} else if (vtype == ValType.INT) {
-					pstmt.setInt(val.getIndex(), val.getIntVal());
-				} else if (vtype == ValType.DOUBLE) {
-					pstmt.setDouble(val.getIndex(), val.getDoubleVal());
-				} else if (vtype == ValType.STRING) {
-					pstmt.setString(val.getIndex(), val.getStrVal());
-				} else if (vtype == ValType.SINGLE_STRING_SUBQUERY) {
-					pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
-				} else if (vtype == ValType.OR_GROUP) {
-					insertIntoPrepStmt(val.getOrConditions(), pstmt);	//recursive
+				switch (vtype) {
+					case INT_RANGE: 	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
+										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+										break;
+					case DOUBLE_RANGE:	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
+										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+										break;
+					case INT:			pstmt.setInt(val.getIndex(), val.getIntVal());
+										break;
+					case DOUBLE:		pstmt.setDouble(val.getIndex(), val.getDoubleVal());
+										break;
+					case STRING:		pstmt.setString(val.getIndex(), val.getStrVal());
+										break;
+					case SINGLE_STRING_SUBQUERY:	pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
+													break;
+					case OR_GROUP:		insertIntoPrepStmt(val.getOrConditions(), pstmt);	//recursive
+										break;
 				}
 			}
 		}

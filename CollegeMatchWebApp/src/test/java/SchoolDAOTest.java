@@ -37,6 +37,7 @@ public class SchoolDAOTest {
 		testOneCondition();
 		testSimpleConditions();
 		testWithFavs();
+		//TODO test gender, ethnicity, region
 	}
 	
 	private void testOneCondition() {
