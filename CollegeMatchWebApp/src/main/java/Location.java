@@ -78,8 +78,10 @@ public class Location {
 	
 	private int id;
 	private String city;
-	private int state;
+	private int stateInt;
+	private String stateStr;
 	private int zip;
+	private boolean valid;
 	//region is stored in region table. only need to set this field if you care about returning the location's
 	//region
 	private String region;
@@ -90,7 +92,7 @@ public class Location {
 	 * @return The abbreviation for the state
 	 */
 	public String getStateAbbreviation() {
-		return stateMap.get(state);
+		return stateMap.get(stateInt);
 	}
 	
 	/**
@@ -118,18 +120,6 @@ public class Location {
 		this.city = city;
 	}
 	/**
-	 * @return the state
-	 */
-	public int getState() {
-		return state;
-	}
-	/**
-	 * @param state the state to set
-	 */
-	public void setState(int state) {
-		this.state = state;
-	}
-	/**
 	 * @return the zip
 	 */
 	public int getZip() {
@@ -154,5 +144,47 @@ public class Location {
 	 */
 	public void setRegion(String region) {
 		this.region = region;
+	}
+
+	/**
+	 * @return Whether this is a valid location (fields set)
+	 */
+	public boolean isValid() {
+		return valid;
+	}
+
+	/**
+	 * @param valid Whether this is a valid location (fields set)
+	 */
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+
+	/**
+	 * @return the stateInt
+	 */
+	public int getStateInt() {
+		return stateInt;
+	}
+
+	/**
+	 * @param stateInt the stateInt to set
+	 */
+	public void setStateInt(int stateInt) {
+		this.stateInt = stateInt;
+	}
+
+	/**
+	 * @return the stateStr
+	 */
+	public String getStateStr() {
+		return stateStr;
+	}
+
+	/**
+	 * @param stateStr the stateStr to set
+	 */
+	public void setStateStr(String stateStr) {
+		this.stateStr = stateStr;
 	}
 }

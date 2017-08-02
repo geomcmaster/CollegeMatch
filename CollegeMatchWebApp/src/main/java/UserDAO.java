@@ -1,7 +1,9 @@
 package main.java;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,30 +29,24 @@ public class UserDAO {
 	 * @return true if successful, false if user name already in use
 	 */
 	public boolean createUser(String userName, String password) {
-		PreparedStatement findUser = null;
-		ResultSet rs = null;
-		PreparedStatement insertUser = null;
-		
+		CallableStatement cstmt = null;
+		boolean success = false;
 		try {
-			findUser = dbUtil.getConnection().prepareStatement("SELECT COUNT(*) FROM user WHERE ID=?");
-			findUser.setString(1, userName);
-			rs = findUser.executeQuery();
-			if (rs.next() && rs.getInt(1) > 0) {
-				return false;	//username already in use
+			cstmt = dbUtil.getConnection().prepareCall("{call create_user(?, ?, ?)}");
+			cstmt.setString(1, userName);
+			cstmt.setString(2, password);
+			cstmt.registerOutParameter(3, Types.INTEGER);
+			cstmt.execute();
+			int valid = cstmt.getInt(3);
+			if (valid == 1) {
+				success = true;
 			}
-			
-			insertUser = dbUtil.getConnection().prepareStatement("INSERT INTO user (ID, password) VALUES (?, ?)");
-			insertUser.setString(1, userName);
-			insertUser.setString(2, password);
-			insertUser.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.closeStatement(findUser);
-			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(insertUser);
+			DBUtil.closeStatement(cstmt);
 		}
-		return true;
+		return success;
 	}
 	
 	/**
@@ -88,14 +84,12 @@ public class UserDAO {
 	 */
 	public User getUser(String userName) {
 		User user = new User();
-		PreparedStatement pstmt = null;
+		CallableStatement cstmt = null;
 		ResultSet rs = null;
 		try {
-			pstmt = 
-					dbUtil.getConnection().prepareStatement("SELECT password, SAT_SCORE, ACT_SCORE "
-							+ "FROM user WHERE ID=?");
-			pstmt.setString(1, userName);
-			rs = pstmt.executeQuery();
+			cstmt = dbUtil.getConnection().prepareCall("{call get_user(?)}");
+			cstmt.setString(1, userName);
+			rs = cstmt.executeQuery();
 			if (rs.next()) {
 				user.setValid(true);
 				user.setPassword(rs.getString(1));
@@ -108,7 +102,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(pstmt);
+			DBUtil.closeStatement(cstmt);
 		}
 		return user;
 	}
@@ -162,6 +156,77 @@ public class UserDAO {
 	}
 	
 	//RESIDENCE
+	//let's just stick to int values for states? 
+	//can uncomment if we change our minds, but that might require other updates
+//	/**
+//	 * Modifies or adds (if it doesn't exist) an entry in the residence table that references location table. 
+//	 * Creates location if necessary.
+//	 * 
+//	 * @param stdID user ID
+//	 * @param city City of residence
+//	 * @param state State of residence
+//	 * @param zip ZIP code of residence
+//	 */
+//	public void modifyResidence(String stdID, String city, String state, int zip) {
+//		//TODO this treats empty strings as such. Do we want to consider them null instead? At the very least
+//		//	we probably shouldn't add a location for "", "", "", right?
+//		PreparedStatement findLoc = null;
+//		String getLocIdCnt = 
+//				"SELECT id, COUNT(*) "
+//				+ "FROM LOCATION "
+//				+ "WHERE city = ? AND state_string = ? AND ZIP = ?";
+//		PreparedStatement insertWithID = null;
+//		String insertForExistingLoc = 
+//				"INSERT INTO residence (std_ID, loc_ID) "
+//				+ "VALUES (?, ?) ON DUPLICATE KEY UPDATE loc_ID=?";
+//		PreparedStatement newLoc = null;
+//		String createLoc = 
+//				"INSERT INTO location (city, state_string, ZIP) "
+//				+ "VALUES (?, ?, ?)";
+//		PreparedStatement resWithNewLoc = null;
+//		String createResForNewLoc = 
+//				"INSERT INTO residence (std_ID, loc_ID) "
+//				+ "VALUES (?, LAST_INSERT_ID()) ON DUPLICATE KEY UPDATE loc_ID=LAST_INSERT_ID()";
+//		ResultSet rs = null;
+//		
+//		try {
+//			findLoc = dbUtil.getConnection().prepareStatement(getLocIdCnt);
+//			findLoc.setString(1, city);
+//			findLoc.setString(2, state);
+//			findLoc.setInt(3, zip);
+//			rs = findLoc.executeQuery();
+//			
+//			//does location already exist?
+//			if (rs.next() && rs.getInt(2) > 0) {
+//				insertWithID = dbUtil.getConnection().prepareStatement(insertForExistingLoc);
+//				insertWithID.setString(1, stdID);
+//				int existingID = rs.getInt(1);			//existing location ID
+//				insertWithID.setInt(2, existingID);
+//				insertWithID.setInt(3, existingID);
+//				insertWithID.executeUpdate();
+//			} else {
+//				//create location
+//				newLoc = dbUtil.getConnection().prepareStatement(createLoc);
+//				newLoc.setString(1, city);
+//				newLoc.setString(2, state);
+//				newLoc.setInt(3, zip);
+//				newLoc.executeUpdate();
+//				//create residence
+//				resWithNewLoc = dbUtil.getConnection().prepareStatement(createResForNewLoc);
+//				resWithNewLoc.setString(1, stdID);
+//				resWithNewLoc.executeUpdate();
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.closeStatement(findLoc);
+//			DBUtil.closeStatement(insertWithID);
+//			DBUtil.closeStatement(newLoc);
+//			DBUtil.closeStatement(resWithNewLoc);
+//			DBUtil.closeResultSet(rs);
+//		}
+//	}
+	
 	/**
 	 * Modifies or adds (if it doesn't exist) an entry in the residence table that references location table. 
 	 * Creates location if necessary.
@@ -230,7 +295,43 @@ public class UserDAO {
 			DBUtil.closeResultSet(rs);
 		}
 	}
-	//get residence
+	
+	/**
+	 * Gets the current residence of a user. If none found, Location.isValid() returns false.
+	 * 
+	 * @param userName The user to get the residence for
+	 * @return A location object representing the user's residence
+	 */
+	public Location getResidence(String userName) {
+		Location loc = new Location();
+		loc.setValid(false);
+		
+		String query = 
+				"SELECT location.ID, location.city, location.state, location.zip "
+				+ "FROM residence JOIN location ON residence.loc_ID = location.ID "
+				+ "WHERE residence.std_ID=?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = dbUtil.getConnection().prepareStatement(query);
+			pstmt.setString(1, userName);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				loc.setValid(true);
+				loc.setId(rs.getInt(1));
+				loc.setCity(rs.getString(2));
+				loc.setStateInt(rs.getInt(3));
+				loc.setZip(rs.getInt(4));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(pstmt);
+		}
+		
+		return loc;
+	}
 	
 	//FIELDS OF STUDY
 	//get fields of study?
@@ -264,7 +365,7 @@ public class UserDAO {
 	}
 
 	/**
-	 * Adds a favorite field of study.
+	 * Modifies a favorite field of study or adds it if entry doesn't exist.
 	 * Does not check: 
 	 * 		-if ID exists in fieldsOfStudy table
 	 * 		-if entry for this field and user already exists
@@ -274,16 +375,17 @@ public class UserDAO {
 	 * @param fieldID ID of the field of study to add
 	 * @param rank Rank for this field of study
 	 */
-	public void addFavField(String userName, int fieldID, int rank) {
+	public void modifyFavField(String userName, int fieldID, int rank) {
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = 
 					dbUtil.getConnection().prepareStatement(
 							"INSERT INTO favoriteFieldsOfStudy (std_ID, field_ID, rank) "
-							+ "VALUES (?, ?, ?)");
+							+ "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rank=?");
 			pstmt.setString(1, userName);
 			pstmt.setInt(2, fieldID);
 			pstmt.setInt(3, rank);
+			pstmt.setInt(4, rank);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -326,8 +428,6 @@ public class UserDAO {
 		}
 		return favs;
 	}
-	
-	//update favorite field of study
 
 	/**
 	 * Deletes one of a user's favorites field of study
@@ -357,21 +457,40 @@ public class UserDAO {
 	 * 
 	 * @param userName The user adding a favorite
 	 * @param schoolID The ID of the school to add
+	 * @return Whether insertion was successful. If school was already a favorite, this returns false.
 	 */
-	public void addFavSchool(String userName, int schoolID) {
+	public boolean addFavSchool(String userName, int schoolID) {
+		boolean success = true;
+		PreparedStatement checkExistence = null;
+		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = 
+			checkExistence = 
 					dbUtil.getConnection().prepareStatement(
-							"INSERT INTO favoriteSchools (std_ID, school_ID) VALUES (?, ?)");
-			pstmt.setString(1, userName);
-			pstmt.setInt(2, schoolID);
-			pstmt.executeUpdate();
+							"SELECT school_ID FROM favoriteSchools WHERE std_ID = ?");
+			checkExistence.setString(1, userName);
+			rs = checkExistence.executeQuery();
+			while (rs.next()) {
+				if (rs.getInt(1) == schoolID) {
+					success = false;
+				}
+			}
+			if (success) {
+				pstmt = 
+						dbUtil.getConnection().prepareStatement(
+								"INSERT INTO favoriteSchools (std_ID, school_ID) VALUES (?, ?)");
+				pstmt.setString(1, userName);
+				pstmt.setInt(2, schoolID);
+				pstmt.executeUpdate();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closeStatement(checkExistence);
 			DBUtil.closeStatement(pstmt);
 		}
+		return success;
 	}
 	
 	/**
@@ -382,18 +501,12 @@ public class UserDAO {
 	 */
 	public List<FavoriteSchool> getFavSchools(String userName) {
 		LinkedList<FavoriteSchool> favs = new LinkedList<FavoriteSchool>();
-		PreparedStatement pstmt = null;
+		CallableStatement cstmt = null;
 		ResultSet rs = null;
 		try {
-			pstmt = 
-					dbUtil.getConnection().prepareStatement(
-							"SELECT school.name, rank, app_status, fin_aid, loan_amt, merit_scholarships "
-							+ "FROM favoriteSchools "
-							+ "JOIN fieldsSchools ON favoriteSchools.school_ID = school.ID "
-							+ "WHERE std_ID=? "
-							+ "ORDER BY rank ASC");
-			pstmt.setString(1, userName);
-			rs = pstmt.executeQuery();
+			cstmt = dbUtil.getConnection().prepareCall("{call get_favorite_schools(?)}");
+			cstmt.setString(1, userName);
+			rs = cstmt.executeQuery();
 			while (rs.next()) {
 				FavoriteSchool fav = new FavoriteSchool();
 				School school = new School();
@@ -410,7 +523,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResultSet(rs);
-			DBUtil.closeStatement(pstmt);
+			DBUtil.closeStatement(cstmt);
 		}
 		return favs;
 	}
