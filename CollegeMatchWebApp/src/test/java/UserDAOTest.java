@@ -58,7 +58,7 @@ public class UserDAOTest {
 	public void setUp() {
 		dbUtil = new DBUtil();
 		userDAO = new UserDAO();
-		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence, testDeleteFavField
+		userDAO.createUser(USERNAME_1, PASSWORD_1);	//used by testAddResidence, testDeleteFavField, testUpdateFavSchool
 		userDAO.createUser(USERNAME_3, PASSWORD_3);	//used by testAddResidence, testModifyFavField, testAddFavSchool
 		userDAO.createUser(USERNAME_4, PASSWORD_4);	//used by testAddResidence, testGetFavFields
 	}
@@ -395,6 +395,9 @@ public class UserDAOTest {
 	@Test
 	public void testUpdateFavSchool() {
 		//TODO implement. Holding off until we have schools in our db
+		userDAO.addFavSchool(USERNAME_1, 197133);
+		userDAO.updateFavSchool(USERNAME_1, 197133, 1, "applied", 99999, 0, 1);
+		//TODO in progress
 	}
 	
 	@Test
