@@ -33,6 +33,7 @@ public class SchoolDAOTest {
 	public void testGetSchools() {
 		testOneCondition();
 		testSimpleConditions();
+		//TODO complex condition test cases
 	}
 	
 	private void testOneCondition() {
