@@ -16,6 +16,7 @@ import java.util.ListIterator;
 public class SchoolDAO {
 	private DBUtil dbUtil;
 	//JOIN tables
+	public static final byte NONE = 0x0;
 	public static final byte GENDER = 0x1;
 	public static final byte ETHNIC = 0x2;
 	public static final byte REGION = 0x4;
@@ -172,8 +173,8 @@ public class SchoolDAO {
 	 */
 	private StringBuilder selectAndJoin(byte tablesToJoin) {
 		String baseQuery = 
-				"SELECT school.name AS name, school.url AS url, school.tuition_out AS outOfState, "
-				+ "school.tuition_in AS inState, location.city AS city, location.state_string AS stateStr FROM school";
+				"SELECT school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
+				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//JOINS
 		queryBuilder.append(" JOIN school_loc ON school_loc.school_ID = school.ID "
@@ -264,7 +265,7 @@ public class SchoolDAO {
 				School s = new School();
 				Location l = new Location();
 				l.setCity(rs.getString("city"));
-				l.setStateStr(rs.getString("stateString"));
+				l.setStateStr(rs.getString("stateStr"));
 				s.setLocation(l);
 				s.setName(rs.getString("name"));
 				s.setWebsite(rs.getString("url"));
