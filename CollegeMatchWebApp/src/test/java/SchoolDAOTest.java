@@ -31,7 +31,20 @@ public class SchoolDAOTest {
 	
 	@Test
 	public void testGetSchools() {
+		testOneCondition();
 		testSimpleConditions();
+	}
+	
+	private void testOneCondition() {
+		Condition c = 
+				new Condition( "school.tuition_and_fees_out", 					//out of state tuition < 20000
+						CondType.GT, CondVal.createIntVal(40000));
+		List<Condition> conditions = new LinkedList<Condition>();
+		conditions.add(c);
+		List<School> schools = schoolDAO.getSchools(conditions, schoolDAO.NONE);
+		for (School school : schools) {
+			assertTrue("Out of state tuition not greater than 40000", school.getTuitionOut() > 40000);
+		}
 	}
 
 	private void testSimpleConditions() {
