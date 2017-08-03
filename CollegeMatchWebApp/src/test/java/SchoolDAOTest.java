@@ -153,7 +153,7 @@ public class SchoolDAOTest {
 		conditions.add(UC);
 		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
 		//uncomment when ID implemented
-		//assertEquals("Correct ID not found", 110635, schools.get(0).getId());
+		assertEquals("Correct ID not found", 110635, schools.get(0).getId());
 		assertEquals("Correct admission rate not found", .1602, schools.get(0).getAdmissionRate(), .001);
 		assertEquals("Correct SAT not found", 1382, schools.get(0).getSatAvg(), .1);
 		assertEquals("Correct ACT not found", 32, schools.get(0).getActAvg(), .1);
@@ -170,7 +170,7 @@ public class SchoolDAOTest {
 		conditions.add(ethnicity);
 		byte tablesToJoin = SchoolDAO.GENDER|SchoolDAO.ETHNIC;
 		List<School> schools = schoolDAO.getSchools(conditions, tablesToJoin);
-		//assertEquals("Correct school not found", 196185, schools.get(0).getId());
+		assertEquals("Correct school not found", 196185, schools.get(0).getId());
 		assertEquals("Correct school not found", "SUNY Oneonta", schools.get(0).getName());
 		
 		//region
