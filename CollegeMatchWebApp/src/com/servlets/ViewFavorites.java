@@ -30,37 +30,10 @@ public class ViewFavorites extends HttpServlet {
 		// data format: rank|id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg|appstatus|finaid|loanamt|meritamt
 		for (int i = 0; i < favs.size(); i++) {
 			FavoriteSchool favSch = favs.get(i);
-			int rank = 0;
-			String appStatus = new String();
-			int finAid = 0;
-			int loanAmt = 0;
-			int meritAmt = 0;
 			String[] schoolValues = {" "," "," "," "," "," "," "," "," "," "," "};
 			
-			// Get rank
-			if (favSch.isRankNotNull()) {
-				rank = favSch.getRank();
-			}
-			
-			// Get application status
-			if (favSch.isStatusNotNull()) {
-				appStatus = favSch.getStatus();
-			}
-			
-			// Get financial aid
-			if (favSch.isFinancialAidNotNull()) {
-				finAid = favSch.getFinancialAid();
-			}
-			
-			// Get loans
-			if (favSch.isLoanNotNull()) {
-				loanAmt = favSch.getLoan();
-			}
-			
-			// Get merit scholarships
-			if (favSch.isMeritNotNull()) {
-				meritAmt = favSch.getMerit();
-			}
+			// Get favorite details
+			String[] favValues = getFavoriteDetails(favSch);
 			
 			// Get school record			
 			if (favSch.isSchoolNotNull()) {
@@ -69,9 +42,9 @@ public class ViewFavorites extends HttpServlet {
 			}
 			
 			// spaces make sure JSTL parses out each piece as discrete, even if the value is a null string
-			String[] schoolData = {" " + rank, schoolValues[0], schoolValues[1], schoolValues[2], schoolValues[3],
+			String[] schoolData = {favValues[0], schoolValues[0], schoolValues[1], schoolValues[2], schoolValues[3],
 					schoolValues[4], schoolValues[5], schoolValues[6], schoolValues[7], schoolValues[8], schoolValues[9],
-					schoolValues[10], " " + appStatus, " " + finAid, " " + loanAmt, " " + meritAmt};
+					schoolValues[10], favValues[1], favValues[2], favValues[3], favValues[4]};
 			String output = String.join("|",schoolData);
 			favSchools[i] = output;
 		}
@@ -81,5 +54,43 @@ public class ViewFavorites extends HttpServlet {
 		request.setAttribute("userState", userResidence.getStateInt());
 		
 		getServletContext().getRequestDispatcher("/favschools.jsp").forward(request,response);
+	}
+	
+	public static String[] getFavoriteDetails(FavoriteSchool sch) {
+		int rank = 0;
+		String appStatus = new String();
+		int finAid = 0;
+		int loanAmt = 0;
+		int meritAmt = 0;
+		
+		// Get rank
+		if (sch.isRankNotNull()) {
+			rank = sch.getRank();
+		}
+		
+		// Get application status
+		if (sch.isStatusNotNull()) {
+			appStatus = sch.getStatus();
+		}
+		
+		// Get financial aid
+		if (sch.isFinancialAidNotNull()) {
+			finAid = sch.getFinancialAid();
+		}
+		
+		// Get loans
+		if (sch.isLoanNotNull()) {
+			loanAmt = sch.getLoan();
+		}
+		
+		// Get merit scholarships
+		if (sch.isMeritNotNull()) {
+			meritAmt = sch.getMerit();
+		}
+		
+		String[] outputValues = {" " + rank, " " + appStatus, " " + finAid,
+				" " + loanAmt, " " + meritAmt};
+		
+		return outputValues;
 	}
 }
