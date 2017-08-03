@@ -79,6 +79,7 @@ function deleteField(el) {
 	// remove from hidden field
 	var hidInput = document.getElementById("hidField");
 	var hidSplit = hidInput.value.split(",");
+	var deleteList = document.getElementById("hidDelete");
 	var toDelete;
 	for (var i = 0; i < hidSplit.length; i++) {
 		var rankSplit = hidSplit[i].split("|")
@@ -88,6 +89,11 @@ function deleteField(el) {
 			toDelete = i;
 		}
 		hidSplit[i] = rankSplit.join("|");
+	}
+	if (deleteList.value.length > 0) {
+		deleteList.value = deleteList.value + "," + hidSplit[toDelete].split("|")[1];
+	} else {
+		deleteList.value = hidSplit[toDelete].split("|")[1];
 	}
 	hidSplit.splice(toDelete, 1);
 	hidInput.value = hidSplit.join(",");
@@ -102,6 +108,17 @@ function addField() {
 	var totalCount = favTD.children.length + 1;
 	
 	var newDiv = newField(favTD, totalCount, totalCount, newOpt);
+	
+	var deleteList = document.getElementById("hidDelete");
+	var deleteSplit = deleteList.split(",");
+	var toDelete;
+	for (var i = 0; i < deleteSplit.length; i++) {
+		if (deleteSplit[0] == newOptVal) {
+			toDelete = i;
+		}
+	}
+	deleteSplit.splice(toDelete, 1);
+	deleteSplit.value = deleteSplit.join(",");
 	
 	reorderBelow(newDiv, totalCount);
 }

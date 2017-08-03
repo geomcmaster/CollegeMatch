@@ -68,6 +68,7 @@
 						<c:import url="fieldselect.html" />
 					</select>
 					<input type="hidden" name="hidField" id="hidField" />
+					<input type="hidden" name="hidDelete" id="hidDelete" />
 				</td>
 			</tr><tr>
 				<td></td>
