@@ -66,6 +66,10 @@
 	<servlet-name>SchoolSearch</servlet-name>
 	<servlet-class>com.servlets.Search</servlet-class>
   </servlet>
+  <servlet>
+	<servlet-name>QuickSearch</servlet-name>
+	<servlet-class>com.servlets.QuickSearch</servlet-class>
+  </servlet>
   
   
   <servlet-mapping>
@@ -123,5 +127,9 @@
   <servlet-mapping>
 	<servlet-name>SchoolSearch</servlet-name>
 	<url-pattern>/advsearch</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>QuickSearch</servlet-name>
+	<url-pattern>/quicksearch</url-pattern>
   </servlet-mapping>
 </web-app>
