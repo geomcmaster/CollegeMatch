@@ -42,6 +42,7 @@ public class SaveUserData extends HttpServlet {
 		if (!validPw) {
 			response.sendRedirect("editmyuser?pwfail");
 		} else {
+
 			// save pw if appropriate
 			if (oldPw.length() > 0) {
 				db.updatePassword(username, newPw);
