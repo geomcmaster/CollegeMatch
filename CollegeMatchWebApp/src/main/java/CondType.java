@@ -31,5 +31,5 @@ package main.java;
  *
  */
 public enum CondType {
-	NO_COND, RANGE, EQ, GT, GE, LT, LE, NE, LIKE, IN, OR_GROUP
+	NO_COND, RANGE, EQ, GT, GE, LT, LE, NE, LIKE, IN, OR_GROUP, REVERSE_IN
 }

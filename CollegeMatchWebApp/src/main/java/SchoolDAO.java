@@ -3,6 +3,8 @@ package main.java;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -103,6 +105,10 @@ public class SchoolDAO {
 			case IN: condStr += " IN ?";
 						val.setIndex(i.getAndIncrement());
 						break;
+			case REVERSE_IN:
+						condStr = "? IN " + condStr + "";
+						val.setIndex(i.getAndIncrement());
+						break;
 		}
 		return condStr;
 	}
@@ -172,10 +178,12 @@ public class SchoolDAO {
 	 * @return A StringBuilder for SELECT, FROM and JOIN clauses
 	 */
 	private StringBuilder selectAndJoin(byte tablesToJoin) {
+		//Added pop_prog's to baseQuery b/c I needed to grab them in my JUnit test for the containsSelectedFieldsOfStudy method
 		String baseQuery = 
 				"SELECT school.ID AS ID, school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
 				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"
-				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate FROM school";
+				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate, school.pop_prog_1, school.pop_prog_2, school.pop_prog_3, "
+				+ "school.pop_prog_4, school.pop_prog_5 FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//JOINS
 		queryBuilder.append(" JOIN school_loc ON school_loc.school_ID = school.ID "
@@ -245,6 +253,29 @@ public class SchoolDAO {
 		CondVal v = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c = new Condition(School.ID, CondType.IN, v);
 		return c;
+	}
+	
+	/**
+	 * Returns condition for checking whether school contains user-specified field(s) of study
+	 * in its top five fields of study, using OR logic
+	 * 
+	 * @param list of fields
+	 * @return condition for checking whether school contains user-specified field of study
+	 * in its top five fields of study
+	 */
+	public Condition containsSelectedFieldOfStudy(ArrayList<Integer> fieldIDList) {
+		 // WHERE fieldID IN (school.pop_prog_1, pop_prog_2...)
+		List<Condition> userSelectedFieldsOfStudy = new LinkedList<Condition>();
+		Iterator<Integer> fieldIDListIterator = fieldIDList.iterator();
+		while (fieldIDListIterator.hasNext()) {
+			CondVal ForFieldID = CondVal.createIntVal(fieldIDListIterator.next());
+			Condition c = new Condition("(pop_prog_1, pop_prog_2, pop_prog_3, pop_prog_4,"
+					+ " pop_prog_5)", CondType.REVERSE_IN, ForFieldID);
+			userSelectedFieldsOfStudy.add(c);
+		}
+		CondVal orFields = CondVal.createORGroupVal(userSelectedFieldsOfStudy);
+		Condition orFieldsCondition = new Condition("", CondType.OR_GROUP, orFields);
+		return orFieldsCondition;
 	}
 	
 	/**
@@ -341,6 +372,34 @@ public class SchoolDAO {
 				if (!rs.wasNull()) {
 					s.setAdmissionRateIsNotNull(true);
 					s.setAdmissionRate(admissionRate);
+				}
+				/*
+				 * Setting popProgIDs here for JUnit test method for containsSelectedFieldsOfStudy
+				 */
+				int popProg1ID = rs.getInt("pop_prog_1");
+				if (!rs.wasNull()) {
+					s.setPopProg1IDIsNotNull(true);
+					s.setPopProg1ID(popProg1ID);
+				}
+				int popProg2ID = rs.getInt("pop_prog_2");
+				if (!rs.wasNull()) {
+					s.setPopProg2IDIsNotNull(true);
+					s.setPopProg2ID(popProg2ID);
+				}
+				int popProg3ID = rs.getInt("pop_prog_3");
+				if (!rs.wasNull()) {
+					s.setPopProg3IDIsNotNull(true);
+					s.setPopProg3ID(popProg3ID);
+				}
+				int popProg4ID = rs.getInt("pop_prog_4");
+				if (!rs.wasNull()) {
+					s.setPopProg4IDIsNotNull(true);
+					s.setPopProg4ID(popProg4ID);
+				}
+				int popProg5ID = rs.getInt("pop_prog_5");
+				if (!rs.wasNull()) {
+					s.setPopProg5IDIsNotNull(true);
+					s.setPopProg5ID(popProg5ID);
 				}
 				
 				schools.addLast(s);

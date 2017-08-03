@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,12 +37,40 @@ public class SchoolDAOTest {
 	
 	@Test
 	public void testGetSchools() {
+		testContainsUserFieldsOfStudy();
 		testOneCondition();
 		testSimpleConditions();
 		testWithFavs();
 		testNullValues();
 		testMyScores();
 		testJoinConditions();
+	}
+	
+	private void testContainsUserFieldsOfStudy() {
+		ArrayList<Integer> fieldIDList = new ArrayList<Integer>();
+		fieldIDList.add(40);
+		fieldIDList.add(45);
+		fieldIDList.add(26);
+		fieldIDList.add(30);
+		Condition hasFields = schoolDAO.containsSelectedFieldOfStudy(fieldIDList);
+		ArrayList<Condition> fieldsArrayList = new ArrayList<Condition>();
+		fieldsArrayList.add(hasFields);
+		byte allTables = 0x7;
+		List<School> schools = schoolDAO.getSchools(fieldsArrayList, allTables);
+		for (School school : schools) {
+			ArrayList<Integer> schoolFields = new ArrayList<Integer>();
+			if(school.isPopProg1IDIsNotNull() == true)
+			schoolFields.add(school.getPopProg1ID());
+			if (school.isPopProg2IDIsNotNull() == true)
+			schoolFields.add(school.getPopProg2ID());
+			if (school.isPopProg3IDIsNotNull() == true)
+			schoolFields.add(school.getPopProg3ID());
+			if (school.isPopProg4IDIsNotNull() == true)
+			schoolFields.add(school.getPopProg4ID());
+			if (school.isPopProg5IDIsNotNull() == true)
+			schoolFields.add(school.getPopProg5ID());
+			assertTrue("School contains user-selected field of study in Top 5", !Collections.disjoint(fieldIDList, schoolFields));
+		}
 	}
 	
 	private void testOneCondition() {
