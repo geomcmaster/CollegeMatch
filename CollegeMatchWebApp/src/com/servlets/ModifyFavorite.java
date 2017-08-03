@@ -1,13 +1,14 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.UserDAO;
+import main.java.FavoriteSchool;
+import main.java.School;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.ArrayList;
 
 public class ModifyFavorite extends HttpServlet {
 	private static final long serialVersionUID = 1L;
