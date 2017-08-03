@@ -178,7 +178,6 @@ public class SchoolDAO {
 	 * @return A StringBuilder for SELECT, FROM and JOIN clauses
 	 */
 	private StringBuilder selectAndJoin(byte tablesToJoin) {
-		//Added pop_prog's to baseQuery b/c I needed to grab them in my JUnit test for the containsSelectedFieldsOfStudy method
 		String baseQuery = 
 				"SELECT school.ID AS ID, school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
 				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"

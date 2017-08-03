@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -48,17 +50,17 @@ public class SchoolDAOTest {
 	
 	private void testContainsUserFieldsOfStudy() {
 		ArrayList<Integer> fieldIDList = new ArrayList<Integer>();
-		fieldIDList.add(14);
-		fieldIDList.add(11);
-		fieldIDList.add(23);
-		fieldIDList.add(9);
+		fieldIDList.add(13); //for University of Arkansas-Fort Smith
+		fieldIDList.add(47); //for University of Arkansas at Monticello
+		fieldIDList.add(43); //for University of Arkansas at Little Rock & University of Arkansas at Pine Bluff
+		fieldIDList.add(14); //for University of Arkansas
 		Condition hasFields = schoolDAO.containsSelectedFieldOfStudy(fieldIDList);
-		Condition SATSchools = new Condition("school.SAT_avg", CondType.GT, CondVal.createDoubleVal(1300));
-		Condition CaliforniaSchools = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("%california%"));
+		Condition ArkansasSchools = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("University of Arkansas%"));
+		Condition NotCollegeInName = new Condition("school.name NOT", CondType.LIKE, CondVal.createStrVal("%College%"));
 		ArrayList<Condition> fieldsArrayList = new ArrayList<Condition>();
 		fieldsArrayList.add(hasFields);
-		fieldsArrayList.add(SATSchools);
-		fieldsArrayList.add(CaliforniaSchools);
+		fieldsArrayList.add(ArkansasSchools);
+		fieldsArrayList.add(NotCollegeInName);
 		byte allTables = 0x7;
 		List<School> schools = schoolDAO.getSchools(fieldsArrayList, allTables);
 		ArrayList<String> schoolNames = new ArrayList<String>();
@@ -66,12 +68,12 @@ public class SchoolDAOTest {
 			schoolNames.add(school.getName());
 		}
 		ArrayList<String> compareNames = new ArrayList<String>();
-		compareNames.add("California Institute of Technology");
-		compareNames.add("University of California-Berkeley");
-		compareNames.add("University of California-Los Angeles");
-		compareNames.add("University of California-San Diego");
-		compareNames.add("University of Southern California");
-		assertTrue("Schools with user-selected fields of study appear", schoolNames.containsAll(compareNames));
+		compareNames.add("University of Arkansas at Little Rock");
+		compareNames.add("University of Arkansas");
+		compareNames.add("University of Arkansas at Pine Bluff");
+		compareNames.add("University of Arkansas at Monticello");
+		compareNames.add("University of Arkansas-Fort Smith");
+		assertTrue("Schools with user-selected fields of study appear", schoolNames.equals(compareNames));
 	}
 
 	private void testOneCondition() {

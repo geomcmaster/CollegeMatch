@@ -147,9 +147,7 @@ public class School {
 	private boolean maleShareIsNotNull;
 	private double femaleShare;
 	private boolean femaleShareIsNotNull;
-	//Added popProgID int's because I need them for 
-	//the JUnit test for containsSelectedFieldsOfStudy method.
-	//WILL also end up needing these for the single-school query anyway, so will keep.
+	//Adding these preemptively for the single-school query method to be written.
 	private int popProg1ID;
 	private boolean popProg1IDIsNotNull;
 	private int popProg2ID;
