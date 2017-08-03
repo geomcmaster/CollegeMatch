@@ -42,6 +42,17 @@ public class EditUserForm extends HttpServlet {
 			if (loc.isZipNotNull()) {
 				ZIP = loc.getZip();
 			}
+		} else {
+			Location loc = db.getResidence(username);
+			if (loc.isCityNotNull()) {
+				city = loc.getCity();
+			}
+			if (loc.isStateIntNotNull()) {
+				stateInt = loc.getStateInt();
+			}
+			if (loc.isZipNotNull()) {
+				ZIP = loc.getZip();
+			}
 		}
 		if (currentUser.isFavoriteFieldsOfStudyNotNull()) {
 			List<FavoriteFieldOfStudy> favorites = currentUser.getFavoriteFieldsOfStudy();
@@ -59,6 +70,7 @@ public class EditUserForm extends HttpServlet {
 		request.setAttribute("loccity", city);
 		request.setAttribute("locstate", stateInt);
 		request.setAttribute("fields", fieldArray);
+		request.setAttribute("user",username);
 		getServletContext().getRequestDispatcher("/userdata.jsp").forward(request,response);
 	}
 }

@@ -32,13 +32,17 @@
 		<div id="pwwarning" class="warning hidden">The password you entered as your old password was incorrect. No changes have been made to your user record.</div>
 
 		<table id="userdata">
+			<tr class="newsection">
+				<td class="label">Username:</td>
+				<td class="input"><c:out value="${user}" /></td>
+			</tr>
 			<!-- SAT / ACT Scores -->
 			<tr class="newsection">
 				<td class="label"><label for="edit_sat">Composite SAT Score:</label></td>
-				<td class="input"><input class="number" type="number" name="edit_sat" id="edit_sat" min="400" max="1600" value='<c:out value="${sat}" />' />
+				<td class="input"><input class="number" type="number" name="edit_sat" id="edit_sat" min="400" max="1600" step="1" value='<f:formatNumber groupingUsed="false" maxFractionDigits="0" value="${sat}" />' />
 			</tr><tr>
 				<td class="label"><label for="edit_act">Composite ACT Score:</label></td>
-				<td class="input"><input onChange="hidecitystate()" class="number" type="number" name="edit_act" id="edit_act" min="1" max="36" value='<c:out value="${act}" />' /> <!--[my current ACT score]-->
+				<td class="input"><input class="number" type="number" name="edit_act" id="edit_act" min="1" max="36" step="1" value='<f:formatNumber groupingUsed="false" maxFractionDigits="0" value="${act}" />' /> <!--[my current ACT score]-->
 			</tr>
 			<!-- Location -->
 			<tr class="newsection">
@@ -64,6 +68,7 @@
 						<c:import url="fieldselect.html" />
 					</select>
 					<input type="hidden" name="hidField" id="hidField" />
+					<input type="hidden" name="hidDelete" id="hidDelete" />
 				</td>
 			</tr><tr>
 				<td></td>

@@ -30,6 +30,9 @@ public class SaveUserData extends HttpServlet {
 		String strAllFields = request.getParameter("hidField");
 		String[] allFields = strAllFields.split("[,]");
 		
+		String strDeleteFields = request.getParameter("hidDelete");
+		String[] deleteFields = strDeleteFields.split("[,]");
+		
 		String oldPw = request.getParameter("old_pw");
 		String newPw = request.getParameter("new_pw");
 		
@@ -51,15 +54,26 @@ public class SaveUserData extends HttpServlet {
 			db.updateUser(username, SATscore, ACTscore);
 			
 			// save location
-			db.modifyResidence(username, city, stateInt, Integer.parseInt(ZIPcode));
+			if (city.length() > 0 && stateInt != 0 && ZIPcode.length() > 0) {
+				db.modifyResidence(username, city, stateInt, Integer.parseInt(ZIPcode));
+			}
 			
 			// save favorite fields
-			for (int i = 0; i < allFields.length; i++) {
-				String[] field = allFields[i].split("[|]");
-				int rank = Integer.parseInt(field[0]);
-				int fieldId = Integer.parseInt(field[1]);
-				db.modifyFavField(username, fieldId, rank);
+			if (allFields[0].length() > 0) {
+				for (int i = 0; i < allFields.length; i++) {
+					String[] field = allFields[i].split("[|]");
+					int rank = Integer.parseInt(field[0]);
+					int fieldId = Integer.parseInt(field[1]);
+					db.modifyFavField(username, fieldId, rank);
+				}
 			}
+			
+			if (deleteFields[0].length() > 0) {
+				for (int i = 0; i < deleteFields.length; i++) {
+					db.deleteFavField(username, Integer.parseInt(deleteFields[i]));
+				}
+			}
+			
 			response.sendRedirect("editmyuser");
 		}
 	}
