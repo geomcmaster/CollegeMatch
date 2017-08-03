@@ -68,7 +68,7 @@ public class Result {
 	int schoolLevel;
 	@SerializedName("2014.admissions.admission_rate.overall")
 	double admissionRate;
-	@SerializedName("2014.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings")
+	@SerializedName("2012.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings")
 	int moneyEarnings_6yrs_avg;
 	@SerializedName("2014.cost.attendance.academic_year")
 	int moneyAvgCost;
