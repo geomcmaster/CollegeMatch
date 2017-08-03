@@ -38,6 +38,9 @@ public class Search extends HttpServlet {
 		
 		for (i = 0; i < criteria.length; i++) {
 			String criterion = criteria[i];
+			if (criterion == null || criterion == "") {
+				continue;
+			}
 			String type = valTyp(criterion);
 			String colName = getColumnName(criterion);
 			String opener = "crit" + (i + 1);
@@ -56,10 +59,10 @@ public class Search extends HttpServlet {
 				int stateInt = Integer.parseInt(request.getParameter(opener + "sel1"));
 				
 				cValue = CondVal.createStrVal(city);
-				conditions.add(new Condition(colName.split("|")[0], CondType.EQ, cValue));
+				conditions.add(new Condition(colName.split("[|]")[0], CondType.EQ, cValue));
 				
 				cValue = CondVal.createIntVal(stateInt);
-				conditions.add(new Condition(colName.split("|")[1], CondType.EQ, cValue));
+				conditions.add(new Condition(colName.split("[|]")[1], CondType.EQ, cValue));
 				break;
 			case "region":
 				cValue = CondVal.createStrVal(request.getParameter(opener + "sel3"));
@@ -75,15 +78,15 @@ public class Search extends HttpServlet {
 				value = request.getParameter(opener + "sel2");
 				cValue = CondVal.createIntVal(Integer.parseInt(value));
 				for (i = 0; i < 5; i++) {
-					Condition cond = new Condition(colName.split("|")[i],CondType.EQ,cValue);
+					Condition cond = new Condition(colName.split("[|]")[i],CondType.EQ,cValue);
 					OrGroup.add(cond);
 				}
 				conditions.add(new Condition("",CondType.OR_GROUP,CondVal.createORGroupVal(OrGroup)));
 				break;
 			case "string":
 				cValue = CondVal.createStrVal("%" + request.getParameter(opener + "text") + "%");
-				Condition cond1 = new Condition(colName.split("|")[0],CondType.LIKE,cValue);
-				Condition cond2 = new Condition(colName.split("|")[1],CondType.LIKE,cValue);
+				Condition cond1 = new Condition(colName.split("[|]")[0],CondType.LIKE,cValue);
+				Condition cond2 = new Condition(colName.split("[|]")[1],CondType.LIKE,cValue);
 				OrGroup.add(cond1);
 				OrGroup.add(cond2);
 				conditions.add(new Condition("",CondType.OR_GROUP,CondVal.createORGroupVal(OrGroup)));
@@ -107,12 +110,12 @@ public class Search extends HttpServlet {
 				break;
 			case "double":
 				if (colName.contains("|")) {
-					if (colName.split("|")[1] == "GENDER") {
+					if (colName.split("[|]")[1] == "GENDER") {
 						tablesToJoin |= SchoolDAO.GENDER;
 					} else {
 						tablesToJoin |= SchoolDAO.ETHNIC;
 					}
-					colName = colName.split("|")[0];
+					colName = colName.split("[|]")[0];
 				}
 				comparison = request.getParameter(opener + "comp");
 				if (comparison == "bet") {
