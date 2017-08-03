@@ -173,7 +173,7 @@ public class SchoolDAO {
 	 */
 	private StringBuilder selectAndJoin(byte tablesToJoin) {
 		String baseQuery = 
-				"SELECT school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
+				"SELECT school.ID AS ID, school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
 				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"
 				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
@@ -302,6 +302,11 @@ public class SchoolDAO {
 					l.setStateStr(state);
 				}
 				s.setLocation(l);
+				int schoolID = rs.getInt("ID");
+				if (!rs.wasNull()) {
+					s.setIdIsNotNull(true);
+					s.setId(schoolID);
+				}
 				String name = rs.getString("name");
 				if (!rs.wasNull()) {
 					s.setNameIsNotNull(true);
