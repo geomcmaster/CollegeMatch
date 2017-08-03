@@ -242,8 +242,34 @@ public class SchoolDAO {
 				+ "WHERE field_ID IN "
 				+ "(SELECT field_ID FROM favoriteFieldsOfStudy WHERE std_ID=?))";
 		CondVal v = CondVal.createSingleStringSubQueryVal(subQuery, userName);
-		Condition c = new Condition("school.ID", CondType.IN, v);
+		Condition c = new Condition(School.ID, CondType.IN, v);
 		return c;
+	}
+	
+	/**
+	 * Returns a condition for comparing a user's SAT scores to a school's average. 
+	 * Order is school average [comparison operator] user score
+	 * 
+	 * @param type Type where 
+	 * @param userName
+	 * @return A condition for comparing a user's SAT scores to a school's average
+	 */
+	public Condition compareMySAT(CondType type, String userName) {
+		String subquery = "(SELECT SAT_SCORE FROM user WHERE ID=?)";
+		return new Condition(School.SAT_AVG, type, CondVal.createSingleStringSubQueryVal(subquery, userName));
+	}
+	
+	/**
+	 * Returns a condition for comparing a user's ACT scores to a school's average
+	 * Order is school average [comparison operator] user score
+	 * 
+	 * @param type
+	 * @param userName
+	 * @return A condition for comparing a user's ACT scores to a school's average
+	 */
+	public Condition compareMyACT(CondType type, String userName) {
+		String subquery = "(SELECT ACT_SCORE FROM user WHERE ID=?)";
+		return new Condition(School.ACT_AVG, type, CondVal.createSingleStringSubQueryVal(subquery, userName));
 	}
 	
 	/**

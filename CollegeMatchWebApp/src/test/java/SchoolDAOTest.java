@@ -39,6 +39,7 @@ public class SchoolDAOTest {
 		testSimpleConditions();
 		testWithFavs();
 		testNullValues();
+		testMyScores();
 		//TODO test gender, ethnicity, region
 	}
 	
@@ -120,7 +121,7 @@ public class SchoolDAOTest {
 		}
 	}
 	
-	public void testNullValues() {
+	private void testNullValues() {
 		List<Condition> conditions = new LinkedList<Condition>();
 		conditions.add(new Condition(School.ID, CondType.EQ, CondVal.createIntVal(110398)));
 		List<School> schools = schoolDAO.getSchools(conditions, schoolDAO.NONE);
@@ -129,6 +130,21 @@ public class SchoolDAOTest {
 		assertEquals("School url not correct", "www.uchastings.edu", UCHastingsLaw.getWebsite());
 		//null value
 		assertFalse("Alias is not null", UCHastingsLaw.isPopProg1NotNull());
+	}
+	
+	private void testMyScores() {
+		String user = "checkmyscores";
+		userDAO.createUser(user, "abcdefgh");
+		userDAO.updateUser(user, 1400, 31);
+		List<Condition> conditions = new LinkedList<Condition>();
+		Condition sat = schoolDAO.compareMySAT(CondType.LT, user);
+		Condition act = schoolDAO.compareMyACT(CondType.GT, user);
+		Condition UC = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("University of California%"));
+		conditions.add(sat);
+		conditions.add(act);
+		conditions.add(UC);
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
+		assertEquals("Correct school not found", "University of California-Berkeley", schools.get(0).getName());
 	}
 	
 	@After
