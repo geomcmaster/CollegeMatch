@@ -1,39 +1,9 @@
-<!-- List o' tasks -->
-<!--
-TASK				QUERY			SCOPE	
-register user		insert			1 table
-save user data		insert/update	1 table
-delete user data	delete			1 table
-save favorites		insert/update	3+ tables (depends on user, field, school)
-search	(school)	select
- -- location						2 tables
- -- demographics					2-3 tables
- -- field of study					2 tables
- -- based on user location			3 tables, w/ subqueries
-search (field)		select			1 table
-display search results
-display user data
-display favorites
--->
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "f" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<c:import url="getUserCookie.jsp" />
-<c:import url="validUser.jsp" />
-
-<c:choose>
-<c:when test="${validCheck}">
-
-<c:import url="getSchool.jsp">
-	<c:param name="schoolId" value="${param.schoolId}" />
-</c:import>
-<%-- c:import url="getFavorite.jsp">
-	<c:param name="user" value="${user}" />
-	<c:param name="schoolId" value="${param.schoolId}" />
-</ c:import --%>
 
 <html>
 <head>
-	<title>CollegeMatch: Edit Favorite Details</title> <!-- this will change with each page -->
+	<title>CollegeMatch: Edit Favorite Details</title>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
@@ -43,32 +13,42 @@ display favorites
 	<div id="header"></div>
 	<div id="contentwrap">
 	
-	<%@ include file="menusidebar.html" %>
+	<c:import url="menusidebar.html" />
 	
 	<!-- EDIT INDIVIDUAL FAVORITE -->
 	<div id="content">
 		<div id="title">
-			<h2>Edit Favorite: <c:out value="${fullName}" /></h2> <!-- !!! Get name of college via form instead of SQL for performance reasons? Otherwise need SQL -->
+			<h2>Edit Favorite: <c:out value="${fullName}" /></h2>
 		</div>
 		<!-- form for scholarships, application status, etc. -->
-		<form action="savefavorite.jsp" id="editfav" method="POST">
+		<form action="saveFav" id="editfav" method="POST">
+			<input type="hidden" name="schoolId" id="schoolId" value='<c:out value="${id}" />' />
 			<table id="editfav">
 				<tr>
 					<td class="label"><label for="rank">Rank:</label></td>
-					<td class="input"><input class="number" type="number" id="rank" name="rank" value="1" min="1" max="20" /></td>
+					<td class="input"><input class="number" type="number" id="rank" name="rank" value='<c:out value="${favdetails[0]}" />' min="1" /></td>
 				</tr><tr>
 					<td class="label"><label for="appstatus">Application Status:</label></td>
-					<td class="input"><input class="inbox" type="text" id="appstatus" name="appstatus" value="None." /></td>
+					<td class="input">
+						<select class="inbox" id="appstatus" name="appstatus">
+							<option>Not applied</option>
+							<option>Applied early admission</option>
+							<option>Applied</option>
+							<option>Waitlisted</option>
+							<option>Rejected</option>
+							<option>Accepted</option>
+						</select>
+					</td>
 				</tr><tr>
 					<td class="label"><label for="finaid">Financial Aid:</label></td>
-					<td class="input">$<input class="number" type="number" id="finaid" name="finaid" value="0" onBlur="calcTotal()" /></td>
+					<td class="input">$<input class="number" type="number" step="1" id="finaid" name="finaid" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${favdetails[2]}" />' onBlur="calcTotal()" /></td>
 				</tr><tr>
 					<td class="label"><label for="loans">Loan Amount:</label></td>
-					<td class="input">$<input class="number" type="number" id="loans" name="loans" value="0" onBlur="calcTotal()" /></td>
+					<td class="input">$<input class="number" type="number" step="1" id="loans" name="loans" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${favdetails[3]}" />' onBlur="calcTotal()" /></td>
 				</tr><tr>
 					<td class="label"><label for="merit">Merit Scholarships:</label></td>
-					<td class="input">$<input class="number" type="number" id="merit" name="merit" value="0" onBlur="calcTotal()" /></td>
-				</tr><tr>
+					<td class="input">$<input class="number" type="number" step="1" id="merit" name="merit" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${favdetails[4]}" />' onBlur="calcTotal()" /></td>
+				</tr><tr id="calculation">
 					<td class="label"><span>Total Needed to Attend One Year:</span></td>
 					<td class="input"><span id="costCounter"></span><input type="hidden" id="costStart" value='<c:out value="${cost}" />' /></td>
 				</tr><tr>
@@ -77,15 +57,31 @@ display favorites
 				</tr>
 			</table>
 		</form>
-		<!-- display known data about school? demographics, et al? -->
-		<%@ include file="detailstable.jsp" %>
 	</div>
 	
 	</div></div> <!-- close wrap -->
 	
 <script type="text/javascript">
-	calcTotal();
-
+	var cost = '${cost}'; // handles if the cost from the server for the school is null -- we don't want it looking free to attend
+	if (cost == 0) {
+		document.getElementById("calculation").classList.add("hidden");
+	} else {
+		document.getElementById("calculation").classList.remove("hidden");
+		calcTotal();
+	}
+	
+	// select the correct app status
+	var appStatus = '${favdeteails[1]}';
+	var elSelect = document.getElementById("appstatus");
+	var elOptions = elSelect.children;
+	for (var i = 0; i < elOptions.length; i++) {
+		var el = elOptions[i];
+		if (el.text == appStatus) {
+			el.selected = true;
+			break;
+		}
+	}
+	
 	function calcTotal() {
 		var strStart = document.getElementById("costStart").value;
 		var strFinaid = document.getElementById("finaid").value;
@@ -103,9 +99,3 @@ display favorites
 	
 </body>
 </html>
-
-</c:when>
-<c:otherwise>
-	<c:redirect url="error401.jsp" />
-</c:otherwise>
-</c:choose>
