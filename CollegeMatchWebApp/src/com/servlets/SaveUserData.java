@@ -60,6 +60,7 @@ public class SaveUserData extends HttpServlet {
 				int fieldId = Integer.parseInt(field[1]);
 				db.modifyFavField(username, fieldId, rank);
 			}
+			response.sendRedirect("editmyuser");
 		}
 	}
 }
