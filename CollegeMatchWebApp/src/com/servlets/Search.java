@@ -1,7 +1,14 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.School;
+import main.java.SchoolDAO;
+import main.java.UserDAO;
+import main.java.Location;
+import main.java.CondVal;
+import main.java.CondType;
+import main.java.Condition;
+import main.java.FavoriteSchool;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +33,7 @@ public class Search extends HttpServlet {
 			criteria[i] = request.getParameter("crit" + (i + 1) + "hid");
 		}
 		List<Condition> conditions = new ArrayList<Condition>();
-		byte tablesToJoin = 0x0;
+		byte tablesToJoin = SchoolDAO.NONE;
 		SchoolDAO db = new SchoolDAO();
 		
 		for (i = 0; i < criteria.length; i++) {
@@ -47,12 +54,17 @@ public class Search extends HttpServlet {
 			case "citystate":
 				String city = request.getParameter(opener + "text");
 				int stateInt = Integer.parseInt(request.getParameter(opener + "sel1"));
-				// TODO: finish
+				
+				cValue = CondVal.createStrVal(city);
+				conditions.add(new Condition(colName.split("|")[0], CondType.EQ, cValue));
+				
+				cValue = CondVal.createIntVal(stateInt);
+				conditions.add(new Condition(colName.split("|")[1], CondType.EQ, cValue));
 				break;
 			case "region":
 				cValue = CondVal.createStrVal(request.getParameter(opener + "sel3"));
 				conditions.add(new Condition(colName,CondType.EQ,cValue));
-				tablesToJoin += 0x4;
+				tablesToJoin |= SchoolDAO.REGION;
 				break;
 			case "id":
 				value = request.getParameter(opener + "level");
@@ -96,9 +108,9 @@ public class Search extends HttpServlet {
 			case "double":
 				if (colName.contains("|")) {
 					if (colName.split("|")[1] == "GENDER") {
-						tablesToJoin += 0x1;
+						tablesToJoin |= SchoolDAO.GENDER;
 					} else {
-						tablesToJoin += 0x2;
+						tablesToJoin |= SchoolDAO.ETHNIC;
 					}
 					colName = colName.split("|")[0];
 				}
@@ -132,7 +144,48 @@ public class Search extends HttpServlet {
 			}
 		}
 		
-		// TODO: send in query with completed list of conditions, tablesToJoin
+		List<School> results = db.getSchools(conditions, tablesToJoin);
+		String[] outputResults = new String[results.size()];
+		// data format: id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg
+		for (i = 0; i < results.size(); i++) {
+			School curSch = results.get(i);
+			int curId = 0; //TODO: fix when possible
+			String curName = curSch.getName();
+			String curUrl = curSch.getWebsite();
+			double curAdmRate = curSch.getAdmissionRate();
+			int tuitionIn = curSch.getTuitionIn();
+			int tuitionOut = curSch.getTuitionOut();
+			Location curLoc = curSch.getLocation();
+			String curCity = curLoc.getCity();
+			int curStateInt = curLoc.getStateInt();
+			String curStateAbbr = curLoc.getStateAbbreviation();
+			double curSat = curSch.getSatAvg();
+			double curAct = curSch.getActAvg();
+			
+			String[] allValues = {" " + curId, " " + curName, " " + curUrl,
+					" " + curAdmRate, " " + tuitionIn, " " + tuitionOut,
+					" " + curCity, " " + curStateInt, " " + curStateAbbr,
+					" " + curSat, " " + curAct};
+			outputResults[i] = String.join("|", allValues);
+		}
+		
+		request.setAttribute("results", outputResults);
+		
+		UserDAO userDb = new UserDAO(); 
+		Location userResidence = userDb.getResidence(username);
+		request.setAttribute("userState", userResidence.getStateInt());
+		
+		List<FavoriteSchool> userFavs = userDb.getFavSchools(username);
+		outputResults = new String[userFavs.size()];
+		// data format: id
+		for (i = 0; i < userFavs.size(); i++) {
+			School curFav = userFavs.get(i).getSchool();
+			int curId = 0; //TODO: fix when possible
+			outputResults[i] = "" + curId;
+		}
+		request.setAttribute("favs", outputResults);
+		
+		getServletContext().getRequestDispatcher("/results.jsp").forward(request,response);
 	}
 	
 	private String valTyp(String criterion) {
@@ -185,40 +238,43 @@ public class Search extends HttpServlet {
 	private String getColumnName(String criterion) {
 		switch(criterion) {
 		case "locationz":
+			return "ZIP?";
 		case "locationcs":
-			return "LOCATION?";
+			return "location.city|location.state";
 		case "programs":
-			return "pop_prog_1|pop_prog_2|pop_prog_3|pop_prog_4|pop_prog_5";
+			return School.PROG_1 + "|" + School.PROG_2 + "|" +
+				School.PROG_3 + "|" + School.PROG_4 + "|" +
+				School.PROG_5;
 		case "level":
-			return "level";
+			return School.LEVEL;
 		case "region":
 			return "region_name";
 		case "name":
-			return "name|alias";
+			return School.NAME + "|" + School.ALIAS;
 		case "cost":
-			return "avg_cost";
+			return School.AVG_COST;
 		case "sat":
-			return "SAT_avg";
+			return School.SAT_AVG;
 		case "act":
-			return "ACT_avg";
+			return School.ACT_AVG;
 		case "earnings":
-			return "avg_earnings_6_years_after_matriculation";
+			return School.AVG_EARN;
 		case "size":
-			return "std_bdy_sz";
+			return School.STD_BODY_SIZE;
 		case "admrate":
-			return "adm_rate";
+			return School.ADM_RATE;
 		case "avginc":
-			return "avg_fam_inc";
+			return School.AVG_FAM_INC;
 		case "medinc":
-			return "med_fam_inc";
+			return School.MED_FAM_INC;
 		case "tuitionin":
-			return "tuition_and_fees_in";
+			return School.TUITION_IN;
 		case "tuitionout":
-			return "tuition_and_fees_out";
+			return School.TUITION_OUT;
 		case "age":
-			return "avg_entry_age";
+			return School.AVG_AGE_ENTRY;
 		case "firstgen":
-			return "1_gen_std_share";
+			return School.FIRST_GEN;
 		case "men":
 			return "male|GENDER";
 		case "women":
@@ -240,7 +296,7 @@ public class Search extends HttpServlet {
 		case "nonres":
 			return "nonresident|ETHNIC";
 		case "online":
-			return "dist_learning";
+			return School.DIST_LEARNING;
 	}
 		return "";
 	}
