@@ -182,8 +182,7 @@ public class SchoolDAO {
 		String baseQuery = 
 				"SELECT school.ID AS ID, school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
 				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"
-				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate, school.pop_prog_1, school.pop_prog_2, school.pop_prog_3, "
-				+ "school.pop_prog_4, school.pop_prog_5 FROM school";
+				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//JOINS
 		queryBuilder.append(" JOIN school_loc ON school_loc.school_ID = school.ID "
@@ -372,34 +371,6 @@ public class SchoolDAO {
 				if (!rs.wasNull()) {
 					s.setAdmissionRateIsNotNull(true);
 					s.setAdmissionRate(admissionRate);
-				}
-				/*
-				 * Setting popProgIDs here for JUnit test method for containsSelectedFieldsOfStudy
-				 */
-				int popProg1ID = rs.getInt("pop_prog_1");
-				if (!rs.wasNull()) {
-					s.setPopProg1IDIsNotNull(true);
-					s.setPopProg1ID(popProg1ID);
-				}
-				int popProg2ID = rs.getInt("pop_prog_2");
-				if (!rs.wasNull()) {
-					s.setPopProg2IDIsNotNull(true);
-					s.setPopProg2ID(popProg2ID);
-				}
-				int popProg3ID = rs.getInt("pop_prog_3");
-				if (!rs.wasNull()) {
-					s.setPopProg3IDIsNotNull(true);
-					s.setPopProg3ID(popProg3ID);
-				}
-				int popProg4ID = rs.getInt("pop_prog_4");
-				if (!rs.wasNull()) {
-					s.setPopProg4IDIsNotNull(true);
-					s.setPopProg4ID(popProg4ID);
-				}
-				int popProg5ID = rs.getInt("pop_prog_5");
-				if (!rs.wasNull()) {
-					s.setPopProg5IDIsNotNull(true);
-					s.setPopProg5ID(popProg5ID);
 				}
 				
 				schools.addLast(s);

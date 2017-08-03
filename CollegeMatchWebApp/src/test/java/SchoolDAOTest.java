@@ -48,31 +48,32 @@ public class SchoolDAOTest {
 	
 	private void testContainsUserFieldsOfStudy() {
 		ArrayList<Integer> fieldIDList = new ArrayList<Integer>();
-		fieldIDList.add(40);
-		fieldIDList.add(45);
-		fieldIDList.add(26);
-		fieldIDList.add(30);
+		fieldIDList.add(14);
+		fieldIDList.add(11);
+		fieldIDList.add(23);
+		fieldIDList.add(9);
 		Condition hasFields = schoolDAO.containsSelectedFieldOfStudy(fieldIDList);
+		Condition SATSchools = new Condition("school.SAT_avg", CondType.GT, CondVal.createDoubleVal(1300));
+		Condition CaliforniaSchools = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("%california%"));
 		ArrayList<Condition> fieldsArrayList = new ArrayList<Condition>();
 		fieldsArrayList.add(hasFields);
+		fieldsArrayList.add(SATSchools);
+		fieldsArrayList.add(CaliforniaSchools);
 		byte allTables = 0x7;
 		List<School> schools = schoolDAO.getSchools(fieldsArrayList, allTables);
+		ArrayList<String> schoolNames = new ArrayList<String>();
 		for (School school : schools) {
-			ArrayList<Integer> schoolFields = new ArrayList<Integer>();
-			if(school.isPopProg1IDNotNull() == true)
-			schoolFields.add(school.getPopProg1ID());
-			if (school.isPopProg2IDNotNull() == true)
-			schoolFields.add(school.getPopProg2ID());
-			if (school.isPopProg3IDNotNull() == true)
-			schoolFields.add(school.getPopProg3ID());
-			if (school.isPopProg4IDNotNull() == true)
-			schoolFields.add(school.getPopProg4ID());
-			if (school.isPopProg5IDNotNull() == true)
-			schoolFields.add(school.getPopProg5ID());
-			assertTrue("School contains user-selected field of study in Top 5", !Collections.disjoint(fieldIDList, schoolFields));
+			schoolNames.add(school.getName());
 		}
+		ArrayList<String> compareNames = new ArrayList<String>();
+		compareNames.add("California Institute of Technology");
+		compareNames.add("University of California-Berkeley");
+		compareNames.add("University of California-Los Angeles");
+		compareNames.add("University of California-San Diego");
+		compareNames.add("University of Southern California");
+		assertTrue("Schools with user-selected fields of study appear", schoolNames.containsAll(compareNames));
 	}
-	
+
 	private void testOneCondition() {
 		Condition c = 
 				new Condition( "school.tuition_and_fees_out", 					//out of state tuition < 20000
