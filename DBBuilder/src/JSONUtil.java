@@ -109,7 +109,7 @@ public class JSONUtil {
 			+ "2014.academics.program_percentage.history,";
 	
 	private static final String FINANCES_and_LOCATION = 
-			"2014.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings,"
+			"2012.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings,"
 			+ "2014.cost.attendance.academic_year," 
 			+ "2014.aid.loan_principal,"
 			+ "school.state_fips," 

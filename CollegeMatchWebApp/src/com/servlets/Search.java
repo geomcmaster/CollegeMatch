@@ -1,6 +1,7 @@
 package com.servlets;
 
 import java.io.IOException;
+
 import main.java.School;
 import main.java.SchoolDAO;
 import main.java.UserDAO;
@@ -9,12 +10,20 @@ import main.java.CondVal;
 import main.java.CondType;
 import main.java.Condition;
 import main.java.FavoriteSchool;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.ArrayList;
+
+import main.java.CondType;
+import main.java.CondVal;
+import main.java.Condition;
+import main.java.School;
+import main.java.SchoolDAO;
 
 public class Search extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -264,13 +264,37 @@ public class SchoolDAO {
 			while (rs.next()) {
 				School s = new School();
 				Location l = new Location();
-				l.setCity(rs.getString("city"));
-				l.setStateStr(rs.getString("stateStr"));
+				String city = rs.getString("city");
+				if (!rs.wasNull()) {
+					l.setCityIsNotNull(true);
+					l.setCity(city);
+				}
+				String state = rs.getString("stateStr");
+				if (!rs.wasNull()) {
+					l.setStateStrIsNotNull(true);
+					l.setStateStr(state);
+				}
 				s.setLocation(l);
-				s.setName(rs.getString("name"));
-				s.setWebsite(rs.getString("url"));
-				s.setTuitionIn(rs.getInt("inState"));
-				s.setTuitionOut(rs.getInt("outOfState"));
+				String name = rs.getString("name");
+				if (!rs.wasNull()) {
+					s.setNameIsNotNull(true);
+					s.setName(name);
+				}
+				String url = rs.getString("url");
+				if (!rs.wasNull()) {
+					s.setWebsiteIsNotNull(true);
+					s.setWebsite(url);
+				}
+				int inState = rs.getInt("inState");
+				if (!rs.wasNull()) {
+					s.setTuitionInIsNotNull(true);
+					s.setTuitionIn(inState);
+				}
+				int outState = rs.getInt("outOfState");
+				if (!rs.wasNull()) {
+					s.setTuitionOutIsNotNull(true);
+					s.setTuitionOut(outState);
+				}
 				schools.addLast(s);
 			}
 		} catch (SQLException e) {
@@ -299,22 +323,23 @@ public class SchoolDAO {
 			} else {
 				CondVal val = c.getValue();
 				ValType vtype = val.getType();
-				if (vtype == ValType.INT_RANGE) {
-					pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
-					pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
-				} else if (vtype == ValType.DOUBLE_RANGE) {
-					pstmt.setDouble(val.getIndexOfMin(), val.getMinDouble());
-					pstmt.setDouble(val.getIndexOfMax(), val.getMaxDouble());
-				} else if (vtype == ValType.INT) {
-					pstmt.setInt(val.getIndex(), val.getIntVal());
-				} else if (vtype == ValType.DOUBLE) {
-					pstmt.setDouble(val.getIndex(), val.getDoubleVal());
-				} else if (vtype == ValType.STRING) {
-					pstmt.setString(val.getIndex(), val.getStrVal());
-				} else if (vtype == ValType.SINGLE_STRING_SUBQUERY) {
-					pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
-				} else if (vtype == ValType.OR_GROUP) {
-					insertIntoPrepStmt(val.getOrConditions(), pstmt);	//recursive
+				switch (vtype) {
+					case INT_RANGE: 	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
+										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+										break;
+					case DOUBLE_RANGE:	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
+										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+										break;
+					case INT:			pstmt.setInt(val.getIndex(), val.getIntVal());
+										break;
+					case DOUBLE:		pstmt.setDouble(val.getIndex(), val.getDoubleVal());
+										break;
+					case STRING:		pstmt.setString(val.getIndex(), val.getStrVal());
+										break;
+					case SINGLE_STRING_SUBQUERY:	pstmt.setString(val.getIndex(), val.getSubQueryStrVal());
+													break;
+					case OR_GROUP:		insertIntoPrepStmt(val.getOrConditions(), pstmt);	//recursive
+										break;
 				}
 			}
 		}

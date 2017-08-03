@@ -101,7 +101,11 @@ public class UserDAOTest {
 		assertFalse("Invalid user not listed as invalid", userDAO.getUser("didntcreatethisuser").isValid());
 		//existing user
 		userDAO.createUser("testingGetUser", "456abc789");
-		userDAO.updateUser("testingGetUser", "456abc789", 1555, 30);
+		//scores are null
+		assertFalse("SAT score is not null", userDAO.getUser("testingGetUser").isSatScoreNotNull());
+		assertFalse("ACT score is not", userDAO.getUser("testingGetUser").isActScoreNotNull());
+		
+		userDAO.updateUser("testingGetUser", 1555, 30);
 		User user = userDAO.getUser("testingGetUser");
 		assertTrue("Valid user not listed as valid", user.isValid());
 		assertEquals("User password not correct", "456abc789", user.getPassword());
@@ -110,19 +114,25 @@ public class UserDAOTest {
 	}
 	
 	@Test
+	public void testUpdatePassword() {
+		String userName = "gottaupdatemypw";
+		userDAO.createUser(userName, "12345678");
+		userDAO.updatePassword(userName, "4b3773rp455w0rd!");
+		assertEquals("Password not updated", "4b3773rp455w0rd!", userDAO.getUser(userName).getPassword());
+	}
+	
+	@Test
 	public void testUpdateUser() {
 		String userName = "goingtoupdatethis";
 		userDAO.createUser(userName, "awesomesauce");
 		//No existing score values
-		userDAO.updateUser(userName, "newpassword", 1600, 30);
+		userDAO.updateUser(userName, 1600, 30);
 		User user = userDAO.getUser(userName);
-		assertEquals("Password not updated", "newpassword", user.getPassword());
 		assertEquals("SAT score not updated", 1600, user.getSatScore());
 		assertEquals("ACT score not updated", 30, user.getActScore());
-		//Modify score values, keep password
-		userDAO.updateUser(userName, "newpassword", 1200, 10);
+		//Modify score values
+		userDAO.updateUser(userName, 1200, 10);
 		User userTakeTwo = userDAO.getUser(userName);
-		assertEquals("Password not updated", "newpassword", userTakeTwo.getPassword());
 		assertEquals("SAT score not updated", 1200, userTakeTwo.getSatScore());
 		assertEquals("ACT score not updated", 10, userTakeTwo.getActScore());
 	}
@@ -416,6 +426,16 @@ public class UserDAOTest {
 		assertEquals("School name not correct", "Yale University", schools.get(1).getSchool().getName());
 		assertEquals("School name not correct", "Harvard University", 
 				schools.get(2).getSchool().getName());
+		//ensure data is saved
+		assertEquals("ID not correct", 130794, schools.get(1).getSchool().getId());
+		assertEquals("SAT average not correct", 1493, schools.get(1).getSchool().getSatAvg(), .1);
+		assertEquals("ACT average not correct", 33, schools.get(1).getSchool().getActAvg(), .1);
+		assertEquals("Admission rate not correct", .063, schools.get(1).getSchool().getAdmissionRate(), .001);
+		assertEquals("URL not correct", "www.yale.edu", schools.get(1).getSchool().getWebsite());
+		assertEquals("Out of state tuition not correct", 45800, schools.get(1).getSchool().getTuitionOut());
+		assertEquals("In state tuition not correct", 45800, schools.get(1).getSchool().getTuitionIn());
+		assertEquals("City not correct", "New Haven", schools.get(1).getSchool().getLocation().getCity());
+		assertEquals("State not correct", "CT", schools.get(1).getSchool().getLocation().getStateStr());
 	}
 	
 	@Test
