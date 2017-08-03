@@ -216,7 +216,7 @@ public class Search extends HttpServlet {
 		case "locationz":
 			return "ZIP?";
 		case "locationcs":
-			return "location.city|location.state";
+			return School.L_CITY + "|" + School.L_STATE;
 		case "programs":
 			return School.PROG_1 + "|" + School.PROG_2 + "|" +
 				School.PROG_3 + "|" + School.PROG_4 + "|" +
@@ -224,7 +224,7 @@ public class Search extends HttpServlet {
 		case "level":
 			return School.LEVEL;
 		case "region":
-			return "region_name";
+			return School.R_REGION;
 		case "name":
 			return School.NAME + "|" + School.ALIAS;
 		case "cost":
@@ -252,25 +252,25 @@ public class Search extends HttpServlet {
 		case "firstgen":
 			return School.FIRST_GEN;
 		case "men":
-			return "male|GENDER";
+			return School.GD_MALE + "|GENDER";
 		case "women":
-			return "female|GENDER";
+			return School.GD_FEMALE + "|GENDER";
 		case "white":
-			return "white|ETHNIC";
+			return School.ED_WHITE + "|ETHNIC";
 		case "black":
-			return "black|ETHNIC";
+			return School.ED_BLACK + "|ETHNIC";
 		case "hispanic":
-			return "hispanic|ETHNIC";
+			return School.ED_HISPANIC + "|ETHNIC";
 		case "asian":
-			return "asian|ETHNIC";
+			return School.ED_ASIAN + "|ETHNIC";
 		case "aian":
-			return "american_indian_alaskan_native|ETHNIC";
+			return School.ED_AM_IND + "|ETHNIC";
 		case "nhpi":
-			return "native_hawaiian_pacific_islander|ETHNIC";
+			return School.ED_HAW_PAC_ISL + "|ETHNIC";
 		case "multi":
-			return "two_or_more|ETHNIC";
+			return School.ED_TWO_OR_MORE + "|ETHNIC";
 		case "nonres":
-			return "nonresident|ETHNIC";
+			return School.ED_NONRES + "|ETHNIC";
 		case "online":
 			return School.DIST_LEARNING;
 	}
