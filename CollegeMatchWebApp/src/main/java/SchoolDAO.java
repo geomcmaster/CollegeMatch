@@ -174,8 +174,8 @@ public class SchoolDAO {
 	private StringBuilder selectAndJoin(byte tablesToJoin) {
 		String baseQuery = 
 				"SELECT school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
-				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg,"
-				+ "school.ACT_avg, school.adm_rate FROM school";
+				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"
+				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//JOINS
 		queryBuilder.append(" JOIN school_loc ON school_loc.school_ID = school.ID "
