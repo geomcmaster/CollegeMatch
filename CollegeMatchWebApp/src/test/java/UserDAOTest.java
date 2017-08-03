@@ -416,6 +416,15 @@ public class UserDAOTest {
 		assertEquals("School name not correct", "Yale University", schools.get(1).getSchool().getName());
 		assertEquals("School name not correct", "Harvard University", 
 				schools.get(2).getSchool().getName());
+		//ensure data is saved
+		assertEquals("SAT average not correct", 1493, schools.get(1).getSchool().getSatAvg(), .1);
+		assertEquals("ACT average not correct", 33, schools.get(1).getSchool().getActAvg(), .1);
+		assertEquals("Admission rate not correct", .063, schools.get(1).getSchool().getAdmissionRate(), .001);
+		assertEquals("URL not correct", "www.yale.edu", schools.get(1).getSchool().getWebsite());
+		assertEquals("Out of state tuition not correct", 45800, schools.get(1).getSchool().getTuitionOut());
+		assertEquals("In state tuition not correct", 45800, schools.get(1).getSchool().getTuitionIn());
+		assertEquals("City not correct", "New Haven", schools.get(1).getSchool().getLocation().getCity());
+		assertEquals("State not correct", "CT", schools.get(1).getSchool().getLocation().getStateStr());
 	}
 	
 	@Test
