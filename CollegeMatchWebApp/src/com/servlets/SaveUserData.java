@@ -43,7 +43,9 @@ public class SaveUserData extends HttpServlet {
 			response.sendRedirect("editmyuser?pwfail");
 		} else {
 			// save pw if appropriate
-			if (oldPw.length() > 0) db.updatePassword(username, newPw);
+			if (oldPw.length() > 0) {
+				db.updatePassword(username, newPw);
+			}
 			
 			// save sat, act scores
 			db.updateUser(username, SATscore, ACTscore);
