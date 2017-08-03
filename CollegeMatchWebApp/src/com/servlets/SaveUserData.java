@@ -43,7 +43,7 @@ public class SaveUserData extends HttpServlet {
 			response.sendRedirect("editmyuser?pwfail");
 		} else {
 			// save pw, sat, act scores
-			db.updateUser(username, newPw, SATscore, ACTscore);
+			//db.updateUser(username, newPw, SATscore, ACTscore);
 			
 			// save location
 			db.modifyResidence(username, city, stateInt, Integer.parseInt(ZIPcode));
