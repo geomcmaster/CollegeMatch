@@ -18,17 +18,46 @@ public class EditUserForm extends HttpServlet {
 		UserDAO db = new UserDAO();
 		User currentUser = db.getUser(username);
 		
-		request.setAttribute("sat", currentUser.getSatScore());
-		request.setAttribute("act", currentUser.getActScore());
-		Location loc = currentUser.getLocation();
-		request.setAttribute("loczip", loc.getZip());
-		request.setAttribute("loccity", loc.getCity());
-		request.setAttribute("locstate", loc.getStateInt());
-		List<FavoriteFieldOfStudy> favorites = currentUser.getFavoriteFieldsOfStudy();
-		String[] fieldArray = new String[favorites.size()];
-		for (int i = 0; i < favorites.size(); i++) {
-			fieldArray[i] = favorites.get(i).getRank() + "|" + favorites.get(i).getFieldOfStudy();
+		double SAT = 0;
+		double ACT = 0;
+		int ZIP = 0;
+		int stateInt = 0;
+		String city = new String();
+		String[] fieldArray = new String[0];
+		
+		if (currentUser.isSatScoreNotNull()) {
+			SAT = currentUser.getSatScore();
 		}
+		if (currentUser.isActScoreNotNull()) {
+			ACT = currentUser.getActScore();
+		}
+		if (currentUser.isLocationNotNull()) {
+			Location loc = currentUser.getLocation();
+			if (loc.isCityNotNull()) {
+				city = loc.getCity();
+			}
+			if (loc.isStateIntNotNull()) {
+				stateInt = loc.getStateInt();
+			}
+			if (loc.isZipNotNull()) {
+				ZIP = loc.getZip();
+			}
+		}
+		if (currentUser.isFavoriteFieldsOfStudyNotNull()) {
+			List<FavoriteFieldOfStudy> favorites = currentUser.getFavoriteFieldsOfStudy();
+			fieldArray = new String[favorites.size()];
+			for (int i = 0; i < favorites.size(); i++) {
+				if (favorites.get(i).isRankNotNull() && favorites.get(i).isFieldOfStudyNotNull()) {
+					fieldArray[i] = favorites.get(i).getRank() + "|" + favorites.get(i).getFieldOfStudy();
+				}
+			}
+		}
+		
+		request.setAttribute("sat", SAT);
+		request.setAttribute("act", ACT);
+		request.setAttribute("loczip", ZIP);
+		request.setAttribute("loccity", city);
+		request.setAttribute("locstate", stateInt);
 		request.setAttribute("fields", fieldArray);
 		getServletContext().getRequestDispatcher("/userdata.jsp").forward(request,response);
 	}
