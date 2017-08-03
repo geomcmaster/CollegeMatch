@@ -55,12 +55,8 @@
 	<servlet-class>com.servlets.SaveFavorite</servlet-class>
   </servlet>
   <servlet>
-	<servlet-name>DeleteFavorite</servlet-name>
-	<servlet-class>com.servlets.DeleteFavorite</servlet-class>
-  </servlet>
-  <servlet>
-	<servlet-name>AddFavorite</servlet-name>
-	<servlet-class>com.servlets.AddFavorite</servlet-class>
+	<servlet-name>ModifyFavorite</servlet-name>
+	<servlet-class>com.servlets.ModifyFavorite</servlet-class>
   </servlet>
   <servlet>
 	<servlet-name>SchoolSearch</servlet-name>
@@ -117,12 +113,8 @@
 	<url-pattern>/saveFav</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-	<servlet-name>DeleteFavorite</servlet-name>
-	<url-pattern>/deleteFav*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-	<servlet-name>AddFavorite</servlet-name>
-	<url-pattern>/addFav*</url-pattern>
+	<servlet-name>ModifyFavorite</servlet-name>
+	<url-pattern>/modifyFavs</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
 	<servlet-name>SchoolSearch</servlet-name>
