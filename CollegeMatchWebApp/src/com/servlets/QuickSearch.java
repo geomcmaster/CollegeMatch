@@ -3,12 +3,9 @@ package com.servlets;
 import java.io.IOException;
 import main.java.School;
 import main.java.SchoolDAO;
-import main.java.UserDAO;
-import main.java.Location;
 import main.java.CondVal;
 import main.java.CondType;
 import main.java.Condition;
-import main.java.FavoriteSchool;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,40 +47,16 @@ public class QuickSearch extends HttpServlet {
 		// data format: id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg
 		for (i = 0; i < results.size(); i++) {
 			School curSch = results.get(i);
-			int curId = 0; //TODO: fix when possible
-			String curName = curSch.getName();
-			String curUrl = curSch.getWebsite();
-			double curAdmRate = curSch.getAdmissionRate();
-			int tuitionIn = curSch.getTuitionIn();
-			int tuitionOut = curSch.getTuitionOut();
-			Location curLoc = curSch.getLocation();
-			String curCity = curLoc.getCity();
-			int curStateInt = curLoc.getStateInt();
-			String curStateAbbr = curLoc.getStateAbbreviation();
-			double curSat = curSch.getSatAvg();
-			double curAct = curSch.getActAvg();
-			
-			String[] allValues = {" " + curId, " " + curName, " " + curUrl,
-					" " + curAdmRate, " " + tuitionIn, " " + tuitionOut,
-					" " + curCity, " " + curStateInt, " " + curStateAbbr,
-					" " + curSat, " " + curAct};
+			String[] allValues = Search.getSchoolDetails(curSch);
 			outputResults[i] = String.join("|", allValues);
 		}
 		
 		request.setAttribute("results", outputResults);
-		
-		UserDAO userDb = new UserDAO(); 
-		Location userResidence = userDb.getResidence(username);
-		request.setAttribute("userState", userResidence.getStateInt());
-		
-		List<FavoriteSchool> userFavs = userDb.getFavSchools(username);
-		outputResults = new String[userFavs.size()];
-		// data format: id
-		for (i = 0; i < userFavs.size(); i++) {
-			School curFav = userFavs.get(i).getSchool();
-			int curId = 0; //TODO: fix when possible
-			outputResults[i] = "" + curId;
-		}
+
+		int userStateInt = Search.getUserStateInt(username);
+		request.setAttribute("userState", userStateInt);
+
+		outputResults = Search.getUserFavorites(username);
 		request.setAttribute("favs", outputResults);
 		
 		getServletContext().getRequestDispatcher("/results.jsp").forward(request,response);

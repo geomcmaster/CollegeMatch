@@ -1,7 +1,6 @@
 package com.servlets;
 
 import java.io.IOException;
-
 import main.java.School;
 import main.java.SchoolDAO;
 import main.java.UserDAO;
@@ -10,20 +9,12 @@ import main.java.CondVal;
 import main.java.CondType;
 import main.java.Condition;
 import main.java.FavoriteSchool;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import main.java.CondType;
-import main.java.CondVal;
-import main.java.Condition;
-import main.java.School;
-import main.java.SchoolDAO;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Search extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -158,40 +149,16 @@ public class Search extends HttpServlet {
 		// data format: id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg
 		for (i = 0; i < results.size(); i++) {
 			School curSch = results.get(i);
-			int curId = 0; //TODO: fix when possible
-			String curName = curSch.getName();
-			String curUrl = curSch.getWebsite();
-			double curAdmRate = curSch.getAdmissionRate();
-			int tuitionIn = curSch.getTuitionIn();
-			int tuitionOut = curSch.getTuitionOut();
-			Location curLoc = curSch.getLocation();
-			String curCity = curLoc.getCity();
-			int curStateInt = curLoc.getStateInt();
-			String curStateAbbr = curLoc.getStateAbbreviation();
-			double curSat = curSch.getSatAvg();
-			double curAct = curSch.getActAvg();
-			
-			String[] allValues = {" " + curId, " " + curName, " " + curUrl,
-					" " + curAdmRate, " " + tuitionIn, " " + tuitionOut,
-					" " + curCity, " " + curStateInt, " " + curStateAbbr,
-					" " + curSat, " " + curAct};
+			String[] allValues = getSchoolDetails(curSch);
 			outputResults[i] = String.join("|", allValues);
 		}
 		
 		request.setAttribute("results", outputResults);
 		
-		UserDAO userDb = new UserDAO(); 
-		Location userResidence = userDb.getResidence(username);
-		request.setAttribute("userState", userResidence.getStateInt());
+		int userStateInt = getUserStateInt(username);
+		request.setAttribute("userState", userStateInt);
 		
-		List<FavoriteSchool> userFavs = userDb.getFavSchools(username);
-		outputResults = new String[userFavs.size()];
-		// data format: id
-		for (i = 0; i < userFavs.size(); i++) {
-			School curFav = userFavs.get(i).getSchool();
-			int curId = 0; //TODO: fix when possible
-			outputResults[i] = "" + curId;
-		}
+		outputResults = getUserFavorites(username);
 		request.setAttribute("favs", outputResults);
 		
 		getServletContext().getRequestDispatcher("/results.jsp").forward(request,response);
@@ -308,5 +275,105 @@ public class Search extends HttpServlet {
 			return School.DIST_LEARNING;
 	}
 		return "";
+	}
+
+	public static String[] getSchoolDetails(School sch) {
+		int curId = 0;
+		String curName = new String();
+		String curUrl = new String();
+		double curAdmRate = 0;
+		int tuitionIn = 0;
+		int tuitionOut = 0;
+		String curCity = new String();
+		int curStateInt = 0;
+		String curStateAbbr = new String();
+		double curSat = 0;
+		double curAct = 0;
+		
+		// Get ID
+		if (sch.isIdNotNull()) {
+			curId = sch.getId();
+		}
+		
+		// Get Name
+		if (sch.isNameNotNull()) {
+			curName = sch.getName();
+		}
+		
+		// Get URL
+		if (sch.isWebsiteNotNull()) {
+			curUrl = sch.getWebsite();
+		}
+		
+		// Get Admission Rate
+		if (sch.isAdmissionRateNotNull()) {
+			curAdmRate = sch.getAdmissionRate();
+		}
+		
+		// Get In-State Tuition
+		if (sch.isTuitionInNotNull()) {
+			tuitionIn = sch.getTuitionIn();
+		}
+		
+		// Get Out-of-State Tuition
+		if (sch.isTuitionOutNotNull()) {
+			tuitionOut = sch.getTuitionOut();
+		}
+		
+		// Get location
+		if (sch.isLocationNotNull()) {
+			Location curLoc = sch.getLocation();
+			if (curLoc.isCityNotNull()) {
+				curCity = curLoc.getCity();
+			}
+			if (curLoc.isStateIntNotNull()) {
+				curStateInt = curLoc.getStateInt();
+			}
+			if (curLoc.isStateStrNotNull()) {
+				curStateAbbr = curLoc.getStateAbbreviation();
+			}
+		}
+		
+		// Get SAT
+		if (sch.isSatAvgNotNull()) {
+			curSat = sch.getSatAvg();
+		}
+		
+		if (sch.isActAvgNotNull()) {
+			curAct = sch.getActAvg();
+		}
+		
+		String[] allValues = {" " + curId, " " + curName, " " + curUrl,
+				" " + curAdmRate, " " + tuitionIn, " " + tuitionOut,
+				" " + curCity, " " + curStateInt, " " + curStateAbbr,
+				" " + curSat, " " + curAct};
+		
+		return allValues;
+	}
+
+	public static String[] getUserFavorites(String username) {
+		UserDAO userDb = new UserDAO();
+		List<FavoriteSchool> userFavs = userDb.getFavSchools(username);
+		String[] outputResults = new String[userFavs.size()];
+		// data format: id
+		for (int i = 0; i < userFavs.size(); i++) {
+			School curFav = userFavs.get(i).getSchool();
+			int curId = 0;
+			if (curFav.isIdNotNull()) {
+				curId = curFav.getId();
+			}
+			outputResults[i] = "" + curId;
+		}
+		return outputResults;
+	}
+	
+	public static int getUserStateInt(String username) {
+		UserDAO userDb = new UserDAO();
+		Location userResidence = userDb.getResidence(username);
+		int userStateInt = 0;
+		if (userResidence.isStateIntNotNull()) {
+			userStateInt = userResidence.getStateInt(); 
+		}
+		return userStateInt;
 	}
 }

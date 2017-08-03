@@ -2,13 +2,10 @@ package com.servlets;
 
 import java.io.IOException;
 import main.java.UserDAO;
-import main.java.FavoriteSchool;
-import main.java.School;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 public class ModifyFavorite extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -34,14 +31,7 @@ public class ModifyFavorite extends HttpServlet {
 			db.deleteFavSchool(username, schoolId);
 		}
 		
-		List<FavoriteSchool> userFavs = db.getFavSchools(username);
-		String[] outputResults = new String[userFavs.size()];
-		// data format: id
-		for (int i = 0; i < userFavs.size(); i++) {
-			School curFav = userFavs.get(i).getSchool();
-			int curId = 0; //TODO: fix when possible
-			outputResults[i] = "" + curId;
-		}
+		String[] outputResults = Search.getUserFavorites(username);
 		
 		request.setAttribute("favs", outputResults);
 		request.setAttribute("results", lastResults);
