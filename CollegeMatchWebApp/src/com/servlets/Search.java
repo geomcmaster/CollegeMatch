@@ -1,13 +1,19 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.ArrayList;
+
+import main.java.CondType;
+import main.java.CondVal;
+import main.java.Condition;
+import main.java.School;
+import main.java.SchoolDAO;
 
 public class Search extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,7 +32,7 @@ public class Search extends HttpServlet {
 			criteria[i] = request.getParameter("crit" + (i + 1) + "hid");
 		}
 		List<Condition> conditions = new ArrayList<Condition>();
-		byte tablesToJoin = 0x0;
+		byte tablesToJoin = SchoolDAO.NONE;
 		SchoolDAO db = new SchoolDAO();
 		
 		for (i = 0; i < criteria.length; i++) {
@@ -52,7 +58,7 @@ public class Search extends HttpServlet {
 			case "region":
 				cValue = CondVal.createStrVal(request.getParameter(opener + "sel3"));
 				conditions.add(new Condition(colName,CondType.EQ,cValue));
-				tablesToJoin += 0x4;
+				tablesToJoin |= SchoolDAO.REGION;
 				break;
 			case "id":
 				value = request.getParameter(opener + "level");
@@ -96,9 +102,9 @@ public class Search extends HttpServlet {
 			case "double":
 				if (colName.contains("|")) {
 					if (colName.split("|")[1] == "GENDER") {
-						tablesToJoin += 0x1;
+						tablesToJoin |= SchoolDAO.GENDER;
 					} else {
-						tablesToJoin += 0x2;
+						tablesToJoin |= SchoolDAO.ETHNIC;
 					}
 					colName = colName.split("|")[0];
 				}
