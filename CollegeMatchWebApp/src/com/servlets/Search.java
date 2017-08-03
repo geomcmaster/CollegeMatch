@@ -1,13 +1,19 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.ArrayList;
+
+import main.java.CondType;
+import main.java.CondVal;
+import main.java.Condition;
+import main.java.School;
+import main.java.SchoolDAO;
 
 public class Search extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,6 +32,7 @@ public class Search extends HttpServlet {
 			criteria[i] = request.getParameter("crit" + (i + 1) + "hid");
 		}
 		List<Condition> conditions = new ArrayList<Condition>();
+		byte tablesToJoin = SchoolDAO.NONE;
 		SchoolDAO db = new SchoolDAO();
 		
 		for (i = 0; i < criteria.length; i++) {
@@ -34,7 +41,9 @@ public class Search extends HttpServlet {
 			String colName = getColumnName(criterion);
 			String opener = "crit" + (i + 1);
 			String value = new String();
+			String comparison = new String();
 			CondVal cValue = null;
+			CondType cType = null;
 			List<Condition> OrGroup = new ArrayList<Condition>();
 			switch(type) {
 			case "distance":
@@ -45,6 +54,11 @@ public class Search extends HttpServlet {
 				String city = request.getParameter(opener + "text");
 				int stateInt = Integer.parseInt(request.getParameter(opener + "sel1"));
 				// TODO: finish
+				break;
+			case "region":
+				cValue = CondVal.createStrVal(request.getParameter(opener + "sel3"));
+				conditions.add(new Condition(colName,CondType.EQ,cValue));
+				tablesToJoin |= SchoolDAO.REGION;
 				break;
 			case "id":
 				value = request.getParameter(opener + "level");
@@ -69,17 +83,46 @@ public class Search extends HttpServlet {
 				conditions.add(new Condition("",CondType.OR_GROUP,CondVal.createORGroupVal(OrGroup)));
 				break;
 			case "int":
-				// TODO:
+				comparison = request.getParameter(opener + "comp");
+				if (comparison == "bet") {
+					int val1 = Integer.parseInt(request.getParameter(opener + "num1"));
+					int val2 = Integer.parseInt(request.getParameter(opener + "num2"));
+					cValue = CondVal.createIntRangeVal(val1, val2);
+					cType = CondType.RANGE;
+				} else {
+					cValue = CondVal.createIntVal(Integer.parseInt(request.getParameter(opener + "num1")));
+					if (comparison == "lt") {
+						cType = CondType.LT;
+					} else {
+						cType = CondType.GT;
+					}
+				}
+				conditions.add(new Condition(colName, cType, cValue));
 				break;
 			case "double":
-				if (colName == "ETHNIC") {
-					
-				} else if (colName == "GENDER") {
-					
-				} else {
-					
+				if (colName.contains("|")) {
+					if (colName.split("|")[1] == "GENDER") {
+						tablesToJoin |= SchoolDAO.GENDER;
+					} else {
+						tablesToJoin |= SchoolDAO.ETHNIC;
+					}
+					colName = colName.split("|")[0];
 				}
-				// TODO:
+				comparison = request.getParameter(opener + "comp");
+				if (comparison == "bet") {
+					double val1 = Double.parseDouble(request.getParameter(opener + "num1"));
+					double val2 = Double.parseDouble(request.getParameter(opener + "num2"));
+					cValue = CondVal.createDoubleRangeVal(val1, val2);
+					cType = CondType.RANGE;
+				} else {
+					cValue = CondVal.createDoubleVal(Double.parseDouble(request.getParameter(opener + "num1")));
+					if (comparison == "lt") {
+						cType = CondType.LT;
+					} else {
+						cType = CondType.GT;
+					}
+				}
+				conditions.add(new Condition(colName, cType, cValue));
 				break;
 			case "special":
 				if (criterion == "favorites") {
@@ -89,10 +132,13 @@ public class Search extends HttpServlet {
 				}
 				break;
 			case "boolean":
-				// TODO:
+				cValue = CondVal.createIntVal(Integer.parseInt(request.getParameter(opener + "check")));
+				conditions.add(new Condition(colName,CondType.EQ,cValue));
 				break;
 			}
 		}
+		
+		// TODO: send in query with completed list of conditions, tablesToJoin
 	}
 	
 	private String valTyp(String criterion) {
@@ -152,7 +198,7 @@ public class Search extends HttpServlet {
 		case "level":
 			return "level";
 		case "region":
-			return "REGION";
+			return "region_name";
 		case "name":
 			return "name|alias";
 		case "cost":
@@ -180,17 +226,25 @@ public class Search extends HttpServlet {
 		case "firstgen":
 			return "1_gen_std_share";
 		case "men":
+			return "male|GENDER";
 		case "women":
-			return "GENDER";
+			return "female|GENDER";
 		case "white":
+			return "white|ETHNIC";
 		case "black":
+			return "black|ETHNIC";
 		case "hispanic":
+			return "hispanic|ETHNIC";
 		case "asian":
+			return "asian|ETHNIC";
 		case "aian":
+			return "american_indian_alaskan_native|ETHNIC";
 		case "nhpi":
+			return "native_hawaiian_pacific_islander|ETHNIC";
 		case "multi":
+			return "two_or_more|ETHNIC";
 		case "nonres":
-			return "ETHNIC";
+			return "nonresident|ETHNIC";
 		case "online":
 			return "dist_learning";
 	}

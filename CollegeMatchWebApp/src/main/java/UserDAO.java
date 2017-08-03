@@ -108,27 +108,45 @@ public class UserDAO {
 	}
 	
 	/**
-	 * Updates user with given password, SAT score, ACT score
+	 * Updates user with new password
 	 * 
 	 * @param userName
-	 * @param password
-	 * @param satScore
-	 * @param actScore
+	 * @param newPassword
 	 */
-	public void updateUser(String userName, String password, int satScore, int actScore) {
-		//assuming that we won't let them change username
-		//assuming that existing values will be passed if they are to stay the same
-			//alternative is having separate methods for each
+	public void updatePassword(String userName, String newPassword) {
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = 
 					dbUtil.getConnection().prepareStatement("UPDATE user "
-							+ "SET password=?, SAT_SCORE=?, ACT_SCORE=? "
+							+ "SET password=? "
 							+ "WHERE id=?");
-			pstmt.setString(1, password);
-			pstmt.setInt(2, satScore);
-			pstmt.setInt(3, actScore);
-			pstmt.setString(4, userName);
+			pstmt.setString(1, newPassword);
+			pstmt.setString(2, userName);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeStatement(pstmt);
+		}
+	}
+	
+	/**
+	 * Updates user with given SAT score, ACT score
+	 * 
+	 * @param userName
+	 * @param satScore
+	 * @param actScore
+	 */
+	public void updateUser(String userName, int satScore, int actScore) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = 
+					dbUtil.getConnection().prepareStatement("UPDATE user "
+							+ "SET SAT_SCORE=?, ACT_SCORE=? "
+							+ "WHERE id=?");
+			pstmt.setInt(1, satScore);
+			pstmt.setInt(2, actScore);
+			pstmt.setString(3, userName);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -510,22 +528,23 @@ public class UserDAO {
 			while (rs.next()) {
 				FavoriteSchool fav = new FavoriteSchool();
 				School school = new School();
-				school.setName(rs.getString(1));
+				school.setId(rs.getInt(1));
+				school.setName(rs.getString(2));
 				fav.setSchool(school);
-				fav.setRank(rs.getInt(2));
-				fav.setStatus(rs.getString(3));
-				fav.setFinancialAid(rs.getInt(4));
-				fav.setLoan(rs.getInt(5));
-				fav.setMerit(rs.getInt(6));
-				school.setSatAvg(rs.getDouble(7));
-				school.setActAvg(rs.getDouble(8));
-				school.setAdmissionRate(rs.getDouble(9));
-				school.setWebsite(rs.getString(10));
-				school.setTuitionOut(rs.getInt(11));
-				school.setTuitionIn(rs.getInt(12));
+				fav.setRank(rs.getInt(3));
+				fav.setStatus(rs.getString(4));
+				fav.setFinancialAid(rs.getInt(5));
+				fav.setLoan(rs.getInt(6));
+				fav.setMerit(rs.getInt(7));
+				school.setSatAvg(rs.getDouble(8));
+				school.setActAvg(rs.getDouble(9));
+				school.setAdmissionRate(rs.getDouble(10));
+				school.setWebsite(rs.getString(11));
+				school.setTuitionOut(rs.getInt(12));
+				school.setTuitionIn(rs.getInt(13));
 				Location location = new Location();
-				location.setCity(rs.getString(13));
-				location.setStateStr(rs.getString(14));
+				location.setCity(rs.getString(14));
+				location.setStateStr(rs.getString(15));
 				school.setLocation(location);
 				favs.addLast(fav);
 			}
