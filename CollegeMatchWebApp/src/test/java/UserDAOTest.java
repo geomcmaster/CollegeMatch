@@ -417,6 +417,7 @@ public class UserDAOTest {
 		assertEquals("School name not correct", "Harvard University", 
 				schools.get(2).getSchool().getName());
 		//ensure data is saved
+		assertEquals("ID not correct", 130794, schools.get(1).getSchool().getId());
 		assertEquals("SAT average not correct", 1493, schools.get(1).getSchool().getSatAvg(), .1);
 		assertEquals("ACT average not correct", 33, schools.get(1).getSchool().getActAvg(), .1);
 		assertEquals("Admission rate not correct", .063, schools.get(1).getSchool().getAdmissionRate(), .001);

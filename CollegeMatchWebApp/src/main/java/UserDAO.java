@@ -510,22 +510,23 @@ public class UserDAO {
 			while (rs.next()) {
 				FavoriteSchool fav = new FavoriteSchool();
 				School school = new School();
-				school.setName(rs.getString(1));
+				school.setId(rs.getInt(1));
+				school.setName(rs.getString(2));
 				fav.setSchool(school);
-				fav.setRank(rs.getInt(2));
-				fav.setStatus(rs.getString(3));
-				fav.setFinancialAid(rs.getInt(4));
-				fav.setLoan(rs.getInt(5));
-				fav.setMerit(rs.getInt(6));
-				school.setSatAvg(rs.getDouble(7));
-				school.setActAvg(rs.getDouble(8));
-				school.setAdmissionRate(rs.getDouble(9));
-				school.setWebsite(rs.getString(10));
-				school.setTuitionOut(rs.getInt(11));
-				school.setTuitionIn(rs.getInt(12));
+				fav.setRank(rs.getInt(3));
+				fav.setStatus(rs.getString(4));
+				fav.setFinancialAid(rs.getInt(5));
+				fav.setLoan(rs.getInt(6));
+				fav.setMerit(rs.getInt(7));
+				school.setSatAvg(rs.getDouble(8));
+				school.setActAvg(rs.getDouble(9));
+				school.setAdmissionRate(rs.getDouble(10));
+				school.setWebsite(rs.getString(11));
+				school.setTuitionOut(rs.getInt(12));
+				school.setTuitionIn(rs.getInt(13));
 				Location location = new Location();
-				location.setCity(rs.getString(13));
-				location.setStateStr(rs.getString(14));
+				location.setCity(rs.getString(14));
+				location.setStateStr(rs.getString(15));
 				school.setLocation(location);
 				favs.addLast(fav);
 			}
