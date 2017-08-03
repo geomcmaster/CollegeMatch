@@ -8,8 +8,47 @@ package main.java;
  */
 public class FavoriteFieldOfStudy {
 	private String fieldOfStudy;
+	private boolean fieldOfStudyIsNotNull;
 	private int rank;
+	private boolean rankIsNotNull;
 	
+	public FavoriteFieldOfStudy() {
+		setNulls();
+	}
+	
+	private void setNulls() {
+		setFieldOfStudyIsNotNull(false);
+		setRankIsNotNull(false);
+	}
+	
+	/**
+	 * @return the fieldOfStudyIsNotNull
+	 */
+	public boolean isFieldOfStudyNotNull() {
+		return fieldOfStudyIsNotNull;
+	}
+
+	/**
+	 * @param fieldOfStudyIsNotNull the fieldOfStudyIsNotNull to set
+	 */
+	public void setFieldOfStudyIsNotNull(boolean fieldOfStudyIsNotNull) {
+		this.fieldOfStudyIsNotNull = fieldOfStudyIsNotNull;
+	}
+
+	/**
+	 * @return the rankIsNotNull
+	 */
+	public boolean isRankNotNull() {
+		return rankIsNotNull;
+	}
+
+	/**
+	 * @param rankIsNotNull the rankIsNotNull to set
+	 */
+	public void setRankIsNotNull(boolean rankIsNotNull) {
+		this.rankIsNotNull = rankIsNotNull;
+	}
+
 	/**
 	 * @return the fieldOfStudy
 	 */

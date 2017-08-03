@@ -8,11 +8,114 @@ package main.java;
  */
 public class FavoriteSchool {
 	private School school;
+	private boolean schoolIsNotNull;
 	private int rank;
+	private boolean rankIsNotNull;
 	private String status;
+	private boolean statusIsNotNull;
 	private int financialAid;
+	private boolean financialAidIsNotNull;
 	private int loan;
+	private boolean loanIsNotNull;
 	private int merit;
+	private boolean meritIsNotNull;
+	
+	public FavoriteSchool() {
+		setNulls();
+	}
+	
+	private void setNulls() {
+		setSchoolIsNotNull(false);
+		setRankIsNotNull(false);
+		setStatusIsNotNull(false);
+		setFinancialAidIsNotNull(false);
+		setLoanIsNotNull(false);
+		setMeritIsNotNull(false);
+	}
+	
+	/**
+	 * @return the schoolIsNotNull
+	 */
+	public boolean isSchoolNotNull() {
+		return schoolIsNotNull;
+	}
+
+	/**
+	 * @param schoolIsNotNull the schoolIsNotNull to set
+	 */
+	public void setSchoolIsNotNull(boolean schoolIsNotNull) {
+		this.schoolIsNotNull = schoolIsNotNull;
+	}
+
+	/**
+	 * @return the rankIsNotNull
+	 */
+	public boolean isRankNotNull() {
+		return rankIsNotNull;
+	}
+
+	/**
+	 * @param rankIsNotNull the rankIsNotNull to set
+	 */
+	public void setRankIsNotNull(boolean rankIsNotNull) {
+		this.rankIsNotNull = rankIsNotNull;
+	}
+
+	/**
+	 * @return the statusIsNotNull
+	 */
+	public boolean isStatusNotNull() {
+		return statusIsNotNull;
+	}
+
+	/**
+	 * @param statusIsNotNull the statusIsNotNull to set
+	 */
+	public void setStatusIsNotNull(boolean statusIsNotNull) {
+		this.statusIsNotNull = statusIsNotNull;
+	}
+
+	/**
+	 * @return the financialAidIsNotNull
+	 */
+	public boolean isFinancialAidNotNull() {
+		return financialAidIsNotNull;
+	}
+
+	/**
+	 * @param financialAidIsNotNull the financialAidIsNotNull to set
+	 */
+	public void setFinancialAidIsNotNull(boolean financialAidIsNotNull) {
+		this.financialAidIsNotNull = financialAidIsNotNull;
+	}
+
+	/**
+	 * @return the loanIsNotNull
+	 */
+	public boolean isLoanNotNull() {
+		return loanIsNotNull;
+	}
+
+	/**
+	 * @param loanIsNotNull the loanIsNotNull to set
+	 */
+	public void setLoanIsNotNull(boolean loanIsNotNull) {
+		this.loanIsNotNull = loanIsNotNull;
+	}
+
+	/**
+	 * @return the meritIsNotNull
+	 */
+	public boolean isMeritNotNull() {
+		return meritIsNotNull;
+	}
+
+	/**
+	 * @param meritIsNotNull the meritIsNotNull to set
+	 */
+	public void setMeritIsNotNull(boolean meritIsNotNull) {
+		this.meritIsNotNull = meritIsNotNull;
+	}
 	
 	/**
 	 * @return the school

@@ -101,6 +101,10 @@ public class UserDAOTest {
 		assertFalse("Invalid user not listed as invalid", userDAO.getUser("didntcreatethisuser").isValid());
 		//existing user
 		userDAO.createUser("testingGetUser", "456abc789");
+		//scores are null
+		assertFalse("SAT score is not null", userDAO.getUser("testingGetUser").isSatScoreNotNull());
+		assertFalse("ACT score is not", userDAO.getUser("testingGetUser").isActScoreNotNull());
+		
 		userDAO.updateUser("testingGetUser", 1555, 30);
 		User user = userDAO.getUser("testingGetUser");
 		assertTrue("Valid user not listed as valid", user.isValid());

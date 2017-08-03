@@ -10,16 +10,136 @@ import java.util.List;
  */
 public class User {
 	private String id;
+	private boolean idIsNotNull;
 	private String password;
+	private boolean passwordIsNotNull;
 	private int satScore;
+	private boolean satScoreIsNotNull;
 	private int actScore;
+	private boolean actScoreIsNotNull;
 	//location is stored in residence table. only need to set this field if you care about returning the student's
 	//residence info
 	private Location location;
+	private boolean locationIsNotNull;
 	private List<FavoriteSchool> favoriteSchools;
+	private boolean favoriteSchoolsIsNotNull;
 	private List<FavoriteFieldOfStudy> favoriteFieldsOfStudy;
+	private boolean favoriteFieldsOfStudyIsNotNull;
 	private boolean isValid;
 	
+	public User() {
+		setNulls();
+	}
+	
+	//initialize all fields to indicate null
+	private void setNulls() {
+		setIdIsNotNull(false);
+		setPasswordIsNotNull(false);
+		setSatScoreIsNotNull(false);
+		setActScoreIsNotNull(false);
+		setLocationIsNotNull(false);
+		setFavoriteSchoolsIsNotNull(false);
+		setFavoriteFieldsOfStudyIsNotNull(false);
+	}
+	
+	/**
+	 * @return the idIsNotNull
+	 */
+	public boolean isIdNotNull() {
+		return idIsNotNull;
+	}
+
+	/**
+	 * @param idIsNotNull the idIsNotNull to set
+	 */
+	public void setIdIsNotNull(boolean idIsNotNull) {
+		this.idIsNotNull = idIsNotNull;
+	}
+
+	/**
+	 * @return the passwordIsNotNull
+	 */
+	public boolean isPasswordNotNull() {
+		return passwordIsNotNull;
+	}
+
+	/**
+	 * @param passwordIsNotNull the passwordIsNotNull to set
+	 */
+	public void setPasswordIsNotNull(boolean passwordIsNotNull) {
+		this.passwordIsNotNull = passwordIsNotNull;
+	}
+
+	/**
+	 * @return the satScoreIsNotNull
+	 */
+	public boolean isSatScoreNotNull() {
+		return satScoreIsNotNull;
+	}
+
+	/**
+	 * @param satScoreIsNotNull the satScoreIsNotNull to set
+	 */
+	public void setSatScoreIsNotNull(boolean satScoreIsNotNull) {
+		this.satScoreIsNotNull = satScoreIsNotNull;
+	}
+
+	/**
+	 * @return the actScoreIsNotNull
+	 */
+	public boolean isActScoreNotNull() {
+		return actScoreIsNotNull;
+	}
+
+	/**
+	 * @param actScoreIsNotNull the actScoreIsNotNull to set
+	 */
+	public void setActScoreIsNotNull(boolean actScoreIsNotNull) {
+		this.actScoreIsNotNull = actScoreIsNotNull;
+	}
+
+	/**
+	 * @return the locationIsNotNull
+	 */
+	public boolean isLocationNotNull() {
+		return locationIsNotNull;
+	}
+
+	/**
+	 * @param locationIsNotNull the locationIsNotNull to set
+	 */
+	public void setLocationIsNotNull(boolean locationIsNotNull) {
+		this.locationIsNotNull = locationIsNotNull;
+	}
+
+	/**
+	 * @return the favoriteSchoolsIsNotNull
+	 */
+	public boolean isFavoriteSchoolsNotNull() {
+		return favoriteSchoolsIsNotNull;
+	}
+
+	/**
+	 * @param favoriteSchoolsIsNotNull the favoriteSchoolsIsNotNull to set
+	 */
+	public void setFavoriteSchoolsIsNotNull(boolean favoriteSchoolsIsNotNull) {
+		this.favoriteSchoolsIsNotNull = favoriteSchoolsIsNotNull;
+	}
+
+	/**
+	 * @return the favoriteFieldsOfStudyIsNotNull
+	 */
+	public boolean isFavoriteFieldsOfStudyNotNull() {
+		return favoriteFieldsOfStudyIsNotNull;
+	}
+
+	/**
+	 * @param favoriteFieldsOfStudyIsNotNull the favoriteFieldsOfStudyIsNotNull to set
+	 */
+	public void setFavoriteFieldsOfStudyIsNotNull(boolean favoriteFieldsOfStudyIsNotNull) {
+		this.favoriteFieldsOfStudyIsNotNull = favoriteFieldsOfStudyIsNotNull;
+	}
+
 	/**
 	 * @return the id
 	 */
