@@ -40,7 +40,7 @@ public class SchoolDAOTest {
 		testWithFavs();
 		testNullValues();
 		testMyScores();
-		//TODO test gender, ethnicity, region
+		testJoinConditions();
 	}
 	
 	private void testOneCondition() {
@@ -71,6 +71,14 @@ public class SchoolDAOTest {
 			assertEquals("School not in CA", "CA", school.getLocation().getStateStr());
 			assertTrue("In state tuition not less than 20000", school.getTuitionIn() < 20000);
 		}
+		
+		Condition between = new Condition(School.TUITION_IN, CondType.RANGE, CondVal.createIntRangeVal(5000, 7000));
+		Condition suny = new Condition("school.name", CondType.LIKE, CondVal.createStrVal("SUNY%"));
+		conditions = new LinkedList<Condition>();
+		conditions.add(between);
+		conditions.add(suny);
+		schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
+		assertEquals("School not correct", "SUNY Empire State College", schools.get(0).getName());
 	}
 	
 	private void testWithFavs() {
@@ -124,7 +132,7 @@ public class SchoolDAOTest {
 	private void testNullValues() {
 		List<Condition> conditions = new LinkedList<Condition>();
 		conditions.add(new Condition(School.ID, CondType.EQ, CondVal.createIntVal(110398)));
-		List<School> schools = schoolDAO.getSchools(conditions, schoolDAO.NONE);
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
 		School UCHastingsLaw = schools.get(0);
 		//non-null value
 		assertEquals("School url not correct", "www.uchastings.edu", UCHastingsLaw.getWebsite());
@@ -144,7 +152,36 @@ public class SchoolDAOTest {
 		conditions.add(act);
 		conditions.add(UC);
 		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
+		//uncomment when ID implemented
+		//assertEquals("Correct ID not found", 110635, schools.get(0).getId());
+		assertEquals("Correct admission rate not found", .1602, schools.get(0).getAdmissionRate(), .001);
+		assertEquals("Correct SAT not found", 1382, schools.get(0).getSatAvg(), .1);
+		assertEquals("Correct ACT not found", 32, schools.get(0).getActAvg(), .1);
 		assertEquals("Correct school not found", "University of California-Berkeley", schools.get(0).getName());
+	}
+	
+	private void testJoinConditions() {
+		List<Condition> conditions = new LinkedList<Condition>();
+		Condition SUNY = new Condition(School.NAME, CondType.LIKE, CondVal.createStrVal("SUNY%"));
+		Condition gender = new Condition(School.GD_FEMALE, CondType.GT, CondVal.createDoubleVal(.59));
+		Condition ethnicity = new Condition(School.ED_WHITE, CondType.GT, CondVal.createDoubleVal(.63));
+		conditions.add(SUNY);
+		conditions.add(gender);
+		conditions.add(ethnicity);
+		byte tablesToJoin = SchoolDAO.GENDER|SchoolDAO.ETHNIC;
+		List<School> schools = schoolDAO.getSchools(conditions, tablesToJoin);
+		//assertEquals("Correct school not found", 196185, schools.get(0).getId());
+		assertEquals("Correct school not found", "SUNY Oneonta", schools.get(0).getName());
+		
+		//region
+		tablesToJoin = SchoolDAO.REGION;
+		Condition region = new Condition(School.R_REGION, CondType.EQ, CondVal.createStrVal("Outlying Areas"));
+		Condition name = new Condition(School.NAME, CondType.LIKE, CondVal.createStrVal("Atlantic%"));
+		List<Condition> regionConditions = new LinkedList<Condition>();
+		regionConditions.add(region);
+		regionConditions.add(name);
+		List<School> regionSchools = schoolDAO.getSchools(regionConditions, tablesToJoin);
+		assertEquals("Correct school not found", "Atlantic University College", regionSchools.get(0).getName());
 	}
 	
 	@After
