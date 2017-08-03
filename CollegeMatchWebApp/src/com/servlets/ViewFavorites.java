@@ -1,7 +1,11 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.User;
+import main.java.UserDAO;
+import main.java.FavoriteSchool;
+import main.java.School;
+import main.java.Location;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +67,8 @@ public class ViewFavorites extends HttpServlet {
 		}
 		
 		request.setAttribute("schools", favSchools);
-		request.setAttribute("userState", user.getLocation().getStateInt());
+		Location userResidence = db.getResidence(username);
+		request.setAttribute("userState", userResidence.getStateInt());
 		
 		getServletContext().getRequestDispatcher("/favschools.jsp").forward(request,response);
 	}
