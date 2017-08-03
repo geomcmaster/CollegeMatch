@@ -91,6 +91,7 @@ public class School {
 	public static final String FOS_NAME = "fieldsOfStudy.name";
 	
 	private int id;
+	private boolean idIsNotNull;
 	private String name;
 	private boolean nameIsNotNull;
 	private String website;
@@ -152,6 +153,7 @@ public class School {
 	}
 	
 	private void setNulls() {
+		setIdIsNotNull(false);
 		setNameIsNotNull(false);
 		setWebsiteIsNotNull(false);
 		setLocationIsNotNull(false);
@@ -181,6 +183,20 @@ public class School {
 		setFemaleShareIsNotNull(false);
 	}
 	
+	/**
+	 * @return the idIsNotNull
+	 */
+	public boolean isIdNotNull() {
+		return idIsNotNull;
+	}
+
+	/**
+	 * @param idIsNotNull the idIsNotNull to set
+	 */
+	public void setIdIsNotNull(boolean idIsNotNull) {
+		this.idIsNotNull = idIsNotNull;
+	}
+
 	/**
 	 * @return the nameIsNotNull
 	 */

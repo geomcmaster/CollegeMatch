@@ -1,6 +1,7 @@
 package test.java;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ public class SchoolDAOTest {
 		testOneCondition();
 		testSimpleConditions();
 		testWithFavs();
+		testNullValues();
 		//TODO test gender, ethnicity, region
 	}
 	
@@ -116,6 +118,17 @@ public class SchoolDAOTest {
 					|| school.getName().equals(SUNYEnvSci) 
 					|| school.getName().equals(SUNYCobleskill));
 		}
+	}
+	
+	public void testNullValues() {
+		List<Condition> conditions = new LinkedList<Condition>();
+		conditions.add(new Condition(School.ID, CondType.EQ, CondVal.createIntVal(110398)));
+		List<School> schools = schoolDAO.getSchools(conditions, schoolDAO.NONE);
+		School UCHastingsLaw = schools.get(0);
+		//non-null value
+		assertEquals("School url not correct", "www.uchastings.edu", UCHastingsLaw.getWebsite());
+		//null value
+		assertFalse("Alias is not null", UCHastingsLaw.isPopProg1NotNull());
 	}
 	
 	@After
