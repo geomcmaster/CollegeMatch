@@ -517,6 +517,16 @@ public class UserDAO {
 				fav.setFinancialAid(rs.getInt(4));
 				fav.setLoan(rs.getInt(5));
 				fav.setMerit(rs.getInt(6));
+				school.setSatAvg(rs.getDouble(7));
+				school.setActAvg(rs.getDouble(8));
+				school.setAdmissionRate(rs.getDouble(9));
+				school.setWebsite(rs.getString(10));
+				school.setTuitionOut(rs.getInt(11));
+				school.setTuitionIn(rs.getInt(12));
+				Location location = new Location();
+				location.setCity(rs.getString(13));
+				location.setStateStr(rs.getString(14));
+				school.setLocation(location);
 				favs.addLast(fav);
 			}
 		} catch (SQLException e) {
