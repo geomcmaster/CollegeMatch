@@ -26,9 +26,7 @@ public class SchoolDAO {
 	}
 	
 	/**
-	 * Performs query based on user search. Does not yet support order by. Currently schools 
-	 * only return name, url, in state/out of state tuition, city, and state, but we can 
-	 * modify this to be whatever we want to return to the user.
+	 * Performs query based on user search.
 	 * 
 	 * @param conditions The list of conditions to use in search
 	 * @param tablesToJoin Bitmap of tables to join on.
@@ -62,6 +60,63 @@ public class SchoolDAO {
 			}
 		}
 
+		return processResults(queryBuilder, conditions);
+	}
+	
+	/**
+	 * Performs query based on user search and orders by given columns.
+	 * 
+	 * @param conditions The list of conditions to use in search
+	 * @param tablesToJoin Bitmap of tables to join on.
+	 * It is currently assumed that school_loc and location tables will always be joined to retrieve location info.
+	 * @param columnsToSort List of columns to sort by -- includes column name and ASC/DESC
+	 * @return A list of school objects returned by the query
+	 */
+	public List<School> getSchools(List<Condition> conditions, byte tablesToJoin, List<SortColumn> columnsToSort) {
+		
+		StringBuilder queryBuilder = selectAndJoin(tablesToJoin);	//SELECT ... FROM ... JOIN ... ON etc.
+		
+		//BUILD WHERE CLAUSE
+		queryBuilder.append(" WHERE");
+		ListIterator<Condition> itr = conditions.listIterator();
+		Index index = new Index();	//index in PreparedStatement
+		//first condition not prefaced with AND
+		while (itr.hasNext()) {
+			Condition c = itr.next();
+			CondType ctype = c.getConditionType();
+			if (ctype != CondType.NO_COND) {
+				queryBuilder.append(" ");
+				queryBuilder.append(buildConditionString(c, index));
+				break;
+			}
+		}
+		while (itr.hasNext()) {
+			Condition c = itr.next();
+			CondType ctype = c.getConditionType();
+			if (ctype != CondType.NO_COND) {
+				queryBuilder.append(" AND ");
+				queryBuilder.append(buildConditionString(c, index));
+			}
+		}
+		
+		//add ORDER BY
+		queryBuilder.append(" ORDER BY ");
+		ListIterator<SortColumn> sortItr = columnsToSort.listIterator();
+		//first condition not prefaced with ,
+		if (sortItr.hasNext()) {
+			SortColumn c = sortItr.next();
+			queryBuilder.append(c.getColumnName());
+			queryBuilder.append(" ");
+			queryBuilder.append(c.isAscending() ? "ASC" : "DESC");
+		}
+		while (sortItr.hasNext()) {
+			SortColumn c = sortItr.next();
+			queryBuilder.append(", ");
+			queryBuilder.append(c.getColumnName());
+			queryBuilder.append(" ");
+			queryBuilder.append(c.isAscending() ? "ASC" : "DESC");
+		}
+		
 		return processResults(queryBuilder, conditions);
 	}
 	

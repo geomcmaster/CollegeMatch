@@ -38,7 +38,7 @@ public class DBUtil {
         	properties.load(inputStream);
         	String user = properties.getProperty("user");
         	String password = properties.getProperty("password");
-        	Class.forName("com.mysql.jdbc.Driver");
+        	Class.forName("com.mysql.cj.jdbc.Driver");
         	conn = DriverManager.getConnection(URL, user, password );
         } catch (IOException e) {
         	e.printStackTrace();
