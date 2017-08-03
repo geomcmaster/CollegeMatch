@@ -77,14 +77,34 @@ public class Location {
 	}
 	
 	private int id;
+	private boolean idIsNotNull;
 	private String city;
+	private boolean cityIsNotNull;
 	private int stateInt;
+	private boolean stateIntIsNotNull;
 	private String stateStr;
+	private boolean stateStrIsNotNull;
 	private int zip;
+	private boolean zipIsNotNull;
 	private boolean valid;
 	//region is stored in region table. only need to set this field if you care about returning the location's
 	//region
 	private String region;
+	private boolean regionIsNotNull;
+	
+	public Location() {
+		setNulls();
+	}
+	
+	//initialize all fields to indicate null
+	private void setNulls() {
+		setIdIsNotNull(false);
+		setCityIsNotNull(false);
+		setStateIntIsNotNull(false);
+		setStateStrIsNotNull(false);
+		setZipIsNotNull(false);
+		setRegionIsNotNull(false);
+	}
 	
 	/**
 	 * Returns the abbreviation for this state
@@ -186,5 +206,89 @@ public class Location {
 	 */
 	public void setStateStr(String stateStr) {
 		this.stateStr = stateStr;
+	}
+
+	/**
+	 * @return the idIsNotNull
+	 */
+	public boolean isIdNotNull() {
+		return idIsNotNull;
+	}
+
+	/**
+	 * @param idIsNotNull the idIsNotNull to set
+	 */
+	public void setIdIsNotNull(boolean idIsNotNull) {
+		this.idIsNotNull = idIsNotNull;
+	}
+
+	/**
+	 * @return the cityIsNotNull
+	 */
+	public boolean isCityNotNull() {
+		return cityIsNotNull;
+	}
+
+	/**
+	 * @param cityIsNotNull the cityIsNotNull to set
+	 */
+	public void setCityIsNotNull(boolean cityIsNotNull) {
+		this.cityIsNotNull = cityIsNotNull;
+	}
+
+	/**
+	 * @return the stateIntIsNotNull
+	 */
+	public boolean isStateIntNotNull() {
+		return stateIntIsNotNull;
+	}
+
+	/**
+	 * @param stateIntIsNotNull the stateIntIsNotNull to set
+	 */
+	public void setStateIntIsNotNull(boolean stateIntIsNotNull) {
+		this.stateIntIsNotNull = stateIntIsNotNull;
+	}
+
+	/**
+	 * @return the stateStrIsNotNull
+	 */
+	public boolean isStateStrNotNull() {
+		return stateStrIsNotNull;
+	}
+
+	/**
+	 * @param stateStrIsNotNull the stateStrIsNotNull to set
+	 */
+	public void setStateStrIsNotNull(boolean stateStrIsNotNull) {
+		this.stateStrIsNotNull = stateStrIsNotNull;
+	}
+
+	/**
+	 * @return the zipIsNotNull
+	 */
+	public boolean isZipNotNull() {
+		return zipIsNotNull;
+	}
+
+	/**
+	 * @param zipIsNotNull the zipIsNotNull to set
+	 */
+	public void setZipIsNotNull(boolean zipIsNotNull) {
+		this.zipIsNotNull = zipIsNotNull;
+	}
+
+	/**
+	 * @return the regionIsNotNull
+	 */
+	public boolean isRegionNotNull() {
+		return regionIsNotNull;
+	}
+
+	/**
+	 * @param regionIsNotNull the regionIsNotNull to set
+	 */
+	public void setRegionIsNotNull(boolean regionIsNotNull) {
+		this.regionIsNotNull = regionIsNotNull;
 	}
 }

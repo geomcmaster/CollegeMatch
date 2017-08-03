@@ -264,13 +264,37 @@ public class SchoolDAO {
 			while (rs.next()) {
 				School s = new School();
 				Location l = new Location();
-				l.setCity(rs.getString("city"));
-				l.setStateStr(rs.getString("stateStr"));
+				String city = rs.getString("city");
+				if (!rs.wasNull()) {
+					l.setCityIsNotNull(true);
+					l.setCity(city);
+				}
+				String state = rs.getString("stateStr");
+				if (!rs.wasNull()) {
+					l.setStateStrIsNotNull(true);
+					l.setStateStr(state);
+				}
 				s.setLocation(l);
-				s.setName(rs.getString("name"));
-				s.setWebsite(rs.getString("url"));
-				s.setTuitionIn(rs.getInt("inState"));
-				s.setTuitionOut(rs.getInt("outOfState"));
+				String name = rs.getString("name");
+				if (!rs.wasNull()) {
+					s.setNameIsNotNull(true);
+					s.setName(name);
+				}
+				String url = rs.getString("url");
+				if (!rs.wasNull()) {
+					s.setWebsiteIsNotNull(true);
+					s.setWebsite(url);
+				}
+				int inState = rs.getInt("inState");
+				if (!rs.wasNull()) {
+					s.setTuitionInIsNotNull(true);
+					s.setTuitionIn(inState);
+				}
+				int outState = rs.getInt("outOfState");
+				if (!rs.wasNull()) {
+					s.setTuitionOutIsNotNull(true);
+					s.setTuitionOut(outState);
+				}
 				schools.addLast(s);
 			}
 		} catch (SQLException e) {

@@ -91,33 +91,479 @@ public class School {
 	public static final String FOS_NAME = "fieldsOfStudy.name";
 	
 	private String name;
+	private boolean nameIsNotNull;
 	private String website;
+	private boolean websiteIsNotNull;
 	private Location location;
+	private boolean locationIsNotNull;
 	private double admissionRate;
+	private boolean admissionRateIsNotNull;
 	private int avgCost;
+	private boolean avgCostIsNotNull;
 	private double sat25;
+	private boolean sat25IsNotNull;
 	private double sat75;
+	private boolean sat75IsNotNull;
 	private double satAvg;
+	private boolean satAvgIsNotNull;
 	private double act25;
+	private boolean act25IsNotNull;
 	private double act75;
+	private boolean act75IsNotNull;
 	private double actAvg;
+	private boolean actAvgIsNotNull;
 	private int avgEarnings;
+	private boolean avgEarningsIsNotNull;
 	private int stdBodySz;
+	private boolean stdBodySzIsNotNull;
 	private String popProg1;
+	private boolean popProg1IsNotNull;
 	private String popProg2;
+	private boolean popProg2IsNotNull;
 	private String popProg3;
+	private boolean popProg3IsNotNull;
 	private String popProg4;
+	private boolean popProg4IsNotNull;
 	private String popProg5;
+	private boolean popProg5IsNotNull;
 	private int tuitionIn;
+	private boolean tuitionInIsNotNull;
 	private int tuitionOut;
+	private boolean tuitionOutIsNotNull;
 	private double medDebt;
+	private boolean medDebtIsNotNull;
 	private int avgFamIncome;
+	private boolean avgFamIncomeIsNotNull;
 	private int medFamIncome;
+	private boolean medFamIncomeIsNotNull;
 	private int avgAge;
+	private boolean avgAgeIsNotNull;
 	private double firstGenStudentShare;
+	private boolean firstGenStudentShareIsNotNull;
 	//Maybe include distance learning as boolean variable?
 	private double maleShare;
+	private boolean maleShareIsNotNull;
 	private double femaleShare;
+	private boolean femaleShareIsNotNull;
+	
+	public School() {
+		setNulls();
+	}
+	
+	private void setNulls() {
+		setNameIsNotNull(false);
+		setWebsiteIsNotNull(false);
+		setLocationIsNotNull(false);
+		setAdmissionRateIsNotNull(false);
+		setAvgCostIsNotNull(false);
+		setSat25IsNotNull(false);
+		setSat75IsNotNull(false);
+		setSatAvgIsNotNull(false);
+		setAct25IsNotNull(false);
+		setAct75IsNotNull(false);
+		setActAvgIsNotNull(false);
+		setAvgEarningsIsNotNull(false);
+		setStdBodySzIsNotNull(false);
+		setPopProg1IsNotNull(false);
+		setPopProg2IsNotNull(false);
+		setPopProg3IsNotNull(false);
+		setPopProg4IsNotNull(false);
+		setPopProg5IsNotNull(false);
+		setTuitionInIsNotNull(false);
+		setTuitionOutIsNotNull(false);
+		setMedDebtIsNotNull(false);
+		setAvgFamIncomeIsNotNull(false);
+		setMedFamIncomeIsNotNull(false);
+		setAvgAgeIsNotNull(false);
+		setFirstGenStudentShareIsNotNull(false);
+		setMaleShareIsNotNull(false);
+		setFemaleShareIsNotNull(false);
+	}
+	
+	/**
+	 * @return the nameIsNotNull
+	 */
+	public boolean isNameNotNull() {
+		return nameIsNotNull;
+	}
+	/**
+	 * @param nameIsNotNull the nameIsNotNull to set
+	 */
+	public void setNameIsNotNull(boolean nameIsNotNull) {
+		this.nameIsNotNull = nameIsNotNull;
+	}
+	/**
+	 * @return the websiteIsNotNull
+	 */
+	public boolean isWebsiteNotNull() {
+		return websiteIsNotNull;
+	}
+	/**
+	 * @param websiteIsNotNull the websiteIsNotNull to set
+	 */
+	public void setWebsiteIsNotNull(boolean websiteIsNotNull) {
+		this.websiteIsNotNull = websiteIsNotNull;
+	}
+	/**
+	 * @return the locationIsNotNull
+	 */
+	public boolean isLocationNotNull() {
+		return locationIsNotNull;
+	}
+	/**
+	 * @param locationIsNotNull the locationIsNotNull to set
+	 */
+	public void setLocationIsNotNull(boolean locationIsNotNull) {
+		this.locationIsNotNull = locationIsNotNull;
+	}
+	/**
+	 * @return the admissionRateIsNotNull
+	 */
+	public boolean isAdmissionRateNotNull() {
+		return admissionRateIsNotNull;
+	}
+	/**
+	 * @param admissionRateIsNotNull the admissionRateIsNotNull to set
+	 */
+	public void setAdmissionRateIsNotNull(boolean admissionRateIsNotNull) {
+		this.admissionRateIsNotNull = admissionRateIsNotNull;
+	}
+	/**
+	 * @return the avgCostIsNotNull
+	 */
+	public boolean isAvgCostNotNull() {
+		return avgCostIsNotNull;
+	}
+	/**
+	 * @param avgCostIsNotNull the avgCostIsNotNull to set
+	 */
+	public void setAvgCostIsNotNull(boolean avgCostIsNotNull) {
+		this.avgCostIsNotNull = avgCostIsNotNull;
+	}
+	/**
+	 * @return the sat25IsNotNull
+	 */
+	public boolean isSat25NotNull() {
+		return sat25IsNotNull;
+	}
+	/**
+	 * @param sat25IsNotNull the sat25IsNotNull to set
+	 */
+	public void setSat25IsNotNull(boolean sat25IsNotNull) {
+		this.sat25IsNotNull = sat25IsNotNull;
+	}
+	/**
+	 * @return the sat75IsNotNull
+	 */
+	public boolean isSat75NotNull() {
+		return sat75IsNotNull;
+	}
+	/**
+	 * @param sat75IsNotNull the sat75IsNotNull to set
+	 */
+	public void setSat75IsNotNull(boolean sat75IsNotNull) {
+		this.sat75IsNotNull = sat75IsNotNull;
+	}
+	/**
+	 * @return the satAvgIsNotNull
+	 */
+	public boolean isSatAvgNotNull() {
+		return satAvgIsNotNull;
+	}
+	/**
+	 * @param satAvgIsNotNull the satAvgIsNotNull to set
+	 */
+	public void setSatAvgIsNotNull(boolean satAvgIsNotNull) {
+		this.satAvgIsNotNull = satAvgIsNotNull;
+	}
+	/**
+	 * @return the act25IsNotNull
+	 */
+	public boolean isAct25NotNull() {
+		return act25IsNotNull;
+	}
+	/**
+	 * @param act25IsNotNull the act25IsNotNull to set
+	 */
+	public void setAct25IsNotNull(boolean act25IsNotNull) {
+		this.act25IsNotNull = act25IsNotNull;
+	}
+	/**
+	 * @return the act75IsNotNull
+	 */
+	public boolean isAct75NotNull() {
+		return act75IsNotNull;
+	}
+	/**
+	 * @param act75IsNotNull the act75IsNotNull to set
+	 */
+	public void setAct75IsNotNull(boolean act75IsNotNull) {
+		this.act75IsNotNull = act75IsNotNull;
+	}
+	/**
+	 * @return the actAvgIsNotNull
+	 */
+	public boolean isActAvgNotNull() {
+		return actAvgIsNotNull;
+	}
+	/**
+	 * @param actAvgIsNotNull the actAvgIsNotNull to set
+	 */
+	public void setActAvgIsNotNull(boolean actAvgIsNotNull) {
+		this.actAvgIsNotNull = actAvgIsNotNull;
+	}
+	/**
+	 * @return the avgEarningsIsNotNull
+	 */
+	public boolean isAvgEarningsNotNull() {
+		return avgEarningsIsNotNull;
+	}
+	/**
+	 * @param avgEarningsIsNotNull the avgEarningsIsNotNull to set
+	 */
+	public void setAvgEarningsIsNotNull(boolean avgEarningsIsNotNull) {
+		this.avgEarningsIsNotNull = avgEarningsIsNotNull;
+	}
+	/**
+	 * @return the stdBodySzIsNotNull
+	 */
+	public boolean isStdBodySzNotNull() {
+		return stdBodySzIsNotNull;
+	}
+	/**
+	 * @param stdBodySzIsNotNull the stBodySzIsNotNull to set
+	 */
+	public void setStdBodySzIsNotNull(boolean stBodySzIsNotNull) {
+		this.stdBodySzIsNotNull = stBodySzIsNotNull;
+	}
+	/**
+	 * @return the popProg1IsNotNull
+	 */
+	public boolean isPopProg1NotNull() {
+		return popProg1IsNotNull;
+	}
+	/**
+	 * @param popProg1IsNotNull the popProg1IsNotNull to set
+	 */
+	public void setPopProg1IsNotNull(boolean popProg1IsNotNull) {
+		this.popProg1IsNotNull = popProg1IsNotNull;
+	}
+	/**
+	 * @return the popProg2IsNotNull
+	 */
+	public boolean isPopProg2NotNull() {
+		return popProg2IsNotNull;
+	}
+	/**
+	 * @param popProg2IsNotNull the popProg2IsNotNull to set
+	 */
+	public void setPopProg2IsNotNull(boolean popProg2IsNotNull) {
+		this.popProg2IsNotNull = popProg2IsNotNull;
+	}
+	/**
+	 * @return the popProg3IsNotNull
+	 */
+	public boolean isPopProg3NotNull() {
+		return popProg3IsNotNull;
+	}
+	/**
+	 * @param popProg3IsNotNull the popProg3IsNotNull to set
+	 */
+	public void setPopProg3IsNotNull(boolean popProg3IsNotNull) {
+		this.popProg3IsNotNull = popProg3IsNotNull;
+	}
+	/**
+	 * @return the popProg4IsNotNull
+	 */
+	public boolean isPopProg4NotNull() {
+		return popProg4IsNotNull;
+	}
+	/**
+	 * @param popProg4IsNotNull the popProg4IsNotNull to set
+	 */
+	public void setPopProg4IsNotNull(boolean popProg4IsNotNull) {
+		this.popProg4IsNotNull = popProg4IsNotNull;
+	}
+	/**
+	 * @return the popProg5IsNotNull
+	 */
+	public boolean isPopProg5NotNull() {
+		return popProg5IsNotNull;
+	}
+	/**
+	 * @param popProg5IsNotNull the popProg5IsNotNull to set
+	 */
+	public void setPopProg5IsNotNull(boolean popProg5IsNotNull) {
+		this.popProg5IsNotNull = popProg5IsNotNull;
+	}
+	/**
+	 * @return the tuitionInIsNotNull
+	 */
+	public boolean isTuitionInNotNull() {
+		return tuitionInIsNotNull;
+	}
+	/**
+	 * @param tuitionInIsNotNull the tuitionInIsNotNull to set
+	 */
+	public void setTuitionInIsNotNull(boolean tuitionInIsNotNull) {
+		this.tuitionInIsNotNull = tuitionInIsNotNull;
+	}
+	/**
+	 * @return the tuitionOutIsNotNull
+	 */
+	public boolean isTuitionOutNotNull() {
+		return tuitionOutIsNotNull;
+	}
+	/**
+	 * @param tuitionOutIsNotNull the tuitionOutIsNotNull to set
+	 */
+	public void setTuitionOutIsNotNull(boolean tuitionOutIsNotNull) {
+		this.tuitionOutIsNotNull = tuitionOutIsNotNull;
+	}
+	/**
+	 * @return the medDebt
+	 */
+	public double getMedDebt() {
+		return medDebt;
+	}
+	/**
+	 * @param medDebt the medDebt to set
+	 */
+	public void setMedDebt(double medDebt) {
+		this.medDebt = medDebt;
+	}
+	/**
+	 * @return the medDebtIsNotNull
+	 */
+	public boolean isMedDebtNotNull() {
+		return medDebtIsNotNull;
+	}
+	/**
+	 * @param medDebtIsNotNull the medDebtIsNotNull to set
+	 */
+	public void setMedDebtIsNotNull(boolean medDebtIsNotNull) {
+		this.medDebtIsNotNull = medDebtIsNotNull;
+	}
+	/**
+	 * @return the avgFamIncome
+	 */
+	public int getAvgFamIncome() {
+		return avgFamIncome;
+	}
+	/**
+	 * @param avgFamIncome the avgFamIncome to set
+	 */
+	public void setAvgFamIncome(int avgFamIncome) {
+		this.avgFamIncome = avgFamIncome;
+	}
+	/**
+	 * @return the avgFamIncomeIsNotNull
+	 */
+	public boolean isAvgFamIncomeNotNull() {
+		return avgFamIncomeIsNotNull;
+	}
+	/**
+	 * @param avgFamIncomeIsNotNull the avgFamIncomeIsNotNull to set
+	 */
+	public void setAvgFamIncomeIsNotNull(boolean avgFamIncomeIsNotNull) {
+		this.avgFamIncomeIsNotNull = avgFamIncomeIsNotNull;
+	}
+	/**
+	 * @return the medFamIncome
+	 */
+	public int getMedFamIncome() {
+		return medFamIncome;
+	}
+	/**
+	 * @param medFamIncome the medFamIncome to set
+	 */
+	public void setMedFamIncome(int medFamIncome) {
+		this.medFamIncome = medFamIncome;
+	}
+	/**
+	 * @return the medFamIncomeIsNotNull
+	 */
+	public boolean isMedFamIncomeNotNull() {
+		return medFamIncomeIsNotNull;
+	}
+	/**
+	 * @param medFamIncomeIsNotNull the medFamIncomeIsNotNull to set
+	 */
+	public void setMedFamIncomeIsNotNull(boolean medFamIncomeIsNotNull) {
+		this.medFamIncomeIsNotNull = medFamIncomeIsNotNull;
+	}
+	/**
+	 * @return the avgAge
+	 */
+	public int getAvgAge() {
+		return avgAge;
+	}
+	/**
+	 * @param avgAge the avgAge to set
+	 */
+	public void setAvgAge(int avgAge) {
+		this.avgAge = avgAge;
+	}
+	/**
+	 * @return the avgAgeIsNotNull
+	 */
+	public boolean isAvgAgeNotNull() {
+		return avgAgeIsNotNull;
+	}
+	/**
+	 * @param avgAgeIsNotNull the avgAgeIsNotNull to set
+	 */
+	public void setAvgAgeIsNotNull(boolean avgAgeIsNotNull) {
+		this.avgAgeIsNotNull = avgAgeIsNotNull;
+	}
+	/**
+	 * @return the firstGenStudentShareIsNotNull
+	 */
+	public boolean isFirstGenStudentShareNotNull() {
+		return firstGenStudentShareIsNotNull;
+	}
+	/**
+	 * @param firstGenStudentShareIsNotNull the firstGenStudentShareIsNotNull to set
+	 */
+	public void setFirstGenStudentShareIsNotNull(boolean firstGenStudentShareIsNotNull) {
+		this.firstGenStudentShareIsNotNull = firstGenStudentShareIsNotNull;
+	}
+	/**
+	 * @return the maleShareIsNotNull
+	 */
+	public boolean isMaleShareNotNull() {
+		return maleShareIsNotNull;
+	}
+	/**
+	 * @param maleShareIsNotNull the maleShareIsNotNull to set
+	 */
+	public void setMaleShareIsNotNull(boolean maleShareIsNotNull) {
+		this.maleShareIsNotNull = maleShareIsNotNull;
+	}
+	/**
+	 * @return the femaleShareIsNotNull
+	 */
+	public boolean isFemaleShareNotNull() {
+		return femaleShareIsNotNull;
+	}
+	/**
+	 * @param femaleShareIsNotNull the femaleShareIsNotNull to set
+	 */
+	public void setFemaleShareIsNotNull(boolean femaleShareIsNotNull) {
+		this.femaleShareIsNotNull = femaleShareIsNotNull;
+	}
+	/**
+	 * @param maleShare the maleShare to set
+	 */
+	public void setMaleShare(double maleShare) {
+		this.maleShare = maleShare;
+	}
+	/**
+	 * @param femaleShare the femaleShare to set
+	 */
+	public void setFemaleShare(double femaleShare) {
+		this.femaleShare = femaleShare;
+	}
 	/**
 	 * @return the name
 	 */
