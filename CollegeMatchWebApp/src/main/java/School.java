@@ -936,7 +936,7 @@ public class School {
 		this.popProg1ID = popProg1ID;
 	}
 
-	public boolean isPopProg1IDIsNotNull() {
+	public boolean isPopProg1IDNotNull() {
 		return popProg1IDIsNotNull;
 	}
 
@@ -952,7 +952,7 @@ public class School {
 		this.popProg2ID = popProg2ID;
 	}
 
-	public boolean isPopProg2IDIsNotNull() {
+	public boolean isPopProg2IDNotNull() {
 		return popProg2IDIsNotNull;
 	}
 
@@ -968,7 +968,7 @@ public class School {
 		this.popProg3ID = popProg3ID;
 	}
 
-	public boolean isPopProg3IDIsNotNull() {
+	public boolean isPopProg3IDNotNull() {
 		return popProg3IDIsNotNull;
 	}
 
@@ -984,7 +984,7 @@ public class School {
 		this.popProg4ID = popProg4ID;
 	}
 
-	public boolean isPopProg4IDIsNotNull() {
+	public boolean isPopProg4IDNotNull() {
 		return popProg4IDIsNotNull;
 	}
 
@@ -1000,7 +1000,7 @@ public class School {
 		this.popProg5ID = popProg5ID;
 	}
 
-	public boolean isPopProg5IDIsNotNull() {
+	public boolean isPopProg5IDNotNull() {
 		return popProg5IDIsNotNull;
 	}
 

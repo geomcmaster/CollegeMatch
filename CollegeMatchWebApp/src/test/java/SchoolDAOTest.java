@@ -59,15 +59,15 @@ public class SchoolDAOTest {
 		List<School> schools = schoolDAO.getSchools(fieldsArrayList, allTables);
 		for (School school : schools) {
 			ArrayList<Integer> schoolFields = new ArrayList<Integer>();
-			if(school.isPopProg1IDIsNotNull() == true)
+			if(school.isPopProg1IDNotNull() == true)
 			schoolFields.add(school.getPopProg1ID());
-			if (school.isPopProg2IDIsNotNull() == true)
+			if (school.isPopProg2IDNotNull() == true)
 			schoolFields.add(school.getPopProg2ID());
-			if (school.isPopProg3IDIsNotNull() == true)
+			if (school.isPopProg3IDNotNull() == true)
 			schoolFields.add(school.getPopProg3ID());
-			if (school.isPopProg4IDIsNotNull() == true)
+			if (school.isPopProg4IDNotNull() == true)
 			schoolFields.add(school.getPopProg4ID());
-			if (school.isPopProg5IDIsNotNull() == true)
+			if (school.isPopProg5IDNotNull() == true)
 			schoolFields.add(school.getPopProg5ID());
 			assertTrue("School contains user-selected field of study in Top 5", !Collections.disjoint(fieldIDList, schoolFields));
 		}
