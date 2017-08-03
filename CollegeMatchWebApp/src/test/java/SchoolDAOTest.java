@@ -37,6 +37,7 @@ public class SchoolDAOTest {
 		testOneCondition();
 		testSimpleConditions();
 		testWithFavs();
+		//TODO test gender, ethnicity, region
 	}
 	
 	private void testOneCondition() {
@@ -64,7 +65,7 @@ public class SchoolDAOTest {
 		conditions.add(c2);
 		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.NONE);
 		for (School school : schools) {
-			assertEquals("School not in CA", school.getLocation().getStateStr(), "CA");
+			assertEquals("School not in CA", "CA", school.getLocation().getStateStr());
 			assertTrue("In state tuition not less than 20000", school.getTuitionIn() < 20000);
 		}
 	}
