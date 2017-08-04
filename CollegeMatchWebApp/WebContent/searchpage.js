@@ -22,6 +22,22 @@ function hideAll(parent) {
 	var kids = parent.children;
 	for(var i = 0; i < kids.length; i++) {
 		kids[i].classList.add("hidden");
+		kids[i].disabled = false;
+		if (kids[i].nodeName == "INPUT") {
+			if (kids[i].type == "text" || kids[i].type == "number") {
+				kids[i].value = "";
+			} else if (kids[i].type == "checkbox") {
+				kids[i].checked = false;
+			}
+		} else if (kids[i].nodeName == "LABEL") {
+			kids[i].innerHTML = "";
+		} else if (kids[i].nodeName == "SELECT") {
+			kids[i].selectedIndex = 0;
+			var spans = kids[i].getElementsByTagName("span");
+			for (var j = 0; j < spans.length; j++) {
+				showThisOption(spans[j]);
+			}
+		}
 	}
 }
 
@@ -34,7 +50,6 @@ function showKids(source) {
 	showOptions(source, elHid.value);
 	elHid.value = selValue;
 	hideAll(tdParent);
-	document.getElementById(strOpen + "checkLab").innerHTML = "";
 	switch(selValue) {
 		case "locationz":
 			var elBefore = document.getElementById(strOpen + "before");
@@ -160,8 +175,7 @@ function showOptions(source, optval) {
 				for (var j = 0; j < spans.length; j++) {
 					var opt = spans[j].children[0];
 					if (opt.value == optval) {
-						opt.classList.remove("hidden");
-						spans[j].outerHTML = opt.outerHTML;
+						showThisOption(spans[j]);
 						break;
 					}
 				}
@@ -189,10 +203,14 @@ function nonum(elCheck) {
 			elCompare.options[1].remove();
 		} else {
 			var wrap = elCompare.getElementsByTagName("span")[0];
-			var opt = wrap.getElementsByTagName("option")[0];
-			opt.classList.remove("hidden");
-			wrap.outerHTML = opt.outerHTML;
+			showThisOption(wrap);
 			document.getElementById(elGroupOpener + "num1").disabled = false;
 		}
 	}
+}
+
+function showThisOption(elSpan) {
+	var opt = elSpan.getElementsByTagName("option")[0];
+	opt.classList.remove("hidden");
+	elSpan.outerHTML = opt.outerHTML;
 }
