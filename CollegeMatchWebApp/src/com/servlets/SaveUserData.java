@@ -1,7 +1,7 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.UserDAO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,48 +33,30 @@ public class SaveUserData extends HttpServlet {
 		String strDeleteFields = request.getParameter("hidDelete");
 		String[] deleteFields = strDeleteFields.split("[,]");
 		
-		String oldPw = request.getParameter("old_pw");
-		String newPw = request.getParameter("new_pw");
+		// save sat, act scores
+		db.updateUser(username, SATscore, ACTscore);
 		
-		boolean validPw;
-		if (oldPw.length() > 0) {
-			validPw = db.verifyPassword(username, oldPw);
-		} else {
-			validPw = true;
+		// save location
+		if (city.length() > 0 && stateInt != 0 && ZIPcode.length() > 0) {
+			db.modifyResidence(username, city, stateInt, Integer.parseInt(ZIPcode));
 		}
-		if (!validPw) {
-			response.sendRedirect("editmyuser?pwfail");
-		} else {
-			// save pw if appropriate
-			if (oldPw.length() > 0) {
-				db.updatePassword(username, newPw);
+		
+		// save favorite fields
+		if (allFields[0].length() > 0) {
+			for (int i = 0; i < allFields.length; i++) {
+				String[] field = allFields[i].split("[|]");
+				int rank = Integer.parseInt(field[0]);
+				int fieldId = Integer.parseInt(field[1]);
+				db.modifyFavField(username, fieldId, rank);
 			}
-			
-			// save sat, act scores
-			db.updateUser(username, SATscore, ACTscore);
-			
-			// save location
-			if (city.length() > 0 && stateInt != 0 && ZIPcode.length() > 0) {
-				db.modifyResidence(username, city, stateInt, Integer.parseInt(ZIPcode));
-			}
-			
-			// save favorite fields
-			if (allFields[0].length() > 0) {
-				for (int i = 0; i < allFields.length; i++) {
-					String[] field = allFields[i].split("[|]");
-					int rank = Integer.parseInt(field[0]);
-					int fieldId = Integer.parseInt(field[1]);
-					db.modifyFavField(username, fieldId, rank);
-				}
-			}
-			
-			if (deleteFields[0].length() > 0) {
-				for (int i = 0; i < deleteFields.length; i++) {
-					db.deleteFavField(username, Integer.parseInt(deleteFields[i]));
-				}
-			}
-			
-			response.sendRedirect("editmyuser?success");
 		}
+		
+		if (deleteFields[0].length() > 0) {
+			for (int i = 0; i < deleteFields.length; i++) {
+				db.deleteFavField(username, Integer.parseInt(deleteFields[i]));
+			}
+		}
+		
+		response.sendRedirect("editmyuser?success");
 	}
 }
