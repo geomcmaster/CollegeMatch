@@ -214,6 +214,9 @@ public class Search extends HttpServlet {
 		
 		request.setAttribute("results", outputResults);
 		
+		int userStateInt = getUserStateInt(username);
+		request.setAttribute("userState", userStateInt);
+		
 		outputResults = getUserFavorites(username);
 		request.setAttribute("favs", outputResults);
 		
@@ -406,6 +409,16 @@ public class Search extends HttpServlet {
 		
 		return allValues;
 	}
+	
+	public static int getUserStateInt(String username) {		
+ 		UserDAO userDb = new UserDAO();		
+ 		Location userResidence = userDb.getResidence(username);		
+ 		int userStateInt = 0;		
+ 		if (userResidence.isStateIntNotNull()) {		
+ 			userStateInt = userResidence.getStateInt(); 		
+ 		}		
+ 		return userStateInt;		
+ 	}
 
 	public static String[] getUserFavorites(String username) {
 		UserDAO userDb = new UserDAO();
