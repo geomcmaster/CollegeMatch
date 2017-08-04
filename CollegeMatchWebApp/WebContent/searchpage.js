@@ -88,8 +88,8 @@ function showKids(source) {
 			document.getElementById(strOpen + "checkLab").appendChild(document.createTextNode("Use my scores"));
 			document.getElementById(strOpen + "checkLab").classList.remove("hidden");
 			document.getElementById(strOpen + "checkBreak").classList.remove("hidden");
-			document.getElementById(strOPen + "num1").step = "1";
-			document.getElementById(strOPen + "num2").step = "1";
+			document.getElementById(strOpen + "num1").step = "1";
+			document.getElementById(strOpen + "num2").step = "1";
 			break;
 		case "cost":
 		case "earnings":
@@ -100,8 +100,8 @@ function showKids(source) {
 		case "tuitionout":
 		case "age":
 		case "meddebt":
-			document.getElementById(strOPen + "num1").step = "1";
-			document.getElementById(strOPen + "num2").step = "1";
+			document.getElementById(strOpen + "num1").step = "1";
+			document.getElementById(strOpen + "num2").step = "1";
 			document.getElementById(strOpen + "comp").classList.remove("hidden");
 			document.getElementById(strOpen + "num1").classList.remove("hidden");
 			break;
@@ -117,8 +117,8 @@ function showKids(source) {
 		case "nhpi":
 		case "multi":
 		case "nonres":
-			document.getElementById(strOPen + "num1").step = "0.01";
-			document.getElementById(strOPen + "num2").step = "0.01";
+			document.getElementById(strOpen + "num1").step = "0.01";
+			document.getElementById(strOpen + "num2").step = "0.01";
 			document.getElementById(strOpen + "comp").classList.remove("hidden");
 			document.getElementById(strOpen + "num1").classList.remove("hidden");
 			break;
