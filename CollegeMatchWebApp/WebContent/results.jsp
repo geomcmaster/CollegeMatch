@@ -32,6 +32,7 @@
 			<input type="hidden" name="searchresults" id="searchresults" value='<c:out value="${comboResults}" />' />
 			<input type="hidden" name="modifyAction" id="modifyAction" />
 			<input type="hidden" name="modifyId" id="modifyId" />
+			<input type="hidden" name="userState" id="userState" value='<c:out value="${userState}" />' />
 			<c:if test="${fn:length(results) > 50}">
 				<div class="warning" id="sizewarning">Your query has generated more than 50 results. Only the first 50 are shown. Try narrowing your search parameters to find the schools you want.</div>
 			</c:if>
@@ -81,10 +82,10 @@
 										<dd><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></dd>
 										
 									<dt>In-State Tuition</dt>
-										<dd><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+										<dd<c:if test="${userState == stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
 									
 									<dt>Out-of-State Tuition</dt>
-										<dd><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+										<dd<c:if test="${userState != stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
 
 									</dl>
 								</td>
@@ -132,6 +133,9 @@
 		
 		form.submit();
 	}
+	
+	var userState = "${userState}";
+	
 </script>
 	
 </body>

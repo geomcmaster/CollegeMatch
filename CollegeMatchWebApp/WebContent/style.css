@@ -290,6 +290,10 @@
 		border: 1px darkgray solid;
 		background-color: lightgray;
 	}
+	
+	.highlit {
+		background-color: yellow;
+	}
 
 /****************/
 /**** BLOCKS ****/
