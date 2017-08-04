@@ -53,7 +53,7 @@
 				
 				<c:set var="isFav" value="${false}" />
 				<c:forEach items="${favs}" var="favId">
-					<c:if test="${id == favId}">
+					<c:if test="${id eq favId}">
 						<c:set var="isFav" value="${true}" />
 					</c:if>
 				</c:forEach>
@@ -79,13 +79,36 @@
 										<dd><a href='<c:out value="http://${url}" />'><c:out value="${url}" /></a></dd>
 										
 									<dt>Admission Rate</dt>
-										<dd><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></dd>
+										<dd>
+											<c:choose>
+												<c:when test="${admRate eq '0.0'}">
+													No data
+												</c:when>
+												<c:otherwise>
+													<f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" />
+												</c:otherwise>
+											</c:choose>
+										</dd>
 										
 									<dt>In-State Tuition</dt>
-										<dd<c:if test="${userState == stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+										<c:choose>
+											<c:when test="${inTuition eq '0'}">
+												<dd>No data</dd>
+											</c:when>
+											<c:otherwise>
+												<dd<c:if test="${userState eq stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+											</c:otherwise>
+										</c:choose>
 									
 									<dt>Out-of-State Tuition</dt>
-										<dd<c:if test="${userState != stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+										<c:choose>
+											<c:when test="${outTuition eq '0'}">
+												<dd>No data</dd>
+											</c:when>
+											<c:otherwise>
+												<dd<c:if test="${userState ne stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+											</c:otherwise>
+										</c:choose>
 
 									</dl>
 								</td>
@@ -95,8 +118,24 @@
 									
 									<dt>Average Test Scores</dt>
 										<dd>
-											SAT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" /><br>
-											ACT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
+											SAT: 
+											<c:choose>
+												<c:when test="${sat eq '0.0'}">
+													No data
+												</c:when>
+												<c:otherwise>
+													<f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" />
+												</c:otherwise>
+											</c:choose><br />
+											ACT: 
+											<c:choose>
+												<c:when test="${act eq '0.0'}">
+													No data
+												</c:when>
+												<c:otherwise>
+													<f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
+												</c:otherwise>
+											</c:choose>
 										</dd>
 									</dl>
 								</td>
