@@ -96,7 +96,7 @@
 		width:100%;
 	}
 	
-	table#userdata, table#editfav {
+	table.userdata, table#editfav {
 		width: 75%;
 		margin: auto;
 	}
@@ -338,7 +338,6 @@
 		padding: 0 3 3 3;
 		position: absolute;
 		left: 5px;
-		top: 30%;
 	}
 	
 	div.warning {
@@ -347,6 +346,7 @@
 	
 	div.warning:before {
 		content: url(images/warning1.png);
+		top: 30%;
 	}
 	
 	div.notice {
@@ -355,6 +355,7 @@
 	
 	div.notice:before {
 		content: url(images/check.png);
+		top: 20%;
 	}
 
 /***********************/

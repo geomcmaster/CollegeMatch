@@ -294,16 +294,16 @@ function comparePWs() {
 	if (elFirstPw.value.length > 0 && elSecondPw.value.length > 0) {
 		if (elFirstPw.value != elSecondPw.value) {
 			document.getElementById("nomatch").classList.remove("hidden");
-			document.getElementById("edit_submit").disabled = true;
+			document.getElementById("pw_submit").disabled = true;
 			return false;
 		} else {
 			document.getElementById("nomatch").classList.add("hidden");
-			document.getElementById("edit_submit").disabled = false;
+			document.getElementById("pw_submit").disabled = false;
 			return true;
 		}
 	} else if (elFirstPw.value.length == 0 && elSecondPw.value.length == 0) {
 		document.getElementById("nomatch").classList.add("hidden");
-		document.getElementById("edit_submit").disabled = false;
+		document.getElementById("pw_submit").disabled = false;
 		return true;
 	}
 }
@@ -314,12 +314,10 @@ function checkForm() {
 	var elOldPw = document.getElementById("old_pw");
 	
 	// if at least one of the password fields is null and at least one is not null, fire error
-	if ((elOldPw.value.length == 0 || 
+	if (elOldPw.value.length == 0 || 
 		elFirstPw.value.length == 0 || 
-		elSecondPw.value.length == 0) &&
-		(elOldPw.value.length > 0 || elFirstPw.value.length > 0 || elSecondPw.value.length > 0)
-		) {
-			alert("You must fill out all three password fields or none of them.");
+		elSecondPw.value.length == 0) {
+			alert("You must fill out all three password fields.");
 			return false;
 	} else {
 		return true;
