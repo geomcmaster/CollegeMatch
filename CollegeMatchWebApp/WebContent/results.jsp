@@ -30,9 +30,9 @@
 		<form action="modifyFavs" id="modifyFavs" method="POST">
 			<c:set var="comboResults" value='${fn:join(results,"^")}' />
 			<input type="hidden" name="searchresults" id="searchresults" value='<c:out value="${comboResults}" />' />
-			<input type="hidden" name="userState" id="userState" value='<c:out value="${userState}" />' />
 			<input type="hidden" name="modifyAction" id="modifyAction" />
 			<input type="hidden" name="modifyId" id="modifyId" />
+			<input type="hidden" name="userState" id="userState" value='<c:out value="${userState}" />' />
 			<c:if test="${fn:length(results) > 50}">
 				<div class="warning" id="sizewarning">Your query has generated more than 50 results. Only the first 50 are shown. Try narrowing your search parameters to find the schools you want.</div>
 			</c:if>
@@ -53,7 +53,7 @@
 				
 				<c:set var="isFav" value="${false}" />
 				<c:forEach items="${favs}" var="favId">
-					<c:if test="${id == favId}">
+					<c:if test="${id eq favId}">
 						<c:set var="isFav" value="${true}" />
 					</c:if>
 				</c:forEach>
@@ -79,20 +79,37 @@
 										<dd><a href='<c:out value="http://${url}" />'><c:out value="${url}" /></a></dd>
 										
 									<dt>Admission Rate</dt>
-										<dd><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></dd>
-										
-									<dt>Tuition</dt>
 										<dd>
 											<c:choose>
-												<c:when test="${userState == stateId}">
-													<f:formatNumber type="CURRENCY" value="${inTuition}" />
+												<c:when test="${admRate eq '0.0'}">
+													No data
 												</c:when>
 												<c:otherwise>
-													<f:formatNumber type="CURRENCY" value="${outTuition}" />
+													<f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" />
 												</c:otherwise>
 											</c:choose>
-											 / year
 										</dd>
+										
+									<dt>In-State Tuition</dt>
+										<c:choose>
+											<c:when test="${inTuition eq '0'}">
+												<dd>No data</dd>
+											</c:when>
+											<c:otherwise>
+												<dd<c:if test="${userState eq stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+											</c:otherwise>
+										</c:choose>
+									
+									<dt>Out-of-State Tuition</dt>
+										<c:choose>
+											<c:when test="${outTuition eq '0'}">
+												<dd>No data</dd>
+											</c:when>
+											<c:otherwise>
+												<dd<c:if test="${userState ne stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+											</c:otherwise>
+										</c:choose>
+
 									</dl>
 								</td>
 								<td><dl>
@@ -101,8 +118,24 @@
 									
 									<dt>Average Test Scores</dt>
 										<dd>
-											SAT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" /><br>
-											ACT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
+											SAT: 
+											<c:choose>
+												<c:when test="${sat eq '0.0'}">
+													No data
+												</c:when>
+												<c:otherwise>
+													<f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" />
+												</c:otherwise>
+											</c:choose><br />
+											ACT: 
+											<c:choose>
+												<c:when test="${act eq '0.0'}">
+													No data
+												</c:when>
+												<c:otherwise>
+													<f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
+												</c:otherwise>
+											</c:choose>
 										</dd>
 									</dl>
 								</td>
@@ -139,6 +172,9 @@
 		
 		form.submit();
 	}
+	
+	var userState = "${userState}";
+	
 </script>
 	
 </body>
