@@ -36,6 +36,7 @@ public class QuickSearch extends HttpServlet {
 		OrGroup.add(new Condition(colName, cType, cValue));
 		
 		colName = School.ALIAS;
+		cValue = CondVal.createStrVal("%" + request.getParameter("qsearch") + "%");
 		OrGroup.add(new Condition(colName, cType, cValue));
 		
 		cType = CondType.OR_GROUP;

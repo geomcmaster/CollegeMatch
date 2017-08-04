@@ -24,7 +24,7 @@
 		
 		
 		<!-- header -->
-		<div id="topbar"><form target="quicksearch"><input type="text" class="inbox" name="qsearch" id="qsearch" /> <input type="submit" value="Quick Search" /><span class="alt-action"><a href="">Advanced Search</a></span></form> </div>
+		<div id="topbar"><form action="quicksearch" method="POST"><input type="text" class="inbox" name="qsearch" id="qsearch" /> <input type="submit" value="Quick Search" /><span class="alt-action"><a href="schoolsearch">Advanced Search</a></span></form> </div>
 		
 		<form action="modifyFavs" id="modifyFavs" method="POST">
 			<c:set var="comboResults" value='${fn:join(results,"^")}' />
@@ -62,11 +62,10 @@
 								<td class="input">
 									<c:choose>
 										<c:when test="${isFav}">
-											<!-- TODO: JavaScript to switch stars? Some way to keep search results page, too -->
-											<a href='JavaScript:void(0)' onclick='deleteFav(<c:out value="${id}" />)'><img class="star" src="images/gray_star.svg"/></a>
+											<a href='JavaScript:void(0)' onclick='deleteFav(<c:out value="${id}" />)'><img class="star" src="images/Golden_star.svg"/></a>
 										</c:when>
 										<c:otherwise>
-											<a href='JavaScript:void(0)' onclick='addFav(<c:out value="${id}" />)'><img class="star" src="images/Golden_star.svg"/></a>
+											<a href='JavaScript:void(0)' onclick='addFav(<c:out value="${id}" />)'><img class="star" src="images/gray_star.svg"/></a>
 										</c:otherwise>
 									</c:choose>
 								</td>
