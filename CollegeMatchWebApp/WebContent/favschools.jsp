@@ -28,6 +28,10 @@
 		<div id="title">
 			<h2>My Favorite Colleges</h2>
 		</div>
+		
+		<!-- Warnings -->
+		<div id="nofavwarning" class="warning hidden">You don't have any favorite schools.</div>
+		
 		<!-- link to search for more->find schools -->
 		<p>Want to find more? Go to <a href="schoolsearch">search</a>!</p>
 		<table class="college_list">
@@ -144,6 +148,15 @@
 	</div>
 	
 	</div></div> <!-- close wrap -->
-	
+		
+<script type="text/javascript">
+	<!-- JavaScript to show warnings when applicable -->
+	var URL = window.location.href;
+	var param = URL.slice(URL.indexOf("?") + 1);
+	if (param.includes("nofavs")) {
+		document.getElementById("nofavwarning").classList.remove("hidden");
+	}
+</script>
+
 </body>
 </html>

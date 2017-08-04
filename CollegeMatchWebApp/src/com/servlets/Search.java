@@ -30,7 +30,8 @@ public class Search extends HttpServlet {
 		int i = 0;
 		String[] criteria = new String[5];
 		for (i = 0; i < criteria.length; i++) {
-			criteria[i] = request.getParameter("crit" + (i + 1) + "hid");
+			String paramName = "crit" + (i + 1) + "hid";
+			criteria[i] = request.getParameter(paramName);
 		}
 		List<Condition> conditions = new ArrayList<Condition>();
 		byte tablesToJoin = SchoolDAO.NONE;
@@ -135,9 +136,44 @@ public class Search extends HttpServlet {
 				break;
 			case "special":
 				if (criterion == "favorites") {
-					conditions.add(db.favsInOffers(username));
+					if (request.getParameter(opener + "check") == "1") {
+						conditions.add(db.favsInOffers(username));
+					}
+				} else if (criterion == "fav5") {
+					if (request.getParameter(opener + "check") == "1") {
+						conditions.add(db.favsInTopFive(username));
+					}
 				} else {
-					conditions.add(db.favsInTopFive(username));
+					comparison = request.getParameter(opener + "comp");
+					if (request.getParameter(opener + "check") == "1") {
+						if (comparison == "lt") {
+							cType = CondType.LT;
+						} else {
+							cType = CondType.GT;
+						}
+						Condition cond = null;
+						if (criterion == "sat") {
+							cond = db.compareMySAT(cType, username);
+						} else {
+							cond = db.compareMyACT(cType, username);
+						}
+						conditions.add(cond);
+					} else {
+						if (comparison == "bet") {
+							double val1 = Double.parseDouble(request.getParameter(opener + "num1"));
+							double val2 = Double.parseDouble(request.getParameter(opener + "num2"));
+							cValue = CondVal.createDoubleRangeVal(val1, val2);
+							cType = CondType.RANGE;
+						} else {
+							cValue = CondVal.createDoubleVal(Double.parseDouble(request.getParameter(opener + "num1")));
+							if (comparison == "lt") {
+								cType = CondType.LT;
+							} else {
+								cType = CondType.GT;
+							}
+						}
+						conditions.add(new Condition(colName, cType, cValue));
+					}
 				}
 				break;
 			case "boolean":
@@ -187,8 +223,6 @@ public class Search extends HttpServlet {
 		case "tuitionout":
 		case "age":
 			return "int";
-		case "sat":
-		case "act":
 		case "admrate":
 		case "firstgen":
 		case "men":
@@ -206,6 +240,8 @@ public class Search extends HttpServlet {
 			return "boolean";
 		case "favorites":
 		case "fav5":
+		case "sat":
+		case "act":
 			return "special";
 		case "region":
 			return "region";

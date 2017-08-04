@@ -1,7 +1,6 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.User;
 import main.java.UserDAO;
 import main.java.FavoriteSchool;
 import main.java.School;
@@ -20,9 +19,8 @@ public class ViewFavorites extends HttpServlet {
 		String username = (String)request.getAttribute("user");
 		
 		UserDAO db = new UserDAO();
-		User user = db.getUser(username);
 		
-		List<FavoriteSchool> favs = user.getFavoriteSchools();
+		List<FavoriteSchool> favs = db.getFavSchools(username);
 		
 		String[] favSchools = new String[favs.size()];
 		
@@ -49,11 +47,14 @@ public class ViewFavorites extends HttpServlet {
 			favSchools[i] = output;
 		}
 		
-		request.setAttribute("schools", favSchools);
-		Location userResidence = db.getResidence(username);
-		request.setAttribute("userState", userResidence.getStateInt());
-		
-		getServletContext().getRequestDispatcher("/favschools.jsp").forward(request,response);
+		if (favSchools.length > 0) {
+			request.setAttribute("schools", favSchools);
+			Location userResidence = db.getResidence(username);
+			request.setAttribute("userState", userResidence.getStateInt());
+			getServletContext().getRequestDispatcher("/favschools.jsp").forward(request,response);
+		} else {
+			response.sendRedirect("favschools.jsp?nofavs");
+		}
 	}
 	
 	public static String[] getFavoriteDetails(FavoriteSchool sch) {
