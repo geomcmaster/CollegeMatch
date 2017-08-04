@@ -34,7 +34,7 @@
 						
 						<td class="input critvals" id='crit<c:out value="${i}" />values'>
 							<span id='crit<c:out value="${i}" />before'></span>
-							<select id='crit<c:out value="${i}" />dist'>
+							<select id='crit<c:out value="${i}" />dist' name='crit<c:out value="${i}" />dist'>
 								<option value="10">10mi</option>
 								<option value="25">25mi</option>
 								<option value="50">50mi</option>
@@ -45,7 +45,7 @@
 								<option value="bet">between</option>
 								<option value="gt">greater than</option>
 							</select>
-							<select id='crit<c:out value="${i}" />level'>
+							<select id='crit<c:out value="${i}" />level' name='crit<c:out value="${i}" />level'>
 								<option value="1">4-year</option>
 								<option value="2">2-year</option>
 								<option value="3">&lt;2-year</option>
