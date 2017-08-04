@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,6 +45,7 @@ public class SchoolDAOTest {
 		testMyScores();
 		testJoinConditions();
 		testOrderBy();
+		testDistance();
 	}
 	
 	private void testContainsUserFieldsOfStudy() {
@@ -237,6 +237,20 @@ public class SchoolDAOTest {
 		assertEquals("Order incorrect", 110714, schoolsDesc.get(1).getId());
 		//two columns
 		//TODO SQL string looks right but can't verify with workbench cause that's not showing everything
+	}
+	
+	private void testDistance() {
+		String userName = "distTest";
+		String pw = "distPW";
+		userDAO.createUser(userName, pw);
+		userDAO.modifyResidence(userName, "Rochester", 36, 14624);
+		Condition c = schoolDAO.distanceRange(75, userName);
+		List<Condition> conditions = new LinkedList<Condition>();
+		conditions.add(c);
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.COORDINATES);
+		for (School school : schools) {
+			System.out.println(school.getName());
+		}
 	}
 	
 	@After

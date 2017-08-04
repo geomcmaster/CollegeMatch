@@ -18,6 +18,8 @@ public class CondVal {
 	private int intVal;
 	private double doubleVal;
 	private List<Condition> orConditions;	//for conditions of the form ...AND (cond1 OR cond2) AND...
+	//distance calculation
+	private String distanceString;
 	
 	private int index;	//the index of the wildcard in the PreparedStatement
 	
@@ -76,6 +78,12 @@ public class CondVal {
 	public static CondVal createORGroupVal(List<Condition> conditions) {
 		CondVal v = new CondVal(ValType.OR_GROUP);
 		v.setOrConditions(conditions);
+		return v;
+	}
+	
+	public static CondVal createDistanceVal(String distanceString) {
+		CondVal v = new CondVal(ValType.DISTANCE);
+		v.setDistanceString(distanceString);
 		return v;
 	}
 	
@@ -252,5 +260,19 @@ public class CondVal {
 	 */
 	public void setOrConditions(List<Condition> orConditions) {
 		this.orConditions = orConditions;
+	}
+
+	/**
+	 * @return the distanceString
+	 */
+	public String getDistanceString() {
+		return distanceString;
+	}
+
+	/**
+	 * @param distanceString the distanceString to set
+	 */
+	public void setDistanceString(String distanceString) {
+		this.distanceString = distanceString;
 	}
 }

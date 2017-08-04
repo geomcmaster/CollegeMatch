@@ -548,6 +548,17 @@ public class UserDAO {
 	}
 	
 	/**
+	 * Use this to check whether a distance filter will be valid
+	 * 
+	 * @param userName
+	 * @return Whether this user's ZIP code is in the coordinates table
+	 */
+	public boolean userHasZipWithCoord(String userName) {
+		//TODO implement
+		return false;
+	}
+	
+	/**
 	 * Gets a user's favorite schools
 	 * 
 	 * @param userName The user whose favorites we are grabbing
