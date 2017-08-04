@@ -239,6 +239,7 @@ public class Search extends HttpServlet {
 		case "size":
 		case "avginc":
 		case "medinc":
+		case "meddebt":
 		case "tuitionin":
 		case "tuitionout":
 		case "age":
@@ -389,7 +390,7 @@ public class Search extends HttpServlet {
 				curStateInt = curLoc.getStateInt();
 			}
 			if (curLoc.isStateStrNotNull()) {
-				curStateAbbr = curLoc.getStateAbbreviation();
+				curStateAbbr = curLoc.getStateStr();
 			}
 		}
 		
@@ -456,15 +457,27 @@ public class Search extends HttpServlet {
 	}
 	
 	private Condition doubleCond(String colName, String comparison, String opener, HttpServletRequest request) {
+		// these are ALL percentages, so we should convert to 0 <= x <= 1 when appropriate
+		
 		CondType cType = null;
 		CondVal cValue = null;
 		if (comparison.equals("bet")) {
 			double val1 = Double.parseDouble(request.getParameter(opener + "num1"));
 			double val2 = Double.parseDouble(request.getParameter(opener + "num2"));
+			if (val1 > 1) {
+				val1 = val1 / 100;
+			}
+			if (val2 > 1) {
+				val2 = val2 / 100;
+			}
 			cValue = CondVal.createDoubleRangeVal(val1, val2);
 			cType = CondType.RANGE;
 		} else {
-			cValue = CondVal.createDoubleVal(Double.parseDouble(request.getParameter(opener + "num1")));
+			double val = Double.parseDouble(request.getParameter(opener + "num1"));
+			if (val > 1) {
+				val = val / 100;
+			}
+			cValue = CondVal.createDoubleVal(val);
 			if (comparison.equals("lt")) {
 				cType = CondType.LT;
 			} else {
