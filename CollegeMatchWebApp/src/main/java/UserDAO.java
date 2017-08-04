@@ -634,11 +634,13 @@ public class UserDAO {
 				Location location = new Location();
 				String city = rs.getString(14);
 				if (!rs.wasNull()) {
+					school.setLocationIsNotNull(true);
 					location.setCityIsNotNull(true);
 					location.setCity(city);
 				}
 				String stateStr = rs.getString(15);
 				if (!rs.wasNull()) {
+					school.setLocationIsNotNull(true);
 					location.setStateStrIsNotNull(true);
 					location.setStateStr(stateStr);
 				}

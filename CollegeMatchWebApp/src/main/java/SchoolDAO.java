@@ -408,6 +408,7 @@ public class SchoolDAO {
 				}
 				String state = rs.getString("state_string");
 				if (!rs.wasNull()) {
+					school.setLocationIsNotNull(true);
 					loc.setStateStr(state);
 					loc.setStateStrIsNotNull(true);
 				}
@@ -706,6 +707,7 @@ public class SchoolDAO {
 				}
 				String state = rs.getString("stateStr");
 				if (!rs.wasNull()) {
+					s.setLocationIsNotNull(true);
 					l.setStateStrIsNotNull(true);
 					l.setStateStr(state);
 				}
