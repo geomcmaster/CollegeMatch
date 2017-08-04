@@ -69,8 +69,26 @@
 						</td>
 					</tr>
 				</c:forEach>
-					
+				
 				<tr>
+					<td><label for="sortby">Sort by:</label></td>
+					<td class="input">
+						<select name="sortby" id="sortby" class="inbox">
+							<option></option>
+							<option value="name">Name</option>
+							<option value="cst">City/State</option>
+							<option value="adm">Admission Rate</option>
+							<option value="sat">SAT Scores</option>
+							<option value="act">ACT Scores</option>
+							<option value="ist">In-State Tuition</option>
+							<option value="oost">Out-of-State Tuition</option>
+						</select>
+						<select name="sortdir" id="sortdir" class="inbox">
+							<option value="asc">Ascending</option>
+							<option value="des">Descending</option>
+						</select>
+					</td>
+				</tr><tr>
 					<td></td>
 					<td class="input"><input type="submit" value="Search" /></td>
 				</tr>

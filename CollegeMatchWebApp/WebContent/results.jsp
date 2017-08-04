@@ -30,7 +30,6 @@
 		<form action="modifyFavs" id="modifyFavs" method="POST">
 			<c:set var="comboResults" value='${fn:join(results,"^")}' />
 			<input type="hidden" name="searchresults" id="searchresults" value='<c:out value="${comboResults}" />' />
-			<input type="hidden" name="userState" id="userState" value='<c:out value="${userState}" />' />
 			<input type="hidden" name="modifyAction" id="modifyAction" />
 			<input type="hidden" name="modifyId" id="modifyId" />
 			<c:if test="${fn:length(results) > 50}">
@@ -81,18 +80,12 @@
 									<dt>Admission Rate</dt>
 										<dd><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></dd>
 										
-									<dt>Tuition</dt>
-										<dd>
-											<c:choose>
-												<c:when test="${userState == stateId}">
-													<f:formatNumber type="CURRENCY" value="${inTuition}" />
-												</c:when>
-												<c:otherwise>
-													<f:formatNumber type="CURRENCY" value="${outTuition}" />
-												</c:otherwise>
-											</c:choose>
-											 / year
-										</dd>
+									<dt>In-State Tuition</dt>
+										<dd><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+									
+									<dt>Out-of-State Tuition</dt>
+										<dd><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+
 									</dl>
 								</td>
 								<td><dl>
