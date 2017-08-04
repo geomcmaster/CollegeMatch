@@ -70,9 +70,9 @@
 									</c:choose>
 								</td>
 							</tr><tr>
-								<td>
+								<td><dl>
 									<dt>School URL</dt>
-										<dd><a href='<c:out value="${url}" />'><c:out value="${url}" /></a></dd>
+										<dd><a href='<c:out value="http://${url}" />'><c:out value="${url}" /></a></dd>
 										
 									<dt>Admission Rate</dt>
 										<dd><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></dd>
@@ -89,8 +89,9 @@
 											</c:choose>
 											 / year
 										</dd>
+									</dl>
 								</td>
-								<td>
+								<td><dl>
 									<dt>Location</dt>
 										<dd><c:out value="${city}" />, <c:out value="${stateAbbr}" /></dd>
 									
@@ -99,6 +100,7 @@
 											SAT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" /><br>
 											ACT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
 										</dd>
+									</dl>
 								</td>
 							</tr>
 						</table>
