@@ -20,7 +20,7 @@ public class ModifyFavorite extends HttpServlet {
 		
 		String action = request.getParameter("modifyAction");
 		int schoolId = Integer.parseInt(request.getParameter("modifyId"));
-		String[] lastResults = request.getParameter("comboResults").split("^");
+		String[] lastResults = request.getParameter("comboResults").split("[^]");
 		String userState = request.getParameter("userState");
 		
 		UserDAO db = new UserDAO();

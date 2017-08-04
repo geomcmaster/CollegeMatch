@@ -21,6 +21,7 @@ import main.java.Condition;
 import main.java.DBUtil;
 import main.java.School;
 import main.java.SchoolDAO;
+import main.java.SortColumn;
 import main.java.UserDAO;
 
 public class SchoolDAOTest {
@@ -44,6 +45,7 @@ public class SchoolDAOTest {
 		testNullValues();
 		testMyScores();
 		testJoinConditions();
+		testOrderBy();
 	}
 	
 	private void testContainsUserFieldsOfStudy() {
@@ -213,6 +215,28 @@ public class SchoolDAOTest {
 		regionConditions.add(name);
 		List<School> regionSchools = schoolDAO.getSchools(regionConditions, tablesToJoin);
 		assertEquals("Correct school not found", "Atlantic University College", regionSchools.get(0).getName());
+	}
+	
+	private void testOrderBy() {
+		//one column ASC
+		List<Condition> conditions = new LinkedList<Condition>();
+		conditions.add(
+				new Condition(School.NAME, CondType.LIKE, CondVal.createStrVal("University of California-Santa%")));
+		List<SortColumn> cols = new LinkedList<SortColumn>();
+		cols.add(new SortColumn(School.SAT_AVG, true));
+		List<School> schoolsAsc = 
+				schoolDAO.getSchools(conditions, SchoolDAO.NONE, cols);
+		assertEquals("Order incorrect", 110714, schoolsAsc.get(0).getId());
+		assertEquals("Order incorrect", 110705, schoolsAsc.get(1).getId());
+		//one column DESC
+		cols = new LinkedList<SortColumn>();
+		cols.add(new SortColumn(School.SAT_AVG, false));
+		List<School> schoolsDesc = 
+				schoolDAO.getSchools(conditions, SchoolDAO.NONE, cols);
+		assertEquals("Order incorrect", 110705, schoolsDesc.get(0).getId());
+		assertEquals("Order incorrect", 110714, schoolsDesc.get(1).getId());
+		//two columns
+		//TODO SQL string looks right but can't verify with workbench cause that's not showing everything
 	}
 	
 	@After

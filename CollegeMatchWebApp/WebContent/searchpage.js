@@ -34,9 +34,10 @@ function showKids(source) {
 	showOptions(source, elHid.value);
 	elHid.value = selValue;
 	hideAll(tdParent);
+	document.getElementById(strOpen + "checkLab").innerHTML = "";
 	switch(selValue) {
 		case "locationz":
-			var elBefore = document.getElementById(strOpen + "before")
+			var elBefore = document.getElementById(strOpen + "before");
 			elBefore.classList.remove("hidden");
 			while (elBefore.firstChild) {
 				elBefore.removeChild(elBefore.firstChild);
@@ -64,9 +65,16 @@ function showKids(source) {
 		case "name":
 			document.getElementById(strOpen + "text").classList.remove("hidden");
 			break;
-		case "cost":
 		case "sat":
 		case "act":
+			document.getElementById(strOpen + "comp").classList.remove("hidden");
+			document.getElementById(strOpen + "num1").classList.remove("hidden");
+			document.getElementById(strOpen + "check").classList.remove("hidden");
+			document.getElementById(strOpen + "checkLab").appendChild(document.createTextNode("Use my scores"));
+			document.getElementById(strOpen + "checkLab").classList.remove("hidden");
+			document.getElementById(strOpen + "checkBreak").classList.remove("hidden");
+			break;
+		case "cost":
 		case "earnings":
 		case "size":
 		case "admrate":
@@ -86,6 +94,7 @@ function showKids(source) {
 		case "nhpi":
 		case "multi":
 		case "nonres":
+		case "meddebt":
 			document.getElementById(strOpen + "comp").classList.remove("hidden");
 			document.getElementById(strOpen + "num1").classList.remove("hidden");
 			break;
@@ -96,13 +105,14 @@ function showKids(source) {
 		case "fav5":
 		case "online":
 			document.getElementById(strOpen + "check").classList.remove("hidden");
+			document.getElementById(strOpen + "checkLab").classList.remove("hidden");
 			break;
 	}
 }
 
 function toggleBetween(source) {
 	var strOpen = source.id.slice(0,5);
-	var elMid = document.getElementById(strOpen + "mid")
+	var elMid = document.getElementById(strOpen + "mid");
 	if (source.options[source.selectedIndex].value == "bet") {
 		elMid.classList.remove("hidden");
 		while (elMid.firstChild) {
@@ -147,7 +157,7 @@ function showOptions(source, optval) {
 			var el = els[i];
 			if (el.id != strIdToSkip) {
 				var spans = el.getElementsByTagName("span");
-				for (j = 0; j < spans.length; j++) {
+				for (var j = 0; j < spans.length; j++) {
 					var opt = spans[j].children[0];
 					if (opt.value == optval) {
 						opt.classList.remove("hidden");
@@ -156,6 +166,33 @@ function showOptions(source, optval) {
 					}
 				}
 			}
+		}
+	}
+}
+
+function nonum(elCheck) {
+	var elGroupOpener = elCheck.id.substring(0,5);
+	var elSelect = document.getElementById(elGroupOpener + "type");
+	var elCompare = document.getElementById(elGroupOpener + "comp");
+	if (elSelect.options[elSelect.selectedIndex].value == "sat" || 
+			elSelect.options[elSelect.selectedIndex].value == "act") {
+		if (elCheck.checked) {
+			document.getElementById(elGroupOpener + "num1").disabled = true;
+			if (elCompare.selectedIndex == 1) {
+				elCompare.selectedIndex = 0;
+				toggleBetween(elCompare);
+			}
+			elCompare.options[1].classList.add("hidden");
+			var wrap = document.createElement("span");
+			wrap.innerHTML = elCompare.options[1].outerHTML;
+			elCompare.options[1].parentNode.insertBefore(wrap,elCompare.options[1]);
+			elCompare.options[1].remove();
+		} else {
+			var wrap = elCompare.getElementsByTagName("span")[0];
+			var opt = wrap.getElementsByTagName("option")[0];
+			opt.classList.remove("hidden");
+			wrap.outerHTML = opt.outerHTML;
+			document.getElementById(elGroupOpener + "num1").disabled = false;
 		}
 	}
 }
