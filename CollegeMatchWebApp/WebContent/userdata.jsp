@@ -30,6 +30,7 @@
 
 		<!-- Warnings -->
 		<div id="pwwarning" class="warning hidden">The password you entered as your old password was incorrect. No changes have been made to your user record.</div>
+		<div id="successnotice" class="notice hidden">Your data has been saved successfully!</div>
 
 		<table id="userdata">
 			<tr class="newsection">
@@ -125,6 +126,8 @@
 	var param = URL.slice(URL.indexOf("?") + 1);
 	if (param.includes("pwfail")) {
 		document.getElementById("pwwarning").classList.remove("hidden");
+	} else if (param.includes("success")) {
+		document.getElementById("successnotice").classList.remove("hidden");
 	}
 </script>
 	

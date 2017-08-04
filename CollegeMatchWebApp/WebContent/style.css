@@ -327,17 +327,32 @@
 		margin: 0;
 	}
 	
-	div.warning {
+	div.warning, div.notice {
 		border: 1px black solid;
-		background-color: #fdc968;
 		padding: 3px;
 		margin-bottom: 10px;
+	}
+	
+	div.warning:before, div.notice:before {
+		padding: 3px;
+	}
+	
+	div.warning {
+		background-color: #fdc968;
 	}
 	
 	div.warning:before {
 		content: url(images/warning1.png);
 		background-color: #fdc968;
-		padding: 3px;
+	}
+	
+	div.notice {
+		background-color: #ccffcc;
+	}
+	
+	div.notice:before {
+		content: url(images/check.png);
+		background-color: #ccffcc;
 	}
 
 /***********************/
