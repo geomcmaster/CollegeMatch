@@ -77,8 +77,8 @@ public class Search extends HttpServlet {
 				break;
 			case "programs":
 				value = request.getParameter(opener + "sel2");
-				cValue = CondVal.createIntVal(Integer.parseInt(value));
 				for (i = 0; i < 5; i++) {
+					cValue = CondVal.createIntVal(Integer.parseInt(value));
 					Condition cond = new Condition(colName.split("[|]")[i],CondType.EQ,cValue);
 					OrGroup.add(cond);
 				}
@@ -87,6 +87,7 @@ public class Search extends HttpServlet {
 			case "string":
 				cValue = CondVal.createStrVal("%" + request.getParameter(opener + "text") + "%");
 				Condition cond1 = new Condition(colName.split("[|]")[0],CondType.LIKE,cValue);
+				cValue = CondVal.createStrVal("%" + request.getParameter(opener + "text") + "%");
 				Condition cond2 = new Condition(colName.split("[|]")[1],CondType.LIKE,cValue);
 				OrGroup.add(cond1);
 				OrGroup.add(cond2);
