@@ -603,7 +603,6 @@ public class SchoolDAO {
 					school.setNonresident(nonresident);
 					school.setNonresidentIsNotNull(true);
 				}
-				DBUtil.closeResultSet(rs);
 				DBUtil.closeStatement(pstmt);
 				
 				//Top 5 fields queries
