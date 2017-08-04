@@ -46,6 +46,178 @@ public class SchoolDAOTest {
 		testMyScores();
 		testJoinConditions();
 		testOrderBy();
+		testGetSingleSchoolViewInfo();
+	}
+	
+	private void testGetSingleSchoolViewInfo() {
+		boolean testWorks = true;
+		int YaleUniversityID = 130794;
+		School Yale = new School();
+		Yale = schoolDAO.getSingleSchoolViewInfo(YaleUniversityID);
+		//A massive boolean check on all returned school fields
+		if (!(Yale.getName().equals("Yale University"))) {
+			System.out.println("Name");
+			testWorks = false;
+		}
+		if(!Yale.getWebsite().equals("www.yale.edu")) {
+			System.out.println("URL");
+			testWorks = false;
+		}
+		if ((Yale.getSatAvg()!=1493)) {
+			System.out.println("SATAvg");
+			testWorks = false;
+		}
+		if (Yale.getSat25() != 1410) {
+			System.out.println("SAT25");
+			testWorks = false;
+		}
+		if (Yale.getSat75() != 1600) {
+			System.out.println("SAT75");
+			testWorks = false;
+		}
+		if (Yale.getActAvg() != 33) {
+			System.out.println("ACTAvg");
+			testWorks = false;
+		}
+		if (Yale.getAct25() != 31) {
+			System.out.println("ACT25");
+			testWorks = false;
+		}
+		if (Yale.getAct75()!=35) {
+			System.out.println("ACT75");
+			testWorks = false;
+		}
+		
+		if (Yale.getAvgEarnings()!=75500) {
+			System.out.println("Earnings");
+			testWorks = false;
+		}
+		if (Yale.getAvgCost()!=61620) {
+			System.out.println("Cost");
+			testWorks = false;
+		}
+		if (Yale.getMedDebt()!=13206) {
+			System.out.println("Debt");
+			testWorks = false;
+		}
+		if (Yale.getStdBodySz()!=5473) {
+			System.out.println("StudentBody");
+			testWorks = false;
+		}
+		
+		if (!Yale.getPopProg1().equals("Social Sciences")) {
+			System.out.println("PopProg1");
+			testWorks = false;
+		}
+		if (!Yale.getPopProg2().equals("Biological and Biomedical Sciences")) {
+			System.out.println("PopProg2");
+			testWorks = false;
+		}
+		if (!Yale.getPopProg3().equals("Multi/Interdisciplinary Studies")) {
+			System.out.println("PopProg3");
+			testWorks = false;
+		}
+		if (!Yale.getPopProg4().equals("History")) {
+			System.out.println("PopProg4");
+			testWorks = false;
+		}
+		if (!Yale.getPopProg5().equals("English Language and Literature/Letters")) {
+			System.out.println("PopProg5");
+			testWorks = false;
+		}
+		if (Yale.getAdmissionRate()!=0.063) {
+			System.out.println("admRate");
+			testWorks = false;
+		}
+		if (Yale.getAvgFamilyIncome()!=90290) {
+			System.out.println("AvgFamInc");
+			testWorks = false;
+		}
+		if (Yale.getMedFamIncome()!=49166) {
+			System.out.println("MedFamInc");
+			testWorks = false;
+		}
+		if (Yale.getTuitionIn()!=45800) {
+			System.out.println("TuitionIn");
+			testWorks = false;
+		}
+		if (Yale.getTuitionOut()!=45800) {
+			System.out.println("TuitionOut");
+			testWorks = false;
+		}
+		if (Yale.getAvgAge()!=19) {
+			System.out.println("Age");
+			testWorks = false;
+		}
+		if (Yale.getFirstGenStudentShare()!=0.224625624) {
+			System.out.println("1stGen");
+			testWorks = false;
+		}
+		if (!Yale.getLevel().equals("4-year")) {
+			System.out.println("level");
+			testWorks = false;
+		}
+		if (Yale.isDistanceLearningNotNull()==false) {
+			System.out.println("distLearningBoolean");
+			testWorks = false;
+		}
+		if (Yale.getDistanceLearning()!=0) {
+			System.out.println("distLearning");
+			testWorks = false;
+		}
+		if (!(Yale.getLocation().getCity().equals(("New Haven")))) {
+			System.out.println("city");
+			testWorks = false;
+		}
+		if (!Yale.getLocation().getStateStr().equals("CT")) {
+			System.out.println("state");
+			testWorks = false;
+		}
+		if (Yale.getFemaleShare()!=0.4902) {
+			System.out.println("female");
+			testWorks = false;
+		}
+		if (Yale.getMaleShare()!=0.5098) {
+			System.out.println("male");
+			testWorks = false;
+		}
+		if (Yale.getWhite()!=0.4705) {
+			System.out.println("white");
+			testWorks = false;
+		}
+		if (Yale.getBlack()!=0.0678) {
+			System.out.println("black");
+			testWorks = false;
+		}
+		if (Yale.getHispanic()!=0.11) {
+			System.out.println("hispanic");
+			testWorks = false;
+		}
+		if (Yale.getAsian()!=0.1655) {
+			System.out.println("asian");
+			testWorks = false;
+		}
+		if (Yale.getAmerican_indian_alaskan_native()!=0.0064) {
+			System.out.println("americanIndian");
+			testWorks = false;
+		}
+		if (Yale.getNative_hawaiian_pacific_islander()!=0) {
+			System.out.println("nativeHawaiian");
+			testWorks = false;
+		}
+		if (Yale.getMultiethnic()!=0.0596) {
+			System.out.println("multiethnic");
+			testWorks = false;
+		}
+		if (Yale.getUnknown_ethnicity()!=0.0163) {
+			System.out.println("unknown ethnicity");
+			testWorks = false;
+		}
+		if (Yale.getNonresident()!=0.104) {
+			System.out.println("nonresident");
+			testWorks = false;
+		}
+		assertTrue("getSingleSchoolViewInfo works", testWorks);
 	}
 	
 	private void testContainsUserFieldsOfStudy() {

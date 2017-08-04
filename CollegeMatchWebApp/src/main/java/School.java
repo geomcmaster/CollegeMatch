@@ -158,6 +158,28 @@ public class School {
 	private boolean popProg4IDIsNotNull;
 	private int popProg5ID;
 	private boolean popProg5IDIsNotNull;
+	private String level;
+	private boolean levelIsNotNull;
+	private int distanceLearning;
+	private boolean isDistanceLearningNotNull;
+	private double white;
+	private boolean isWhiteNotNull;
+	private double black;
+	private boolean isBlackNotNull;
+	private double hispanic;
+	private boolean isHispanicNotNull;
+	private double asian;
+	private boolean isAsianNotNull;
+	private double american_indian_alaskan_native;
+	private boolean isAmericanIndianAlaskanNativeNotNull;
+	private double native_hawaiian_pacific_islander;
+	private boolean isNativeHawaiianPacificIslanderNotNull;
+	private double multiethnic;
+	private boolean isMultiethnicNotNull;
+	private double unknown_ethnicity;
+	private boolean isUnknownEthnicityNotNull;
+	private double nonresident;
+	private boolean isNonresidentNotNull;
 	
 	public School() {
 		setNulls();
@@ -197,6 +219,17 @@ public class School {
 		setPopProg3IDIsNotNull(false);
 		setPopProg4IDIsNotNull(false);
 		setPopProg5IDIsNotNull(false);
+		setLevelIsNotNull(false);
+		setWhiteIsNotNull(false);
+		setBlackIsNotNull(false);
+		setHispanicIsNotNull(false);
+		setAsianIsNotNull(false);
+		setAmericanIndianAlaskanNativeIsNotNull(false);
+		setNativeHawaiianPacificIslanderIsNotNull(false);
+		setMultiethnicIsNotNull(false);
+		setUnknownEthnicityIsNotNull(false);
+		setNonresidentIsNotNull(false);
+		setDistanceLearningIsNotNull(false);
 	}
 	
 	/**
@@ -838,18 +871,6 @@ public class School {
 		this.tuitionOut = tuitionOut;
 	}
 	/**
-	 * @param debt
-	 */
-	public void setMedianDebt(double debt) {
-		this.medDebt = debt;
-	}
-	/**
-	 * @return medDebt
-	 */
-	public double getMedianDebt() {
-		return this.medDebt;
-	}
-	/**
 	 * @param avgIncome
 	 */
 	public void setAvgFamilyIncome(int avgIncome) {
@@ -860,18 +881,6 @@ public class School {
 	 */
 	public int getAvgFamilyIncome() {
 		return this.avgFamIncome;
-	}
-	/**
-	 * @param medIncome
-	 */
-	public void setMedianFamIncome(int medIncome) {
-		this.medFamIncome = medIncome;
-	}
-	/**
-	 * @return medFamIncome
-	 */
-	public int getMedianFamIncome(int medIncome) {
-		return this.medFamIncome;
 	}
 	/**
 	 * @param avg entry age
@@ -1004,6 +1013,181 @@ public class School {
 
 	public void setPopProg5IDIsNotNull(boolean popProg5IDIsNotNull) {
 		this.popProg5IDIsNotNull = popProg5IDIsNotNull;
+	}
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	public int getDistanceLearning() {
+		return distanceLearning;
+	}
+
+	public void setDistanceLearning(int distanceLearning) {
+		this.distanceLearning = distanceLearning;
+	}
+
+	public double getWhite() {
+		return white;
+	}
+
+	public void setWhite(double white) {
+		this.white = white;
+	}
+
+	public boolean isWhiteNull() {
+		return isWhiteNotNull;
+	}
+
+	public void setWhiteIsNotNull(boolean isWhiteNull) {
+		this.isWhiteNotNull = isWhiteNull;
+	}
+
+	public double getBlack() {
+		return black;
+	}
+
+	public void setBlack(double black) {
+		this.black = black;
+	}
+
+	public double getHispanic() {
+		return hispanic;
+	}
+
+	public void setHispanic(double hispanic) {
+		this.hispanic = hispanic;
+	}
+
+	public double getAsian() {
+		return asian;
+	}
+
+	public void setAsian(double asian) {
+		this.asian = asian;
+	}
+
+	public double getAmerican_indian_alaskan_native() {
+		return american_indian_alaskan_native;
+	}
+
+	public void setAmerican_indian_alaskan_native(double american_indian_alaskan_native) {
+		this.american_indian_alaskan_native = american_indian_alaskan_native;
+	}
+
+	public double getNative_hawaiian_pacific_islander() {
+		return native_hawaiian_pacific_islander;
+	}
+
+	public void setNative_hawaiian_pacific_islander(double native_hawaiian_pacific_islander) {
+		this.native_hawaiian_pacific_islander = native_hawaiian_pacific_islander;
+	}
+
+	public double getMultiethnic() {
+		return multiethnic;
+	}
+
+	public void setMultiethnic(double multiethnic) {
+		this.multiethnic = multiethnic;
+	}
+
+	public double getUnknown_ethnicity() {
+		return unknown_ethnicity;
+	}
+
+	public void setUnknown_ethnicity(double unknown_ethnicity) {
+		this.unknown_ethnicity = unknown_ethnicity;
+	}
+
+	public double getNonresident() {
+		return nonresident;
+	}
+
+	public void setNonresident(double nonresident) {
+		this.nonresident = nonresident;
+	}
+
+	public boolean isBlackNull() {
+		return isBlackNotNull;
+	}
+
+	public void setBlackIsNotNull(boolean isBlackNull) {
+		this.isBlackNotNull = isBlackNull;
+	}
+
+	public boolean isHispanicNull() {
+		return isHispanicNotNull;
+	}
+
+	public void setHispanicIsNotNull(boolean isHispanicNull) {
+		this.isHispanicNotNull = isHispanicNull;
+	}
+
+	public boolean isAsianNull() {
+		return isAsianNotNull;
+	}
+
+	public void setAsianIsNotNull(boolean isAsianNull) {
+		this.isAsianNotNull = isAsianNull;
+	}
+
+	public boolean isAmericanIndianAlaskanNativeNull() {
+		return isAmericanIndianAlaskanNativeNotNull;
+	}
+
+	public void setAmericanIndianAlaskanNativeIsNotNull(boolean isAmericanIndianAlaskanNativeNull) {
+		this.isAmericanIndianAlaskanNativeNotNull = isAmericanIndianAlaskanNativeNull;
+	}
+
+	public boolean isNativeHawaiianPacificIslanderNull() {
+		return isNativeHawaiianPacificIslanderNotNull;
+	}
+
+	public void setNativeHawaiianPacificIslanderIsNotNull(boolean isNativeHawaiianPacificIslanderNull) {
+		this.isNativeHawaiianPacificIslanderNotNull = isNativeHawaiianPacificIslanderNull;
+	}
+
+	public boolean isMultiethnicNull() {
+		return isMultiethnicNotNull;
+	}
+
+	public void setMultiethnicIsNotNull(boolean isMultiethnicNull) {
+		this.isMultiethnicNotNull = isMultiethnicNull;
+	}
+
+	public boolean isUnknownEthnicityNull() {
+		return isUnknownEthnicityNotNull;
+	}
+
+	public void setUnknownEthnicityIsNotNull(boolean isUnknownEthnicityNull) {
+		this.isUnknownEthnicityNotNull = isUnknownEthnicityNull;
+	}
+
+	public boolean isNonresidentNull() {
+		return isNonresidentNotNull;
+	}
+
+	public void setNonresidentIsNotNull(boolean isNonresidentNull) {
+		this.isNonresidentNotNull = isNonresidentNull;
+	}
+
+	public boolean isLevelNull() {
+		return levelIsNotNull;
+	}
+
+	public void setLevelIsNotNull(boolean isLevelNull) {
+		this.levelIsNotNull = isLevelNull;
+	}
+
+	public boolean isDistanceLearningNotNull() {
+		return isDistanceLearningNotNull;
+	}
+
+	public void setDistanceLearningIsNotNull(boolean isDistanceLearningNull) {
+		this.isDistanceLearningNotNull = isDistanceLearningNull;
 	}
 	
 }

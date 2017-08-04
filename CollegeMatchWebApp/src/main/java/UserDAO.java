@@ -566,6 +566,7 @@ public class UserDAO {
 				School school = new School();
 				int id = rs.getInt(1);
 				if (!rs.wasNull()) {
+					fav.setSchoolIsNotNull(true);
 					school.setIdIsNotNull(true);
 					school.setId(id);
 				}
