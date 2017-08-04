@@ -50,7 +50,6 @@
 								<option value="2">2-year</option>
 								<option value="3">&lt;2-year</option>
 							</select>
-							<input type="checkbox" name='crit<c:out value="${i}" />check' id='crit<c:out value="${i}" />check' value="1" />
 							<input class="number" type="number" name='crit<c:out value="${i}" />num1' id='crit<c:out value="${i}" />num1' />
 							<span id='crit<c:out value="${i}" />mid'></span>
 							<input id='crit<c:out value="${i}" />num2' class="number" type="number" name='crit<c:out value="${i}" />num2' />
@@ -64,6 +63,9 @@
 							<select class="sel_type" name='crit<c:out value="${i}" />sel3' id='crit<c:out value="${i}" />sel3'>
 								<c:import url="regionselect.html" />
 							</select>
+							<br id='crit<c:out value="${i}" />checkBreak' />
+							<input type="checkbox" name='crit<c:out value="${i}" />check' id='crit<c:out value="${i}" />check' value="1" onclick="nonum(this)" />
+							<label for='crit<c:out value="${i}" />check' id='crit<c:out value="${i}" />checkLab'></label>
 						</td>
 					</tr>
 				</c:forEach>
