@@ -240,10 +240,26 @@
 		overflow: hidden;
 	}
 	
+	table.college td:first-child dt {
+		width: 152px; /*45%;*/
+	}
+	
+	table.college td:first-child dd {
+		width: 181px; /*55%*/
+	}
+	
+	table.college td:last-child dt {
+		width: 122px;
+	}
+	
+	table.college td:last-child dd {
+		width: 149px;
+	}
+	
 	dt {
 		font-style:italic;
 		float: left;
-		width: 45%;
+		
 		padding: 0;
 		margin: 0;
 		clear: left;
@@ -255,10 +271,12 @@
 	
 	dd {
 		float: left;
-		width: 55%;
 		padding: 0;
 		margin: 0;
-		word-wrap: break-word;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space:nowrap;
+		display:block;
 	}
 
 	.alert {
@@ -309,17 +327,32 @@
 		margin: 0;
 	}
 	
-	div.warning {
+	div.warning, div.notice {
 		border: 1px black solid;
-		background-color: #fdc968;
 		padding: 3px;
 		margin-bottom: 10px;
+	}
+	
+	div.warning:before, div.notice:before {
+		padding: 3px;
+	}
+	
+	div.warning {
+		background-color: #fdc968;
 	}
 	
 	div.warning:before {
 		content: url(images/warning1.png);
 		background-color: #fdc968;
-		padding: 3px;
+	}
+	
+	div.notice {
+		background-color: #ccffcc;
+	}
+	
+	div.notice:before {
+		content: url(images/check.png);
+		background-color: #ccffcc;
 	}
 
 /***********************/
@@ -336,4 +369,51 @@
 	
 	.hidden {
 		display: none;
+	}
+	
+/****************/
+/**** HOVERS ****/
+/****************/
+	.hoversource {
+		display:inline-block;
+		border-bottom-style: dotted;
+		border-bottom-width: 2px;
+		border-bottom-color: #0000F0;
+		position: relative;
+		margin-right: -4px;
+		margin-bottom: -2.5px;
+	}
+	
+	.target {
+		display: none;
+		padding: 7px;
+		border: 1px #333388 solid;
+		width: 200px;
+		position: absolute;
+		left: 0px;
+		top: 19px;
+		border-radius: 3px;
+		box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+		font-size: 14px;
+		line-height: 1.4;
+		z-index: 1;
+		background-color: #cce6ff;
+	}
+	
+	.target:before {
+		position: absolute;
+		content: '';
+		width: 0;
+		height: 0;
+		border: 4px solid transparent;
+		border-bottom-color: #171a1c;
+		left: 10px;
+		top: -8px;
+	}
+	
+	.hoversource:hover .target {
+		display: block;
+		transform-origin: 100% 0%;
+		-webkit-animation: fadeIn 0.3s ease-in-out;
+		animation: fadeIn 0.3s ease-in-out;
 	}

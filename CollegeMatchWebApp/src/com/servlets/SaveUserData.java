@@ -74,7 +74,7 @@ public class SaveUserData extends HttpServlet {
 				}
 			}
 			
-			response.sendRedirect("editmyuser");
+			response.sendRedirect("editmyuser?success");
 		}
 	}
 }
