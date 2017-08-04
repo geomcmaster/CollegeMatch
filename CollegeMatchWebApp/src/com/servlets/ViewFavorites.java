@@ -20,6 +20,8 @@ public class ViewFavorites extends HttpServlet {
 		
 		UserDAO db = new UserDAO();
 		
+		boolean successfulSave = (request.getParameter("success") != null);
+		
 		List<FavoriteSchool> favs = db.getFavSchools(username);
 		
 		String[] favSchools = new String[favs.size()];
@@ -45,6 +47,12 @@ public class ViewFavorites extends HttpServlet {
 					schoolValues[10], favValues[1], favValues[2], favValues[3], favValues[4]};
 			String output = String.join("|",schoolData);
 			favSchools[i] = output;
+		}
+		
+		if (successfulSave) {
+			request.setAttribute("success",1);
+		} else {
+			request.setAttribute("success",0);
 		}
 		
 		if (favSchools.length > 0) {

@@ -19,15 +19,33 @@ public class SaveFavorite extends HttpServlet {
 		String username = (String)request.getAttribute("user");
 		
 		int schoolId = Integer.parseInt(request.getParameter("schoolId"));
-		int rank = Integer.parseInt(request.getParameter("rank"));
+		int rank = 0;
+		int finAid = 0;
+		int loans = 0;
+		int merit = 0;
+		String rankInput = request.getParameter("rank");
+		if (rankInput.length() > 0) {
+			rank = Integer.parseInt(rankInput);
+		}
 		String appStatus = request.getParameter("appstatus");
-		int finAid = Integer.parseInt(request.getParameter("finaid"));
-		int loans = Integer.parseInt(request.getParameter("loans"));
-		int merit = Integer.parseInt(request.getParameter("merit"));
+		String finAidInput = request.getParameter("finaid");
+		if (finAidInput.length() > 0) {
+			finAid = Integer.parseInt(finAidInput);
+		}
+		
+		String loanInput = request.getParameter("loans");
+		if (loanInput.length() > 0) {
+			loans = Integer.parseInt(loanInput);
+		}
+		
+		String meritInput = request.getParameter("merit");
+		if (meritInput.length() > 0) {
+			merit = Integer.parseInt(meritInput);
+		}
 		
 		UserDAO db = new UserDAO();
 		db.updateFavSchool(username, schoolId, rank, appStatus, finAid, loans, merit);
 		
-		response.sendRedirect("myfavorites");
+		response.sendRedirect("myfavorites?success=1");
 	}
 }
