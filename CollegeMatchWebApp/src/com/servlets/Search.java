@@ -9,6 +9,7 @@ import main.java.CondVal;
 import main.java.CondType;
 import main.java.Condition;
 import main.java.FavoriteSchool;
+import main.java.SortColumn;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,14 @@ public class Search extends HttpServlet {
 		List<Condition> conditions = new ArrayList<Condition>();
 		byte tablesToJoin = SchoolDAO.NONE;
 		SchoolDAO db = new SchoolDAO();
+		String sortBy = request.getParameter("sortby");
+		String sortDir = request.getParameter("sortdir");
+		boolean isAsc;
+		if (sortDir.equals("asc")) {
+			isAsc = true;
+		} else {
+			isAsc = false;
+		}
 		
 		for (i = 0; i < criteria.length; i++) {
 			String criterion = criteria[i];
@@ -133,7 +142,7 @@ public class Search extends HttpServlet {
 					}
 				} else {
 					comparison = request.getParameter(opener + "comp");
-					if (request.getParameter(opener + "check").equals("1")) {
+					if (request.getParameter(opener + "check") != null) {
 						if (comparison.equals("lt")) {
 							cType = CondType.LT;
 						} else {
@@ -164,7 +173,37 @@ public class Search extends HttpServlet {
 			}
 		}
 		
-		List<School> results = db.getSchools(conditions, tablesToJoin);
+		List<School> results = null;
+		if (sortBy.equals("") || sortBy == null) {
+			results = db.getSchools(conditions, tablesToJoin);			
+		} else {
+			List<SortColumn> sorts = new ArrayList<SortColumn>();
+			switch(sortBy) {
+			case "name":
+				sorts.add(new SortColumn(School.NAME, isAsc));
+				break;
+			case "cst":
+				sorts.add(new SortColumn(School.L_STATE_STRING, isAsc));
+				sorts.add(new SortColumn(School.L_CITY, isAsc));
+				break;
+			case "adm":
+				sorts.add(new SortColumn(School.ADM_RATE, isAsc));
+				break;
+			case "sat":
+				sorts.add(new SortColumn(School.SAT_AVG, isAsc));
+				break;
+			case "act":
+				sorts.add(new SortColumn(School.ACT_AVG, isAsc));
+				break;
+			case "ist":
+				sorts.add(new SortColumn(School.TUITION_IN, isAsc));
+				break;
+			case "oost":
+				sorts.add(new SortColumn(School.TUITION_OUT, isAsc));
+				break;
+			}
+			results = db.getSchools(conditions, tablesToJoin, sorts);
+		}
 		String[] outputResults = new String[results.size()];
 		// data format: id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg
 		for (i = 0; i < results.size(); i++) {
@@ -174,9 +213,6 @@ public class Search extends HttpServlet {
 		}
 		
 		request.setAttribute("results", outputResults);
-		
-		int userStateInt = getUserStateInt(username);
-		request.setAttribute("userState", userStateInt);
 		
 		outputResults = getUserFavorites(username);
 		request.setAttribute("favs", outputResults);
@@ -385,16 +421,6 @@ public class Search extends HttpServlet {
 			outputResults[i] = "" + curId;
 		}
 		return outputResults;
-	}
-	
-	public static int getUserStateInt(String username) {
-		UserDAO userDb = new UserDAO();
-		Location userResidence = userDb.getResidence(username);
-		int userStateInt = 0;
-		if (userResidence.isStateIntNotNull()) {
-			userStateInt = userResidence.getStateInt(); 
-		}
-		return userStateInt;
 	}
 
 	private Condition intCond(String colName, String comparison, String opener, HttpServletRequest request) {
