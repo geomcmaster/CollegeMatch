@@ -3,6 +3,8 @@ package main.java;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -158,6 +160,10 @@ public class SchoolDAO {
 			case IN: condStr += " IN ?";
 						val.setIndex(i.getAndIncrement());
 						break;
+			case REVERSE_IN:
+						condStr = "? IN " + condStr + "";
+						val.setIndex(i.getAndIncrement());
+						break;
 		}
 		return condStr;
 	}
@@ -300,6 +306,29 @@ public class SchoolDAO {
 		CondVal v = CondVal.createSingleStringSubQueryVal(subQuery, userName);
 		Condition c = new Condition(School.ID, CondType.IN, v);
 		return c;
+	}
+	
+	/**
+	 * Returns condition for checking whether school contains user-specified field(s) of study
+	 * in its top five fields of study, using OR logic
+	 * 
+	 * @param list of fields
+	 * @return condition for checking whether school contains user-specified field of study
+	 * in its top five fields of study
+	 */
+	public Condition containsSelectedFieldOfStudy(ArrayList<Integer> fieldIDList) {
+		 // WHERE fieldID IN (school.pop_prog_1, pop_prog_2...)
+		List<Condition> userSelectedFieldsOfStudy = new LinkedList<Condition>();
+		Iterator<Integer> fieldIDListIterator = fieldIDList.iterator();
+		while (fieldIDListIterator.hasNext()) {
+			CondVal ForFieldID = CondVal.createIntVal(fieldIDListIterator.next());
+			Condition c = new Condition("(pop_prog_1, pop_prog_2, pop_prog_3, pop_prog_4,"
+					+ " pop_prog_5)", CondType.REVERSE_IN, ForFieldID);
+			userSelectedFieldsOfStudy.add(c);
+		}
+		CondVal orFields = CondVal.createORGroupVal(userSelectedFieldsOfStudy);
+		Condition orFieldsCondition = new Condition("", CondType.OR_GROUP, orFields);
+		return orFieldsCondition;
 	}
 	
 	/**

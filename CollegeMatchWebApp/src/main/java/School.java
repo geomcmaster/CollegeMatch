@@ -147,6 +147,17 @@ public class School {
 	private boolean maleShareIsNotNull;
 	private double femaleShare;
 	private boolean femaleShareIsNotNull;
+	//Adding these preemptively for the single-school query method to be written.
+	private int popProg1ID;
+	private boolean popProg1IDIsNotNull;
+	private int popProg2ID;
+	private boolean popProg2IDIsNotNull;
+	private int popProg3ID;
+	private boolean popProg3IDIsNotNull;
+	private int popProg4ID;
+	private boolean popProg4IDIsNotNull;
+	private int popProg5ID;
+	private boolean popProg5IDIsNotNull;
 	
 	public School() {
 		setNulls();
@@ -181,6 +192,11 @@ public class School {
 		setFirstGenStudentShareIsNotNull(false);
 		setMaleShareIsNotNull(false);
 		setFemaleShareIsNotNull(false);
+		setPopProg1IDIsNotNull(false);
+		setPopProg2IDIsNotNull(false);
+		setPopProg3IDIsNotNull(false);
+		setPopProg4IDIsNotNull(false);
+		setPopProg5IDIsNotNull(false);
 	}
 	
 	/**
@@ -909,4 +925,85 @@ public class School {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public int getPopProg1ID() {
+		return popProg1ID;
+	}
+
+	public void setPopProg1ID(int popProg1ID) {
+		this.popProg1ID = popProg1ID;
+	}
+
+	public boolean isPopProg1IDNotNull() {
+		return popProg1IDIsNotNull;
+	}
+
+	public void setPopProg1IDIsNotNull(boolean popProg1IDIsNotNull) {
+		this.popProg1IDIsNotNull = popProg1IDIsNotNull;
+	}
+
+	public int getPopProg2ID() {
+		return popProg2ID;
+	}
+
+	public void setPopProg2ID(int popProg2ID) {
+		this.popProg2ID = popProg2ID;
+	}
+
+	public boolean isPopProg2IDNotNull() {
+		return popProg2IDIsNotNull;
+	}
+
+	public void setPopProg2IDIsNotNull(boolean popProg2IDIsNotNull) {
+		this.popProg2IDIsNotNull = popProg2IDIsNotNull;
+	}
+
+	public int getPopProg3ID() {
+		return popProg3ID;
+	}
+
+	public void setPopProg3ID(int popProg3ID) {
+		this.popProg3ID = popProg3ID;
+	}
+
+	public boolean isPopProg3IDNotNull() {
+		return popProg3IDIsNotNull;
+	}
+
+	public void setPopProg3IDIsNotNull(boolean popProg3IDIsNotNull) {
+		this.popProg3IDIsNotNull = popProg3IDIsNotNull;
+	}
+
+	public int getPopProg4ID() {
+		return popProg4ID;
+	}
+
+	public void setPopProg4ID(int popProg4ID) {
+		this.popProg4ID = popProg4ID;
+	}
+
+	public boolean isPopProg4IDNotNull() {
+		return popProg4IDIsNotNull;
+	}
+
+	public void setPopProg4IDIsNotNull(boolean popProg4IDIsNotNull) {
+		this.popProg4IDIsNotNull = popProg4IDIsNotNull;
+	}
+
+	public int getPopProg5ID() {
+		return popProg5ID;
+	}
+
+	public void setPopProg5ID(int popProg5ID) {
+		this.popProg5ID = popProg5ID;
+	}
+
+	public boolean isPopProg5IDNotNull() {
+		return popProg5IDIsNotNull;
+	}
+
+	public void setPopProg5IDIsNotNull(boolean popProg5IDIsNotNull) {
+		this.popProg5IDIsNotNull = popProg5IDIsNotNull;
+	}
+	
 }
