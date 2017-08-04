@@ -40,7 +40,7 @@
 								<option value="50">50mi</option>
 								<option value="100">100mi</option>
 							</select>
-							<select id='crit<c:out value="${i}" />comp' onChange="toggleBetween(this)">
+							<select id='crit<c:out value="${i}" />comp' name='crit<c:out value="${i}" />comp' onChange="toggleBetween(this)">
 								<option value="lt">less than</option>
 								<option value="bet">between</option>
 								<option value="gt">greater than</option>
