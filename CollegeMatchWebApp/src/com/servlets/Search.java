@@ -390,7 +390,7 @@ public class Search extends HttpServlet {
 				curStateInt = curLoc.getStateInt();
 			}
 			if (curLoc.isStateStrNotNull()) {
-				curStateAbbr = curLoc.getStateAbbreviation();
+				curStateAbbr = curLoc.getStateStr();
 			}
 		}
 		
