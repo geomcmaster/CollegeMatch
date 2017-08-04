@@ -20,14 +20,14 @@ public class ModifyFavorite extends HttpServlet {
 		
 		String action = request.getParameter("modifyAction");
 		int schoolId = Integer.parseInt(request.getParameter("modifyId"));
-		String[] lastResults = request.getParameter("comboResults").split("[^]");
+		String[] lastResults = request.getParameter("searchresults").split("\\^");
 		String userState = request.getParameter("userState");
 		
 		UserDAO db = new UserDAO();
 		
-		if (action == "add") {
+		if (action.equals("add")) {
 			db.addFavSchool(username, schoolId);
-		} else if (action == "delete") {
+		} else if (action.equals("delete")) {
 			db.deleteFavSchool(username, schoolId);
 		}
 		
