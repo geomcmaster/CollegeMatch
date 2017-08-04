@@ -48,7 +48,7 @@
 							<select id='crit<c:out value="${i}" />level'>
 								<option value="1">4-year</option>
 								<option value="2">2-year</option>
-								<option value="3"><2-year</option>
+								<option value="3">&lt;2-year</option>
 							</select>
 							<input type="checkbox" name='crit<c:out value="${i}" />check' id='crit<c:out value="${i}" />check' value="1" />
 							<input class="number" type="number" name='crit<c:out value="${i}" />num1' id='crit<c:out value="${i}" />num1' />
