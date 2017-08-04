@@ -1,6 +1,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "f" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix = "m" uri = "http://www.versorbooks.com/math.tld" %>
 
 <html>
 <head>
@@ -32,8 +33,11 @@
 			<input type="hidden" name="userState" id="userState" value='<c:out value="${userState}" />' />
 			<input type="hidden" name="modifyAction" id="modifyAction" />
 			<input type="hidden" name="modifyId" id="modifyId" />
+			<c:if test="${fn:length(results) > 50}">
+				<div class="warning" id="sizewarning">Your query has generated more than 50 results. Only the first 50 are shown. Try narrowing your search parameters to find the schools you want.</div>
+			</c:if>
 		<table class="college_list">
-			<c:forEach items="${results}" var="school">
+			<c:forEach items="${results}" var="school" end="${m:min(fn:length(results),50)}">
 				<c:set var="schoolSplit" value="${fn:split(school, '|')}" />
 				<c:set var="id" value="${fn:trim(schoolSplit[0])}" />
 				<c:set var="name" value="${fn:trim(schoolSplit[1])}" />

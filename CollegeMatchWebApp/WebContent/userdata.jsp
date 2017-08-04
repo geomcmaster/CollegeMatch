@@ -26,13 +26,13 @@
 		<div id="title">
 			<h2>Edit My Data</h2>
 		</div>
-		<form id="editdata" action="savedata" method="POST">
 
 		<!-- Warnings -->
 		<div id="pwwarning" class="warning hidden">The password you entered as your old password was incorrect. No changes have been made to your user record.</div>
 		<div id="successnotice" class="notice hidden">Your data has been saved successfully!</div>
 
-		<table id="userdata">
+		<form id="editdata" action="savedata" method="POST">
+		<table class="userdata">
 			<tr class="newsection">
 				<td class="label">Username:</td>
 				<td class="input"><c:out value="${user}" /></td>
@@ -74,10 +74,17 @@
 			</tr><tr>
 				<td></td>
 				<td class="input" id="fieldlist"></td> <!-- list favorites here -->
+			</tr><tr>
+				<td></td>
+				<td class="input"><input type="submit" id="edit_submit" value="Save Data" /></td>
 			</tr>
+		</table>
+		</form>
+		<form id="editpw" action="savepw" method="POST">
+		<table class="userdata">
 			<!-- Password -->
 			<tr class="newsection">
-				<td colspan="2">To change your password, fill in all three of the following fields; otherwise, leave them all blank.</td>
+				<td colspan="2" style="border-top: 1px darkgray solid;">To change your password, fill in all three of the following fields; otherwise, leave them all blank.</td>
 			</tr><tr>
 				<td class="label"><label for="old_pw">Old Password:</label></td>
 				<td class="input"><input class="inbox" type="password" id="old_pw" name="old_pw" />
@@ -89,7 +96,7 @@
 				<td class="input"><input class="inbox" type="password" id="pwcheck" name="pwcheck" onblur="comparePWs()" />
 			</tr><tr>
 				<td class="label"></td>
-				<td class="input"><input type="submit" id="edit_submit" value="Save" onclick="return checkForm()" /></td>
+				<td class="input"><input type="submit" id="pw_submit" value="Save Password" onclick="return checkForm()" /></td>
 			</tr>
 		</table>
 		<div style="float:left;" id="nomatch" class="hidden alert">!! The passwords you have entered do not match.</div>

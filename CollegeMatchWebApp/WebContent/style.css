@@ -96,7 +96,7 @@
 		width:100%;
 	}
 	
-	table#userdata, table#editfav {
+	table.userdata, table#editfav {
 		width: 75%;
 		margin: auto;
 	}
@@ -329,12 +329,15 @@
 	
 	div.warning, div.notice {
 		border: 1px black solid;
-		padding: 3px;
+		padding: 3 3 3 30;
 		margin-bottom: 10px;
+		position: relative;
 	}
 	
 	div.warning:before, div.notice:before {
-		padding: 3px;
+		padding: 0 3 3 3;
+		position: absolute;
+		left: 5px;
 	}
 	
 	div.warning {
@@ -343,7 +346,7 @@
 	
 	div.warning:before {
 		content: url(images/warning1.png);
-		background-color: #fdc968;
+		top: 30%;
 	}
 	
 	div.notice {
@@ -352,7 +355,7 @@
 	
 	div.notice:before {
 		content: url(images/check.png);
-		background-color: #ccffcc;
+		top: 20%;
 	}
 
 /***********************/
