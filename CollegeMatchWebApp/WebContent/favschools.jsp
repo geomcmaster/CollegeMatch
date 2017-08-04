@@ -31,6 +31,9 @@
 		
 		<!-- Warnings -->
 		<div id="nofavwarning" class="warning hidden">You don't have any favorite schools.</div>
+		<c:if test="${success == 1}">
+			<div id="successnotice" class="notice">Favorite data saved successfully!</div>
+		</c:if>
 		
 		<!-- link to search for more->find schools -->
 		<p>Want to find more? Go to <a href="schoolsearch">search</a>!</p>
@@ -64,79 +67,126 @@
 								<td class="input"><a href=""><!--delete action--><img src="images/delete-128.png" width="14"></a></td>
 							</tr><tr>
 								<td>
-									<dt>Application Status</dt>
-										<dd><c:out value="${status}" /></dd>
-										
-									<dt>Financial Aid</dt>
-										<dd>
-											<c:choose>
-												<c:when test="${finAid > 0}">
-													<f:formatNumber type="CURRENCY" value="${finAid}" />
-												</c:when>
-												<c:otherwise>
-													None.
-												</c:otherwise>
-											</c:choose>
-										</dd>
-										
-									<dt>Loan Amount</dt>
-										<dd>
-											<c:choose>
-												<c:when test="${loans > 0}">
-													<f:formatNumber type="CURRENCY" value="${loans}" />
-												</c:when>
-												<c:otherwise>
-													None.
-												</c:otherwise>
-											</c:choose>
-										</dd>
-										
-									<dt>Merit Scholarships</dt>
-										<dd>
-											<c:choose>
-												<c:when test="${merit > 0}">
-													<f:formatNumber type="CURRENCY" value="${merit}" />
-												</c:when>
-												<c:otherwise>
-													None.
-												</c:otherwise>
-											</c:choose>
-										</dd>
-										
+									<dl>
+										<dt>Application Status</dt>
+											<dd>
+												<c:choose>
+													<c:when test="${fn:length(status) > 0}">
+														<c:out value="${status}" />
+													</c:when>
+													<c:otherwise>
+														No status yet.
+													</c:otherwise>
+												</c:choose>
+											</dd>
+											
+										<dt>Financial Aid</dt>
+											<dd>
+												<c:choose>
+													<c:when test="${finAid > 0}">
+														<f:formatNumber type="CURRENCY" value="${finAid}" />
+													</c:when>
+													<c:otherwise>
+														None.
+													</c:otherwise>
+												</c:choose>
+											</dd>
+											
+										<dt>Loan Amount</dt>
+											<dd>
+												<c:choose>
+													<c:when test="${loans > 0}">
+														<f:formatNumber type="CURRENCY" value="${loans}" />
+													</c:when>
+													<c:otherwise>
+														None.
+													</c:otherwise>
+												</c:choose>
+											</dd>
+											
+										<dt>Merit Scholarships</dt>
+											<dd>
+												<c:choose>
+													<c:when test="${merit > 0}">
+														<f:formatNumber type="CURRENCY" value="${merit}" />
+													</c:when>
+													<c:otherwise>
+														None.
+													</c:otherwise>
+												</c:choose>
+											</dd>
+									</dl>
 								</td>
 								<td class="input alt-action"><a href='editFav?id=<c:out value="${id}" />'>Edit details</a></td>
 								
 							</tr><tr>
 								
 								<td>
-									<dt>School URL</dt>
-										<dd><a href='<c:out value="${url}" />'><c:out value="${url}" /></a></dd>
-										
-									<dt>Admission Rate</dt>
-										<dd><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></dd>
-										
-									<dt>Tuition</dt>
-										<dd>
+									<dl>
+										<dt>School URL</dt>
+											<dd><a href='<c:out value="${url}" />'><c:out value="${url}" /></a></dd>
+											
+										<dt>Admission Rate</dt>
+											<dd>
 											<c:choose>
-												<c:when test="${userState == stateId}">
-													<f:formatNumber type="CURRENCY" value="${inTuition}" />
+												<c:when test="${admRate eq '0.0'}">
+													No data
 												</c:when>
 												<c:otherwise>
-													<f:formatNumber type="CURRENCY" value="${outTuition}" />
+													<f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" />
 												</c:otherwise>
 											</c:choose>
-											 / year
 										</dd>
+											
+										<dt>In-State Tuition</dt>
+											<c:choose>
+												<c:when test="${inTuition eq '0'}">
+													<dd>No data</dd>
+												</c:when>
+												<c:otherwise>
+													<dd<c:if test="${userState eq stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+												</c:otherwise>
+											</c:choose>
+										
+										<dt>Out-of-State Tuition</dt>
+											<c:choose>
+												<c:when test="${outTuition eq '0'}">
+													<dd>No data</dd>
+												</c:when>
+												<c:otherwise>
+													<dd<c:if test="${userState ne stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+												</c:otherwise>
+											</c:choose>
+
+									</dl>
 								</td>
 								<td>
-									<dt>Location</dt>
-										<dd><c:out value="${city}" />, <c:out value="${stateAbbr}" /></dd>
-									
-									<dt>Average Test Scores</dt>
-										<dd>
-											SAT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" /><br>
-											ACT: <f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
-										</dd>
+									<dl>
+										<dt>Location</dt>
+											<dd><c:out value="${city}" />, <c:out value="${stateAbbr}" /></dd>
+										
+										<dt>Average Test Scores</dt>
+											<dd>
+												SAT: 
+												<c:choose>
+													<c:when test="${sat eq '0.0'}">
+														No data
+													</c:when>
+													<c:otherwise>
+														<f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${sat}" />
+													</c:otherwise>
+												</c:choose><br />
+												ACT: 
+												<c:choose>
+													<c:when test="${act eq '0.0'}">
+														No data
+													</c:when>
+													<c:otherwise>
+														<f:formatNumber type="NUMBER" maxFractionDigits="0" groupingUsed="false" value="${act}" />
+													</c:otherwise>
+												</c:choose>
+											</dd>
+									</dl>
 								</td>
 							</tr>
 						</table>
