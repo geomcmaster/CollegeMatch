@@ -94,6 +94,7 @@ function showKids(source) {
 		case "nhpi":
 		case "multi":
 		case "nonres":
+		case "meddebt":
 			document.getElementById(strOpen + "comp").classList.remove("hidden");
 			document.getElementById(strOpen + "num1").classList.remove("hidden");
 			break;
