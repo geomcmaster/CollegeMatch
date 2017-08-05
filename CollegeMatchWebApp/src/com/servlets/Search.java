@@ -133,12 +133,16 @@ public class Search extends HttpServlet {
 				break;
 			case "special":
 				if (criterion.equals("favorites")) {
-					if (request.getParameter(opener + "check").equals("1")) {
-						conditions.add(db.favsInOffers(username));
+					if (request.getParameter(opener + "check") != null) {
+						if (request.getParameter(opener + "check").equals("1")) {
+							conditions.add(db.favsInOffers(username));
+						}
 					}
 				} else if (criterion.equals("fav5")) {
-					if (request.getParameter(opener + "check").equals("1")) {
-						conditions.add(db.favsInTopFive(username));
+					if (request.getParameter(opener + "check") != null) {
+						if (request.getParameter(opener + "check").equals("1")) {
+							conditions.add(db.favsInTopFive(username));
+						}
 					}
 				} else {
 					comparison = request.getParameter(opener + "comp");
@@ -167,8 +171,10 @@ public class Search extends HttpServlet {
 				}
 				break;
 			case "boolean":
-				cValue = CondVal.createIntVal(Integer.parseInt(request.getParameter(opener + "check")));
-				conditions.add(new Condition(colName,CondType.EQ,cValue));
+				if (request.getParameter(opener + "check") != null) {
+					cValue = CondVal.createIntVal(Integer.parseInt(request.getParameter(opener + "check")));
+					conditions.add(new Condition(colName,CondType.EQ,cValue));
+				}
 				break;
 			}
 		}

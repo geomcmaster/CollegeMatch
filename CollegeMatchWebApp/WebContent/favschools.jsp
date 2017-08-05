@@ -124,7 +124,7 @@
 								<td>
 									<dl>
 										<dt>School URL</dt>
-											<dd><a href='<c:out value="${url}" />'><c:out value="${url}" /></a></dd>
+											<dd><a href='<c:out value="http://${url}" />'><c:out value="${url}" /></a></dd>
 											
 										<dt>Admission Rate</dt>
 											<dd>
