@@ -19,3 +19,13 @@ Java program for creating the database using the College Scorecard dataset.
 
 Coordinates table data must be imported separately from csv (the table itself is created, however).
 The three stored procedures used by the application are not at this time created by DBBuilder code and so they must be added manually.
+
+Requires command line arguments:
+1. API key
+2. DB username
+3. DB password
+4. Run-type option [1-4]
+    * 1: Drop database if it exists. Create database and populate.
+    * 2: Drop tables if they exist. Create tables and populate.
+    * 3: Clear tables and repopulate.
+    * 4: Do nothing before populating tables.
