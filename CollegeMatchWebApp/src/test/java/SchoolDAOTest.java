@@ -370,14 +370,40 @@ public class SchoolDAOTest {
 		String userName = "distTest";
 		String pw = "distPW";
 		userDAO.createUser(userName, pw);
-		userDAO.modifyResidence(userName, "Rochester", 36, 14624);
+		//no matches
+		assertEquals(
+				"Does not return NO COND", CondType.NO_COND, 
+				schoolDAO.distanceRange(100, userName).getConditionType());
+		//one state
+		userDAO.modifyResidence(userName, "San Diego", 6, 92101);
 		Condition c = schoolDAO.distanceRange(75, userName);
 		List<Condition> conditions = new LinkedList<Condition>();
 		conditions.add(c);
 		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.COORDINATES);
 		for (School school : schools) {
-			System.out.println(school.getName());
+			if (school.getLocation().isStateIntNotNull()) {
+				int state = school.getLocation().getStateInt();
+				assertEquals("Non-California state matched", 6, state);
+			}
 		}
+		//multiple states
+		Condition c2 = schoolDAO.distanceRange(275, userName);
+		conditions = new LinkedList<Condition>();
+		conditions.add(c2);
+		schools = schoolDAO.getSchools(conditions, SchoolDAO.COORDINATES);
+		boolean arizonaMatchFound = false;
+		for (School school : schools) {
+			if (school.getLocation().isStateIntNotNull()) {
+				int state = school.getLocation().getStateInt();
+				if (state != 6) {
+					assertEquals("State not California or Arizona", 4, state);
+					if (state == 4) {
+						arizonaMatchFound = true;
+					}
+				}
+			}
+		}
+		assertTrue("No Arizona schools found", arizonaMatchFound);
 	}
 	
 	@After

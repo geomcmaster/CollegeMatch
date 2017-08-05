@@ -366,7 +366,9 @@ public class SchoolDAO {
 	}
 	
 	/**
-	 * Returns a condition for filtering on schools within a certain range of user zip
+	 * Returns a condition for filtering on schools within a certain range of user zip.
+	 * If coordinates are not found for the user's ZIP code, it returns a Condition of type
+	 * NO_COND
 	 * 
 	 * @param distance Distance in miles
 	 * @param userName User with the ZIP to use
@@ -376,17 +378,20 @@ public class SchoolDAO {
 		double userLat = 0;
 		double userLon = 0;
 		String query = "SELECT coordinates.latitude, coordinates.longitude FROM user "
-				+ "JOIN residence ON user.ID = residence.std_ID "
-				+ "JOIN location ON location.ID = residence.loc_ID "
-				+ "JOIN coordinates ON location.ZIP = coordinates.ZIP;";
-		Statement getUserCoord = null;
+				+ "JOIN residence ON user.ID = residence.std_ID JOIN location ON location.ID = residence.loc_ID "
+				+ "JOIN coordinates ON location.ZIP = coordinates.ZIP WHERE user.ID = ?";
+		
+		PreparedStatement getUserCoord = null;
 		ResultSet userCoord = null;
 		try {
-			getUserCoord = dbUtil.getConnection().createStatement();
-			userCoord = getUserCoord.executeQuery(query);
+			getUserCoord = dbUtil.getConnection().prepareStatement(query);
+			getUserCoord.setString(1, userName);
+			userCoord = getUserCoord.executeQuery();
 			if (userCoord.next()) {
 				userLat = userCoord.getDouble(1);
 				userLon = userCoord.getDouble(2);
+			} else {
+				return new Condition("", CondType.NO_COND, null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
