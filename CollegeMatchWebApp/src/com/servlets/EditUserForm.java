@@ -62,6 +62,14 @@ public class EditUserForm extends HttpServlet {
 					fieldArray[i] = favorites.get(i).getRank() + "|" + favorites.get(i).getFieldOfStudy();
 				}
 			}
+		} else {
+			List<FavoriteFieldOfStudy> favorites = db.getFavFields(username);
+			fieldArray = new String[favorites.size()];
+			for (int i = 0; i < favorites.size(); i++) {
+				if (favorites.get(i).isRankNotNull() && favorites.get(i).isFieldOfStudyNotNull()) {
+					fieldArray[i] = favorites.get(i).getRank() + "|" + favorites.get(i).getFieldOfStudy();
+				}
+			}
 		}
 		
 		request.setAttribute("sat", SAT);

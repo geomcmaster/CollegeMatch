@@ -80,22 +80,24 @@ function deleteField(el) {
 	var hidInput = document.getElementById("hidField");
 	var hidSplit = hidInput.value.split(",");
 	var deleteList = document.getElementById("hidDelete");
-	var toDelete;
+	var toDelete = -1;
 	for (var i = 0; i < hidSplit.length; i++) {
-		var rankSplit = hidSplit[i].split("|")
-		if (rankSplit[0] > delRank) {
+		var rankSplit = hidSplit[i].split("|");
+		if (parseInt(rankSplit[0]) > parseInt(delRank)) {
 			rankSplit[0]--;
-		} else if (rankSplit[0] == delRank) {
+		} else if (parseInt(rankSplit[0]) == parseInt(delRank)) {
 			toDelete = i;
 		}
 		hidSplit[i] = rankSplit.join("|");
 	}
 	if (deleteList.value.length > 0) {
-		deleteList.value = deleteList.value + "," + hidSplit[toDelete].split("|")[1];
+		deleteList.value = deleteList.value + "," + fieldId;
 	} else {
-		deleteList.value = hidSplit[toDelete].split("|")[1];
+		deleteList.value = fieldId;
 	}
-	hidSplit.splice(toDelete, 1);
+	if (toDelete != -1) {
+		hidSplit.splice(toDelete, 1);
+	}
 	hidInput.value = hidSplit.join(",");
 }
 
@@ -110,14 +112,16 @@ function addField() {
 	var newDiv = newField(favTD, totalCount, totalCount, newOpt);
 	
 	var deleteList = document.getElementById("hidDelete");
-	var deleteSplit = deleteList.split(",");
-	var toDelete;
+	var deleteSplit = deleteList.value.split(",");
+	var toDelete = -1;
 	for (var i = 0; i < deleteSplit.length; i++) {
 		if (deleteSplit[0] == newOptVal) {
 			toDelete = i;
 		}
 	}
-	deleteSplit.splice(toDelete, 1);
+	if (toDelete != -1) {
+		deleteSplit.splice(toDelete, 1);
+	}
 	deleteSplit.value = deleteSplit.join(",");
 	
 	reorderBelow(newDiv, totalCount);
@@ -142,10 +146,10 @@ function reorderFavs(elChanger) {
 	for (i = 0; i < hidSplit.length; i++) {
 		rankSplit = hidSplit[i].split("|");
 		if (rankSplit[1] != reorderedKey) {
-			if (rankSplit[0] >= oldRank) {
+			if (parseInt(rankSplit[0]) >= parseInt(oldRank)) {
 				rankSplit[0]--;
 			}
-			if (rankSplit[0] >= newRank) {
+			if (parseInt(rankSplit[0]) >= parseInt(newRank)) {
 				rankSplit[0]++;
 			}
 		} else {
@@ -161,10 +165,10 @@ function reorderFavs(elChanger) {
 	while (sib != null) {
 		sel = sib.getElementsByTagName("select")[0];
 		if (sel != elChanger) {
-			if (sel.options[sel.selectedIndex].value >= oldRank) {
+			if (parseInt(sel.options[sel.selectedIndex].value) >= parseInt(oldRank)) {
 				sel.selectedIndex--;
 			}
-			if (sel.options[sel.selectedIndex].value >= newRank) {
+			if (parseInt(sel.options[sel.selectedIndex].value) >= parseInt(newRank)) {
 				sel.selectedIndex++;
 			}
 		}
@@ -174,10 +178,10 @@ function reorderFavs(elChanger) {
 	while (sib != null) {
 		sel = sib.getElementsByTagName("select")[0];
 		if (sel != elChanger) {
-			if (sel.options[sel.selectedIndex].value >= oldRank) {
+			if (parseInt(sel.options[sel.selectedIndex].value) >= parseInt(oldRank)) {
 				sel.selectedIndex--;
 			}
-			if (sel.options[sel.selectedIndex].value >= newRank) {
+			if (parseInt(sel.options[sel.selectedIndex].value) >= parseInt(newRank)) {
 				sel.selectedIndex++;
 			}
 		}
@@ -255,7 +259,7 @@ function removeFromSelect(fieldName) {
 function showInSelect(fieldName) {
 	var favSel = document.getElementById("fav_field_add");
 	var spans = favSel.getElementsByTagName("span");
-	for (i = 0; i < spans.length; i++) {
+	for (var i = 0; i < spans.length; i++) {
 		var opt = spans[i].children[0];
 		if (opt.text == fieldName) {
 			opt.classList.remove("hidden");
@@ -280,7 +284,7 @@ function getNameFromDiv(elDiv) {
 function findKey(fieldName) {
 	var elSel = document.getElementById("fav_field_add");
 	var opts = elSel.getElementsByTagName("option");
-	for (i = 0; i < opts.length; i++) {
+	for (var i = 0; i < opts.length; i++) {
 		if (opts[i].text == fieldName) {
 			return opts[i].value;
 		}
