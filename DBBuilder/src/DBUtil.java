@@ -338,6 +338,7 @@ public class DBUtil {
 			stmt.execute("DELETE FROM favoriteFieldsOfStudy");
 			stmt.execute("DELETE FROM favoriteSchools");
 			stmt.execute("DELETE FROM offers");
+			stmt.execute("DELETE FROM coordinates");
 		} catch (SQLException e) {
 			System.out.println(e.toString());
 		} finally {
