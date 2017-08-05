@@ -71,7 +71,7 @@
 				</c:forEach>
 				
 				<tr>
-					<td><label for="sortby">Sort by:</label></td>
+					<td class="input"><label for="sortby">Sort by:</label></td>
 					<td class="input">
 						<select name="sortby" id="sortby" class="inbox">
 							<option></option>

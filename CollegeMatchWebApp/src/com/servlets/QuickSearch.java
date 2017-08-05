@@ -54,11 +54,11 @@ public class QuickSearch extends HttpServlet {
 		
 		request.setAttribute("results", outputResults);
 
-		int userStateInt = Search.getUserStateInt(username);
-		request.setAttribute("userState", userStateInt);
-
 		outputResults = Search.getUserFavorites(username);
 		request.setAttribute("favs", outputResults);
+		
+		int userStateInt = Search.getUserStateInt(username);
+		request.setAttribute("userState", userStateInt);
 		
 		getServletContext().getRequestDispatcher("/results.jsp").forward(request,response);
 	}
