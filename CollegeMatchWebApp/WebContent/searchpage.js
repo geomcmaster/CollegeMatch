@@ -129,6 +129,7 @@ function showKids(source) {
 		case "fav5":
 		case "online":
 			document.getElementById(strOpen + "check").classList.remove("hidden");
+			document.getElementById(strOpen + "check").checked = true;
 			document.getElementById(strOpen + "checkLab").classList.remove("hidden");
 			break;
 	}
