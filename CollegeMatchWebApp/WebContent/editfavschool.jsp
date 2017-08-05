@@ -1,5 +1,6 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "f" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
 <head>
@@ -15,6 +16,12 @@
 	
 	<c:import url="menusidebar.html" />
 	
+	<c:set var="rank" value="${fn:trim(favDetails[0])}" />
+	<c:set var="appStatus" value="${fn:trim(favDetails[1])}" />
+	<c:set var="finAid" value="${fn:trim(favDetails[2])}" />
+	<c:set var="loans" value="${fn:trim(favDetails[3])}" />
+	<c:set var="merit" value="${fn:trim(favDetails[4])}" />
+	
 	<!-- EDIT INDIVIDUAL FAVORITE -->
 	<div id="content">
 		<div id="title">
@@ -26,7 +33,7 @@
 			<table id="editfav">
 				<tr>
 					<td class="label"><label for="rank">Rank:</label></td>
-					<td class="input"><input class="number" type="number" id="rank" name="rank" value='<c:out value="${favdetails[0]}" />' min="1" /></td>
+					<td class="input"><input class="number" type="number" id="rank" name="rank" value='<c:out value="${rank}" />' min="1" /></td>
 				</tr><tr>
 					<td class="label"><label for="appstatus">Application Status:</label></td>
 					<td class="input">
@@ -41,13 +48,13 @@
 					</td>
 				</tr><tr>
 					<td class="label"><label for="finaid">Financial Aid:</label></td>
-					<td class="input">$<input class="number" type="number" step="1" id="finaid" name="finaid" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${favdetails[2]}" />' onBlur="calcTotal()" /></td>
+					<td class="input">$<input class="number" type="number" step="1" id="finaid" name="finaid" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${finAid}" />' onBlur="calcTotal()" /></td>
 				</tr><tr>
 					<td class="label"><label for="loans">Loan Amount:</label></td>
-					<td class="input">$<input class="number" type="number" step="1" id="loans" name="loans" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${favdetails[3]}" />' onBlur="calcTotal()" /></td>
+					<td class="input">$<input class="number" type="number" step="1" id="loans" name="loans" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${loans}" />' onBlur="calcTotal()" /></td>
 				</tr><tr>
 					<td class="label"><label for="merit">Merit Scholarships:</label></td>
-					<td class="input">$<input class="number" type="number" step="1" id="merit" name="merit" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${favdetails[4]}" />' onBlur="calcTotal()" /></td>
+					<td class="input">$<input class="number" type="number" step="1" id="merit" name="merit" value='<f:formatNumber type="NUMBER" groupingUsed="false" maxFractionDigits="2" value="${merit}" />' onBlur="calcTotal()" /></td>
 				</tr><tr id="calculation">
 					<td class="label"><span>Total Needed to Attend One Year:</span></td>
 					<td class="input"><span id="costCounter"></span><input type="hidden" id="costStart" value='<c:out value="${cost}" />' /></td>
@@ -71,7 +78,7 @@
 	}
 	
 	// select the correct app status
-	var appStatus = '${favdeteails[1]}';
+	var appStatus = '${appStatus}';
 	var elSelect = document.getElementById("appstatus");
 	var elOptions = elSelect.children;
 	for (var i = 0; i < elOptions.length; i++) {
