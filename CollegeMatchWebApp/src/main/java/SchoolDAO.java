@@ -63,6 +63,8 @@ public class SchoolDAO {
 				queryBuilder.append(buildConditionString(c, index));
 			}
 		}
+		
+		queryBuilder.append(" LIMIT 51");
 
 		return processResults(queryBuilder, conditions);
 	}
@@ -120,6 +122,8 @@ public class SchoolDAO {
 			queryBuilder.append(" ");
 			queryBuilder.append(c.isAscending() ? "ASC" : "DESC");
 		}
+		
+		queryBuilder.append(" LIMIT 51");
 		
 		return processResults(queryBuilder, conditions);
 	}
