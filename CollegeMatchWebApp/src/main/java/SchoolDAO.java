@@ -3,6 +3,7 @@ package main.java;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ public class SchoolDAO {
 	public static final byte GENDER = 0x1;
 	public static final byte ETHNIC = 0x2;
 	public static final byte REGION = 0x4;
+	public static final byte COORDINATES = 0x8;
 	
 	public SchoolDAO() {
 		dbUtil = new DBUtil();
@@ -129,6 +131,8 @@ public class SchoolDAO {
 			return buildSingleStringSubqueryConditionString(c, i);
 		} else if (val.getType() == ValType.OR_GROUP) {
 			return buildORGroupConditionString(c, i).toString();
+		} else if (val.getType() == ValType.DISTANCE) {
+			return val.getDistanceString();
 		}
 		String condStr = c.getColumnName();
 		switch (c.getConditionType()) {
@@ -251,6 +255,9 @@ public class SchoolDAO {
 		if ((tablesToJoin & REGION) == REGION) {
 			queryBuilder.append(" JOIN region ON location.state = region.state");
 		}
+		if ((tablesToJoin & COORDINATES) == COORDINATES) {
+			queryBuilder.append(" JOIN coordinates ON location.ZIP = coordinates.ZIP");
+		}
 		
 		return queryBuilder;
 	}
@@ -359,13 +366,60 @@ public class SchoolDAO {
 	}
 	
 	/**
+	 * Returns a condition for filtering on schools within a certain range of user zip.
+	 * If coordinates are not found for the user's ZIP code, it returns a Condition of type
+	 * NO_COND
+	 * 
+	 * @param distance Distance in miles
+	 * @param userName User with the ZIP to use
+	 * @return
+	 */
+	public Condition distanceRange(int distance, String userName) {
+		double userLat = 0;
+		double userLon = 0;
+		String query = "SELECT coordinates.latitude, coordinates.longitude FROM user "
+				+ "JOIN residence ON user.ID = residence.std_ID JOIN location ON location.ID = residence.loc_ID "
+				+ "JOIN coordinates ON location.ZIP = coordinates.ZIP WHERE user.ID = ?";
+		
+		PreparedStatement getUserCoord = null;
+		ResultSet userCoord = null;
+		try {
+			getUserCoord = dbUtil.getConnection().prepareStatement(query);
+			getUserCoord.setString(1, userName);
+			userCoord = getUserCoord.executeQuery();
+			if (userCoord.next()) {
+				userLat = userCoord.getDouble(1);
+				userLon = userCoord.getDouble(2);
+			} else {
+				return new Condition("", CondType.NO_COND, null);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(userCoord);
+			DBUtil.closeStatement(getUserCoord);
+		}
+		
+		double lon1 = userLon - distance/Math.abs(Math.cos(Math.toRadians(userLat))*69);
+		double lon2 = userLon + distance/Math.abs(Math.cos(Math.toRadians(userLat))*69);
+		double lat1 = userLat - (distance/69);
+		double lat2 = userLat + (distance/69);
+		
+		String distQuery = "3956 * 2 * ASIN(SQRT( POWER(SIN((" + userLat + " - coordinates.latitude) "
+				+ "* pi()/180 / 2), 2) + COS(" + userLat + " * pi()/180) * COS(coordinates.latitude * "
+						+ "pi()/180) * POWER(SIN((" + userLon+ " - coordinates.longitude) * pi()/180 / 2), 2) )) "
+								+ "< " + distance + " AND coordinates.longitude BETWEEN " + lon1 + " AND " + 
+						lon2 + " AND coordinates.latitude BETWEEN " + lat1 + " AND " + lat2;
+		
+		return new Condition("", CondType.DISTANCE, CondVal.createDistanceVal(distQuery));
+	}
+	
+	/**
 	 * This method returns a school object with fields matching the fields selected in the query.
 	 * 
 	 * @param schoolID
-	 * @return School object with fields populated matching the query SELECT <attributes>
-	 * 
+	 * @return
 	 */
-	
 	public School getSingleSchoolViewInfo(int schoolID) {
 		School school = new School();
 		PreparedStatement pstmt = null;
@@ -811,6 +865,7 @@ public class SchoolDAO {
 													break;
 					case OR_GROUP:		insertIntoPrepStmt(val.getOrConditions(), pstmt);	//recursive
 										break;
+					case DISTANCE:		continue;
 				}
 			}
 		}

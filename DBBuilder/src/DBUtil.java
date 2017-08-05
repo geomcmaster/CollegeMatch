@@ -154,6 +154,11 @@ public class DBUtil {
 			+ "PRIMARY KEY (school_ID, field_ID), "
 			+ "FOREIGN KEY (school_ID) REFERENCES school(ID), "
 			+ "FOREIGN KEY (field_ID) REFERENCES fieldsOfStudy(ID) ); ";
+	private static final String COORDINATES_TBL = "CREATE TABLE coordinates ("
+			+ "ZIP INT, "
+			+ "latitude FLOAT NOT NULL, "
+			+ "longitude FLOAT NOT NULL, "
+			+ "PRIMARY KEY (ZIP) ); ";
 	
 	////////////////////////////////////
 	//TABLE CREATION STORED PROCEDURES//
@@ -192,12 +197,14 @@ public class DBUtil {
 			+ "residence, "
 			+ "favoriteFieldsOfStudy, "
 			+ "favoriteSchools, "
-			+ "offers; " 
+			+ "offers, "
+			+ "coordinates; " 
 			+ SCHOOL_LOC_TBL 
 			+ RESIDENCE_TBL 
 			+ FAV_FIELD_TBL 
 			+ FAV_SCHOOL_TBL 
 			+ OFFERS_TBL 
+			+ COORDINATES_TBL
 			+ "END";
 	
 	///////////
