@@ -58,9 +58,8 @@ public class SchoolDAOTest {
 		assertEquals("Name", "Yale University", Yale.getName());
 		assertEquals("URL", "www.yale.edu", Yale.getWebsite());
 		assertEquals("SATAvg", 1493, Yale.getSatAvg(), .01);
-		//TODO add these again after updating DB
-		//assertEquals("SAT25", 1410, Yale.getSat25(), .01);
-		//assertEquals("SAT75", 1600, Yale.getSat75(), .01);
+		assertEquals("SAT25", 1410, Yale.getSat25(), .01);
+		assertEquals("SAT75", 1600, Yale.getSat75(), .01);
 		assertEquals("ACTAvg", 33, Yale.getActAvg(), .01);
 		assertEquals("ACT25", 31, Yale.getAct25(), .01);
 		assertEquals("ACT75", 35, Yale.getAct75(), 01);
@@ -71,31 +70,13 @@ public class SchoolDAOTest {
 		assertEquals("PopProg1", "Social Sciences", Yale.getPopProg1());
 		assertEquals("PopProg2", "Biological and Biomedical Sciences", Yale.getPopProg2());
 		assertEquals("PopProg3", "Multi/Interdisciplinary Studies", Yale.getPopProg3());
+		assertEquals("PopProg4", "History", Yale.getPopProg4());
+		assertEquals("PopProg5", "English Language and Literature/Letters", Yale.getPopProg5());
+		assertEquals("admRate", .063, Yale.getAdmissionRate(), .01);
+		assertEquals("AvgFamInc", 90290, Yale.getAvgFamilyIncome());
+		assertEquals("MedFamInc", 49166, Yale.getMedFamIncome());
+		assertEquals("TuitionIn", 45800, Yale.getTuitionIn());
 		//TODO fix the rest of these
-		if (!Yale.getPopProg4().equals("History")) {
-			System.out.println("PopProg4");
-			testWorks = false;
-		}
-		if (!Yale.getPopProg5().equals("English Language and Literature/Letters")) {
-			System.out.println("PopProg5");
-			testWorks = false;
-		}
-		if (Yale.getAdmissionRate()!=0.063) {
-			System.out.println("admRate");
-			testWorks = false;
-		}
-		if (Yale.getAvgFamilyIncome()!=90290) {
-			System.out.println("AvgFamInc");
-			testWorks = false;
-		}
-		if (Yale.getMedFamIncome()!=49166) {
-			System.out.println("MedFamInc");
-			testWorks = false;
-		}
-		if (Yale.getTuitionIn()!=45800) {
-			System.out.println("TuitionIn");
-			testWorks = false;
-		}
 		if (Yale.getTuitionOut()!=45800) {
 			System.out.println("TuitionOut");
 			testWorks = false;
@@ -367,6 +348,11 @@ public class SchoolDAOTest {
 	}
 	
 	private void testDistance() {
+		testDistanceUser();
+		testDistanceAny();
+	}
+	
+	private void testDistanceUser() {
 		String userName = "distTest";
 		String pw = "distPW";
 		userDAO.createUser(userName, pw);
@@ -388,6 +374,42 @@ public class SchoolDAOTest {
 		}
 		//multiple states
 		Condition c2 = schoolDAO.distanceRange(275, userName);
+		conditions = new LinkedList<Condition>();
+		conditions.add(c2);
+		schools = schoolDAO.getSchools(conditions, SchoolDAO.COORDINATES);
+		boolean arizonaMatchFound = false;
+		for (School school : schools) {
+			if (school.getLocation().isStateIntNotNull()) {
+				int state = school.getLocation().getStateInt();
+				if (state != 6) {
+					assertEquals("State not California or Arizona", 4, state);
+					if (state == 4) {
+						arizonaMatchFound = true;
+					}
+				}
+			}
+		}
+		assertTrue("No Arizona schools found", arizonaMatchFound);
+	}
+	
+	private void testDistanceAny() {
+		//no matches
+		assertEquals(
+				"Does not return NO COND", CondType.NO_COND, 
+				schoolDAO.distanceRange(100, 11111).getConditionType());
+		//one state
+		Condition c = schoolDAO.distanceRange(75, 92101);
+		List<Condition> conditions = new LinkedList<Condition>();
+		conditions.add(c);
+		List<School> schools = schoolDAO.getSchools(conditions, SchoolDAO.COORDINATES);
+		for (School school : schools) {
+			if (school.getLocation().isStateIntNotNull()) {
+				int state = school.getLocation().getStateInt();
+				assertEquals("Non-California state matched", 6, state);
+			}
+		}
+		//multiple states
+		Condition c2 = schoolDAO.distanceRange(275, 92101);
 		conditions = new LinkedList<Condition>();
 		conditions.add(c2);
 		schools = schoolDAO.getSchools(conditions, SchoolDAO.COORDINATES);

@@ -419,6 +419,54 @@ public class SchoolDAO {
 	}
 	
 	/**
+	 * Returns a condition for filtering on schools within a certain range of given zip.
+	 * If coordinates are not found for the given ZIP code, it returns a Condition of type
+	 * NO_COND
+	 * 
+	 * @param distance Distance in miles
+	 * @param zipCode The zip code to search from
+	 * @return
+	 */
+	public Condition distanceRange(int distance, int zipCode) {
+		double userLat = 0;
+		double userLon = 0;
+		String query = "SELECT latitude, longitude FROM coordinates "
+				+ "WHERE ZIP=?";
+		
+		PreparedStatement getUserCoord = null;
+		ResultSet userCoord = null;
+		try {
+			getUserCoord = dbUtil.getConnection().prepareStatement(query);
+			getUserCoord.setInt(1, zipCode);
+			userCoord = getUserCoord.executeQuery();
+			if (userCoord.next()) {
+				userLat = userCoord.getDouble(1);
+				userLon = userCoord.getDouble(2);
+			} else {
+				return new Condition("", CondType.NO_COND, null);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResultSet(userCoord);
+			DBUtil.closeStatement(getUserCoord);
+		}
+		
+		double lon1 = userLon - distance/Math.abs(Math.cos(Math.toRadians(userLat))*69);
+		double lon2 = userLon + distance/Math.abs(Math.cos(Math.toRadians(userLat))*69);
+		double lat1 = userLat - (distance/69);
+		double lat2 = userLat + (distance/69);
+		
+		String distQuery = "3956 * 2 * ASIN(SQRT( POWER(SIN((" + userLat + " - coordinates.latitude) "
+				+ "* pi()/180 / 2), 2) + COS(" + userLat + " * pi()/180) * COS(coordinates.latitude * "
+						+ "pi()/180) * POWER(SIN((" + userLon+ " - coordinates.longitude) * pi()/180 / 2), 2) )) "
+								+ "< " + distance + " AND coordinates.longitude BETWEEN " + lon1 + " AND " + 
+						lon2 + " AND coordinates.latitude BETWEEN " + lat1 + " AND " + lat2;
+		
+		return new Condition("", CondType.DISTANCE, CondVal.createDistanceVal(distQuery));
+	}
+	
+	/**
 	 * This method returns a school object with fields matching the fields selected in the query.
 	 * 
 	 * @param schoolID
