@@ -20,8 +20,17 @@ public class SaveUserData extends HttpServlet {
 		
 		UserDAO db = new UserDAO(); // open connection
 		
-		int SATscore = Integer.parseInt(request.getParameter("edit_sat"));
-		int ACTscore = Integer.parseInt(request.getParameter("edit_act"));
+		int SATscore = 0;
+		String strSat = request.getParameter("edit_sat");
+		if (strSat.length() > 0) {
+			SATscore = Integer.parseInt(strSat);
+		}
+		
+		int ACTscore = 0;
+		String strAct = request.getParameter("edit_act");
+		if (strAct.length() > 0) {
+			ACTscore = Integer.parseInt(strAct);
+		}
 		
 		String city = request.getParameter("edit_loc_city");
 		int stateInt = Integer.parseInt(request.getParameter("edit_loc_state"));
