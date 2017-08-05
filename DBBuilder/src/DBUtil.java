@@ -879,8 +879,8 @@ public class DBUtil {
 			questionMarks += "?";
 			
 			//create SAT_pct_25_cumulative, SAT_pct_75_cumulative
-			double SAT_pct_25_cumulative = result.SAT_25_math + result.SAT_25_reading + result.SAT_25_writing;
-			double SAT_pct_75_cumulative = result.SAT_75_math + result.SAT_75_reading + result.SAT_75_writing;
+			double SAT_pct_25_cumulative = result.SAT_25_math + result.SAT_25_reading;
+			double SAT_pct_75_cumulative = result.SAT_75_math + result.SAT_75_reading;
 			
 			schoolStmt = conn.prepareStatement("INSERT INTO school (ID, name, url, "
 					+ "alias, SAT_avg, SAT_pct_25_cumulative, SAT_pct_75_cumulative,"

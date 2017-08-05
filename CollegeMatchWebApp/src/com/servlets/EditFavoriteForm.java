@@ -53,7 +53,7 @@ public class EditFavoriteForm extends HttpServlet {
 			request.setAttribute("fullName", schoolName);
 			request.setAttribute("id", schoolId);
 
-			getServletContext().getRequestDispatcher("/editfav.jsp").forward(request,response);
+			getServletContext().getRequestDispatcher("/editfavschool.jsp").forward(request,response);
 		}
 	}
 }

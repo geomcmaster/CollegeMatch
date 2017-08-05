@@ -9,6 +9,7 @@ import main.java.CondVal;
 import main.java.CondType;
 import main.java.Condition;
 import main.java.FavoriteSchool;
+import main.java.SortColumn;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,10 +37,18 @@ public class Search extends HttpServlet {
 		List<Condition> conditions = new ArrayList<Condition>();
 		byte tablesToJoin = SchoolDAO.NONE;
 		SchoolDAO db = new SchoolDAO();
+		String sortBy = request.getParameter("sortby");
+		String sortDir = request.getParameter("sortdir");
+		boolean isAsc;
+		if (sortDir.equals("asc")) {
+			isAsc = true;
+		} else {
+			isAsc = false;
+		}
 		
 		for (i = 0; i < criteria.length; i++) {
 			String criterion = criteria[i];
-			if (criterion == null || criterion == "") {
+			if (criterion == null || criterion.equals("")) {
 				continue;
 			}
 			String type = valTyp(criterion);
@@ -95,24 +104,18 @@ public class Search extends HttpServlet {
 				break;
 			case "int":
 				comparison = request.getParameter(opener + "comp");
-				if (comparison == "bet") {
-					int val1 = Integer.parseInt(request.getParameter(opener + "num1"));
-					int val2 = Integer.parseInt(request.getParameter(opener + "num2"));
-					cValue = CondVal.createIntRangeVal(val1, val2);
-					cType = CondType.RANGE;
-				} else {
-					cValue = CondVal.createIntVal(Integer.parseInt(request.getParameter(opener + "num1")));
-					if (comparison == "lt") {
-						cType = CondType.LT;
-					} else {
-						cType = CondType.GT;
-					}
+				
+				conditions.add(intCond(colName, comparison, opener, request));
+				
+				if (comparison.equals("lt")) {
+					cType = CondType.NE;
+					cValue = CondVal.createIntVal(0);
+					conditions.add(new Condition(colName, cType, cValue));
 				}
-				conditions.add(new Condition(colName, cType, cValue));
 				break;
 			case "double":
 				if (colName.contains("|")) {
-					if (colName.split("[|]")[1] == "GENDER") {
+					if (colName.split("[|]")[1].equals("GENDER")) {
 						tablesToJoin |= SchoolDAO.GENDER;
 					} else {
 						tablesToJoin |= SchoolDAO.ETHNIC;
@@ -120,59 +123,45 @@ public class Search extends HttpServlet {
 					colName = colName.split("[|]")[0];
 				}
 				comparison = request.getParameter(opener + "comp");
-				if (comparison == "bet") {
-					double val1 = Double.parseDouble(request.getParameter(opener + "num1"));
-					double val2 = Double.parseDouble(request.getParameter(opener + "num2"));
-					cValue = CondVal.createDoubleRangeVal(val1, val2);
-					cType = CondType.RANGE;
-				} else {
-					cValue = CondVal.createDoubleVal(Double.parseDouble(request.getParameter(opener + "num1")));
-					if (comparison == "lt") {
-						cType = CondType.LT;
-					} else {
-						cType = CondType.GT;
-					}
+				
+				conditions.add(doubleCond(colName, comparison, opener, request));
+				if (comparison.equals("lt")) {
+					cType = CondType.NE;
+					cValue = CondVal.createDoubleVal(0);
+					conditions.add(new Condition(colName, cType, cValue));
 				}
-				conditions.add(new Condition(colName, cType, cValue));
 				break;
 			case "special":
-				if (criterion == "favorites") {
-					if (request.getParameter(opener + "check") == "1") {
+				if (criterion.equals("favorites")) {
+					if (request.getParameter(opener + "check").equals("1")) {
 						conditions.add(db.favsInOffers(username));
 					}
-				} else if (criterion == "fav5") {
-					if (request.getParameter(opener + "check") == "1") {
+				} else if (criterion.equals("fav5")) {
+					if (request.getParameter(opener + "check").equals("1")) {
 						conditions.add(db.favsInTopFive(username));
 					}
 				} else {
 					comparison = request.getParameter(opener + "comp");
-					if (request.getParameter(opener + "check") == "1") {
-						if (comparison == "lt") {
+					if (request.getParameter(opener + "check") != null) {
+						if (comparison.equals("lt")) {
 							cType = CondType.LT;
 						} else {
 							cType = CondType.GT;
 						}
 						Condition cond = null;
-						if (criterion == "sat") {
+						if (criterion.equals("sat")) {
 							cond = db.compareMySAT(cType, username);
 						} else {
 							cond = db.compareMyACT(cType, username);
 						}
 						conditions.add(cond);
 					} else {
-						if (comparison == "bet") {
-							double val1 = Double.parseDouble(request.getParameter(opener + "num1"));
-							double val2 = Double.parseDouble(request.getParameter(opener + "num2"));
-							cValue = CondVal.createDoubleRangeVal(val1, val2);
-							cType = CondType.RANGE;
-						} else {
-							cValue = CondVal.createDoubleVal(Double.parseDouble(request.getParameter(opener + "num1")));
-							if (comparison == "lt") {
-								cType = CondType.LT;
-							} else {
-								cType = CondType.GT;
-							}
-						}
+						conditions.add(doubleCond(colName, comparison, opener, request));
+						
+					}
+					if (comparison.equals("lt")) {
+						cType = CondType.NE;
+						cValue = CondVal.createDoubleVal(0);
 						conditions.add(new Condition(colName, cType, cValue));
 					}
 				}
@@ -184,7 +173,37 @@ public class Search extends HttpServlet {
 			}
 		}
 		
-		List<School> results = db.getSchools(conditions, tablesToJoin);
+		List<School> results = null;
+		if (sortBy.equals("") || sortBy == null) {
+			results = db.getSchools(conditions, tablesToJoin);			
+		} else {
+			List<SortColumn> sorts = new ArrayList<SortColumn>();
+			switch(sortBy) {
+			case "name":
+				sorts.add(new SortColumn(School.NAME, isAsc));
+				break;
+			case "cst":
+				sorts.add(new SortColumn(School.L_STATE_STRING, isAsc));
+				sorts.add(new SortColumn(School.L_CITY, isAsc));
+				break;
+			case "adm":
+				sorts.add(new SortColumn(School.ADM_RATE, isAsc));
+				break;
+			case "sat":
+				sorts.add(new SortColumn(School.SAT_AVG, isAsc));
+				break;
+			case "act":
+				sorts.add(new SortColumn(School.ACT_AVG, isAsc));
+				break;
+			case "ist":
+				sorts.add(new SortColumn(School.TUITION_IN, isAsc));
+				break;
+			case "oost":
+				sorts.add(new SortColumn(School.TUITION_OUT, isAsc));
+				break;
+			}
+			results = db.getSchools(conditions, tablesToJoin, sorts);
+		}
 		String[] outputResults = new String[results.size()];
 		// data format: id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg
 		for (i = 0; i < results.size(); i++) {
@@ -220,6 +239,7 @@ public class Search extends HttpServlet {
 		case "size":
 		case "avginc":
 		case "medinc":
+		case "meddebt":
 		case "tuitionin":
 		case "tuitionout":
 		case "age":
@@ -370,7 +390,7 @@ public class Search extends HttpServlet {
 				curStateInt = curLoc.getStateInt();
 			}
 			if (curLoc.isStateStrNotNull()) {
-				curStateAbbr = curLoc.getStateAbbreviation();
+				curStateAbbr = curLoc.getStateStr();
 			}
 		}
 		
@@ -390,6 +410,16 @@ public class Search extends HttpServlet {
 		
 		return allValues;
 	}
+	
+	public static int getUserStateInt(String username) {		
+ 		UserDAO userDb = new UserDAO();		
+ 		Location userResidence = userDb.getResidence(username);		
+ 		int userStateInt = 0;		
+ 		if (userResidence.isStateIntNotNull()) {		
+ 			userStateInt = userResidence.getStateInt(); 		
+ 		}		
+ 		return userStateInt;		
+ 	}
 
 	public static String[] getUserFavorites(String username) {
 		UserDAO userDb = new UserDAO();
@@ -406,14 +436,54 @@ public class Search extends HttpServlet {
 		}
 		return outputResults;
 	}
-	
-	public static int getUserStateInt(String username) {
-		UserDAO userDb = new UserDAO();
-		Location userResidence = userDb.getResidence(username);
-		int userStateInt = 0;
-		if (userResidence.isStateIntNotNull()) {
-			userStateInt = userResidence.getStateInt(); 
+
+	private Condition intCond(String colName, String comparison, String opener, HttpServletRequest request) {
+		CondType cType = null;
+		CondVal cValue = null;
+		if (comparison.equals("bet")) {
+			int val1 = Integer.parseInt(request.getParameter(opener + "num1"));
+			int val2 = Integer.parseInt(request.getParameter(opener + "num2"));
+			cValue = CondVal.createIntRangeVal(val1, val2);
+			cType = CondType.RANGE;
+		} else {
+			cValue = CondVal.createIntVal(Integer.parseInt(request.getParameter(opener + "num1")));
+			if (comparison.equals("lt")) {
+				cType = CondType.LT;
+			} else {
+				cType = CondType.GT;
+			}
 		}
-		return userStateInt;
+		return new Condition(colName, cType, cValue);
+	}
+	
+	private Condition doubleCond(String colName, String comparison, String opener, HttpServletRequest request) {
+		// these are ALL percentages, so we should convert to 0 <= x <= 1 when appropriate
+		
+		CondType cType = null;
+		CondVal cValue = null;
+		if (comparison.equals("bet")) {
+			double val1 = Double.parseDouble(request.getParameter(opener + "num1"));
+			double val2 = Double.parseDouble(request.getParameter(opener + "num2"));
+			if (val1 > 1) {
+				val1 = val1 / 100;
+			}
+			if (val2 > 1) {
+				val2 = val2 / 100;
+			}
+			cValue = CondVal.createDoubleRangeVal(val1, val2);
+			cType = CondType.RANGE;
+		} else {
+			double val = Double.parseDouble(request.getParameter(opener + "num1"));
+			if (val > 1) {
+				val = val / 100;
+			}
+			cValue = CondVal.createDoubleVal(val);
+			if (comparison.equals("lt")) {
+				cType = CondType.LT;
+			} else {
+				cType = CondType.GT;
+			}
+		}
+		return new Condition(colName, cType, cValue);
 	}
 }
