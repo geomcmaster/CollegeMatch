@@ -239,7 +239,8 @@ public class SchoolDAO {
 	private StringBuilder selectAndJoin(byte tablesToJoin) {
 		String baseQuery = 
 				"SELECT school.ID AS ID, school.name AS name, school.url AS url, school.tuition_and_fees_out AS outOfState, "
-				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"
+				+ "school.tuition_and_fees_in AS inState, location.city AS city, location.state AS state, "
+				+ "location.state_string AS stateStr, school.SAT_avg AS SAT_avg,"
 				+ "school.ACT_avg AS ACT_avg, school.adm_rate AS adm_rate FROM school";
 		StringBuilder queryBuilder = new StringBuilder(baseQuery);
 		//JOINS
@@ -431,7 +432,7 @@ public class SchoolDAO {
 					+ "ethnicdemographics.white, ethnicdemographics.black, ethnicdemographics.hispanic, ethnicdemographics.asian,"
 					+ "ethnicdemographics.american_indian_alaskan_native, ethnicdemographics.native_hawaiian_pacific_islander, "
 					+ "ethnicdemographics.two_or_more AS multiethnic, ethnicdemographics.unknown AS unknownEthnicity, "
-					+ "ethnicdemographics.nonresident AS nonresidentAlien, location.city, location.state_string, school.avg_earnings_6_years_after_matriculation,"
+					+ "ethnicdemographics.nonresident AS nonresidentAlien, location.city, location.state, location.state_string, school.avg_earnings_6_years_after_matriculation,"
 					+ "school.med_debt";
 			String FROM = 
 					" FROM school JOIN school_loc ON school.ID = school_loc.school_id"
@@ -454,6 +455,12 @@ public class SchoolDAO {
 					school.setLocationIsNotNull(true);
 					loc.setCity(city);
 					loc.setCityIsNotNull(true);
+				}
+				int state_int = rs.getInt("state");
+				if (!rs.wasNull()) {
+					school.setLocationIsNotNull(true);
+					loc.setStateInt(state_int);
+					loc.setStateIntIsNotNull(true);
 				}
 				String state = rs.getString("state_string");
 				if (!rs.wasNull()) {
@@ -753,6 +760,12 @@ public class SchoolDAO {
 					s.setLocationIsNotNull(true);
 					l.setCityIsNotNull(true);
 					l.setCity(city);
+				}
+				int state_int = rs.getInt("state");
+				if (!rs.wasNull()) {
+					s.setLocationIsNotNull(true);
+					l.setStateIntIsNotNull(true);
+					l.setStateInt(state_int);
 				}
 				String state = rs.getString("stateStr");
 				if (!rs.wasNull()) {
