@@ -2,10 +2,12 @@ package com.servlets;
 
 import java.io.IOException;
 import main.java.UserDAO;
+import main.java.FavoriteSchool;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public class SaveFavorite extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -20,6 +22,7 @@ public class SaveFavorite extends HttpServlet {
 		
 		int schoolId = Integer.parseInt(request.getParameter("schoolId"));
 		int rank = 0;
+		int oldRank = 0;
 		int finAid = 0;
 		int loans = 0;
 		int merit = 0;
@@ -44,6 +47,37 @@ public class SaveFavorite extends HttpServlet {
 		}
 		
 		UserDAO db = new UserDAO();
+		
+		// UPDATE all other ranks
+		List<FavoriteSchool> curFavs = db.getFavSchools(username);
+		for (int i = 0; i < curFavs.size(); i++) {
+			int curId = curFavs.get(i).getSchool().getId();
+			if (curId == schoolId) {
+				oldRank = curFavs.get(i).getRank();
+				curFavs.remove(i);
+				break;
+			}
+		}
+		for (int i = 0; i < curFavs.size(); i++) {
+			FavoriteSchool fs = curFavs.get(i);
+			int curId = fs.getSchool().getId();
+			int curRank = fs.getRank();
+			String curApp = fs.getStatus();
+			int curFin = fs.getFinancialAid();
+			int curLoan = fs.getLoan();
+			int curMerit = fs.getMerit();
+			
+			if (curRank > oldRank) {
+				curRank--;
+			}
+			if (curRank >= rank) {
+				curRank++;
+			}
+			if (curRank != fs.getRank()) {
+				db.updateFavSchool(username, curId, curRank, curApp, curFin, curLoan, curMerit);
+			}
+		}
+		
 		db.updateFavSchool(username, schoolId, rank, appStatus, finAid, loans, merit);
 		
 		response.sendRedirect("myfavorites?success=1");
