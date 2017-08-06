@@ -1,12 +1,13 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.SchoolDAO;
+import main.java.School;
+import main.java.Location;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 public class SchoolDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -17,7 +18,7 @@ public class SchoolDetails extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("id"));
 		
 		SchoolDAO db = new SchoolDAO();
-		School sch = null;//db.getSchool(id);
+		School sch = db.getSingleSchoolViewInfo(id);
 		
 		// Initialize all variables in case something in the School object is NULL
 		String name = new String();
@@ -65,7 +66,7 @@ public class SchoolDetails extends HttpServlet {
 		double medDebt = 0;
 		int age = 0;
 		double firstGen = 0;
-		int level = 0;
+		String level = new String();
 		boolean distOnly = false;
 		double male = 0;
 		double female = 0;
@@ -248,15 +249,13 @@ public class SchoolDetails extends HttpServlet {
 			firstGen = sch.getFirstGenStudentShare();
 		}
 		
-		/*
-		 * if (sch.isLevelNotNull()) {
-		 *	level = sch.getLevel();
-		 *}
-		 *
-		 *if (sch.isDistanceOnlyNull()) {
-		 *	distOnly = sch.getDistanceOnly();
-		 *}
-		 */
+		if (sch.isLevelNull()) {
+			level = sch.getLevel();
+		}
+
+		if (sch.isDistanceLearningNotNull()) {
+			distOnly = sch.getDistanceLearning() > 0;
+		}
 		
 		if (sch.isMaleShareNotNull()) {
 			male = sch.getMaleShare();
@@ -266,43 +265,41 @@ public class SchoolDetails extends HttpServlet {
 			female = sch.getFemaleShare();
 		}
 		
-		/*
-		 * if (sch.isWhiteShareNotNull()) {
-		 * 	white = sch.getWhiteShare();
-		 * }
-		 * 
-		 * if (sch.isBlackShareNotNull()) {
-		 * 	black = sch.getBlackShare();
-		 * }
-		 * 
-		 * if (sch.isHispanicShareNotNull()) {
-		 * 	hispanic = sch.getHispanicShare();
-		 * }
-		 * 
-		 * if (sch.isAsianShareNotNull()) {
-		 * 	asian = sch.getAsianShare();
-		 * }
-		 * 
-		 * if (sch.isAianShareNotNull()) {
-		 * 	aian = sch.getAianShare();
-		 * }
-		 * 
-		 * if (sch.isNhpiShareNotNull()) {
-		 * 	nhpi = sch.getNhpiShare();
-		 * }
-		 * 
-		 * if (sch.isMultiShareNotNull()) {
-		 * 	multi = sch.getMultiShare();
-		 * }
-		 * 
-		 * if (sch.isNonresShareNotNull()) {
-		 * 	nonres = sch.getNonresShare();
-		 * }
-		 * 
-		 * if (sch.isUnknownShareNotNull()) {
-		 * 	unknown = sch.getUnknownShare();
-		 * }
-		 */
+		if (sch.isWhiteNull()) {
+			white = sch.getWhite();
+		}
+		
+		if (sch.isBlackNull()) {
+			black = sch.getBlack();
+		}
+		
+		if (sch.isHispanicNull()) {
+			hispanic = sch.getHispanic();
+		}
+		
+		if (sch.isAsianNull()) {
+			asian = sch.getAsian();
+		}
+		
+		if (sch.isAmericanIndianAlaskanNativeNull()) {
+			aian = sch.getAmerican_indian_alaskan_native();
+		}
+		
+		if (sch.isNativeHawaiianPacificIslanderNull()) {
+			nhpi = sch.getNative_hawaiian_pacific_islander();
+		}
+		
+		if (sch.isMultiethnicNull()) {
+			multi = sch.getMultiethnic();
+		}
+		
+		if (sch.isNonresidentNull()) {
+			nonres = sch.getNonresident();
+		}
+		
+		if (sch.isUnknownEthnicityNull()) {
+			unknown = sch.getUnknown_ethnicity();
+		}
 		
 		request.setAttribute("name", name);
 		request.setAttribute("url", url);
@@ -350,7 +347,11 @@ public class SchoolDetails extends HttpServlet {
 		request.setAttribute("age", age);
 		request.setAttribute("firstGen", firstGen);
 		request.setAttribute("level", level);
-		request.setAttribute("distOnly", distOnly);
+		if (distOnly) {
+			request.setAttribute("distOnly", "Yes");
+		} else {
+			request.setAttribute("distOnly", "No");
+		}
 		request.setAttribute("male", male);
 		request.setAttribute("female", female);
 		request.setAttribute("white", white);

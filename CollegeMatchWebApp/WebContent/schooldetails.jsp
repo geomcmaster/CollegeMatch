@@ -1,67 +1,6 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "f" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
-<%--
-	request.setAttribute("name","University of Wisconsin-Madison");
-	request.setAttribute("url","http://www.wisc.edu");
-	request.setAttribute("city","Madison");
-	request.setAttribute("state","WI");
-	request.setAttribute("region","Great Lakes");
-	request.setAttribute("cost","23839");
-	request.setAttribute("sat25","1770");
-	request.setAttribute("satAvg","1929");
-	request.setAttribute("sat75","2100");
-	request.setAttribute("satE25","600");
-	request.setAttribute("satEAvg","650");
-	request.setAttribute("satE75","700");
-	request.setAttribute("satM25","590");
-	request.setAttribute("satMAvg","636");
-	request.setAttribute("satM75","710");
-	request.setAttribute("satW25","580");
-	request.setAttribute("satWAvg","643");
-	request.setAttribute("satW75","690");
-	request.setAttribute("act25","26");
-	request.setAttribute("actAvg","29");
-	request.setAttribute("act75","31");
-	request.setAttribute("actE25","25");
-	request.setAttribute("actEAvg","29");
-	request.setAttribute("actE75","31");
-	request.setAttribute("actM25","27");
-	request.setAttribute("actMAvg","30");
-	request.setAttribute("actM75","30");
-	request.setAttribute("actW25","26");
-	request.setAttribute("actWAvg","28");
-	request.setAttribute("actW75","32");
-	request.setAttribute("earnings","51600");
-	request.setAttribute("size","29302");
-	request.setAttribute("prog_1","Social Sciences");
-	request.setAttribute("prog_2","Biological and Biomedical Sciences");
-	request.setAttribute("prog_3","Business, Management, Marketing, and Related Support Services");
-	request.setAttribute("prog_4","Engineering");
-	request.setAttribute("prog_5","Communication, Journalism, and Related Programs");
-	request.setAttribute("admRate","0.5694");
-	request.setAttribute("avgInc","101479");
-	request.setAttribute("medInc","86640");
-	request.setAttribute("tuitionIn","10410");
-	request.setAttribute("tuitionOut","26660");
-	request.setAttribute("medDebt","22028");
-	request.setAttribute("age","20");
-	request.setAttribute("firstGen","0.192");
-	request.setAttribute("level","4-Year");
-	request.setAttribute("distOnly","No");
-	request.setAttribute("male","0.489");
-	request.setAttribute("female","0.511");
-	request.setAttribute("white","0.7705");
-	request.setAttribute("black","0.0212");
-	request.setAttribute("hispanic","0.0479");
-	request.setAttribute("asian","0.0549");
-	request.setAttribute("aian","0.0022");
-	request.setAttribute("nhpi","0.0013");
-	request.setAttribute("multi","0.0276");
-	request.setAttribute("nonres","0.0714");
-	request.setAttribute("unknown","0.003");
---%>
-
 <html>
 <head>
 	<title>CollegeMatch: <c:out value="${name}" /> Details</title>
@@ -98,7 +37,16 @@
 				<td class="input"><c:out value="${region}" /></td>
 			</tr><tr>
 				<td>Level of Institution:</td>
-				<td class="input"><c:out value="${level}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${not empty level}">
+							<c:out value="${level}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Distance-Education (Online) Only?</td>
 				<td class="input"><c:out value="${distOnly}" /></td>
@@ -107,31 +55,103 @@
 			<!-- FINANCES -->
 			<tr>
 				<td>In-State Tuition:</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${tuitionIn}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${tuitionIn != 0}">
+							<f:formatNumber type="CURRENCY" value="${tuitionIn}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Out-of-State Tuition:</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${tuitionOut}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${tuitionOut != 0}">
+							<f:formatNumber type="CURRENCY" value="${tuitionOut}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Average Cost of Attendance:</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${cost}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${cost != 0}">
+							<f:formatNumber type="CURRENCY" value="${cost}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Average Graduate Earnings (Annual) 6 Years after Admittance:<br />(The most recent data is from 2012)</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${earnings}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${earnings != 0}">
+							<f:formatNumber type="CURRENCY" value="${earnings}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Median Graduate Debt:</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${medDebt}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${medDebt != 0}">
+							<f:formatNumber type="CURRENCY" value="${medDebt}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Average Family Income:</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${avgInc}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${avgInc != 0}">
+							<f:formatNumber type="CURRENCY" value="${avgInc}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Median Family Income:</td>
-				<td class="input"><f:formatNumber type="CURRENCY" value="${medInc}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${medInc != 0}">
+							<f:formatNumber type="CURRENCY" value="${medInc}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			
 			<!-- ACADEMICS -->
 			<tr>
 				<td>Admission Rate:</td>
-				<td class="input"><f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${admRate != 0}">
+							<f:formatNumber type="PERCENT" minFractionDigits="2" value="${admRate}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>SAT Scores:</td>
 				<td><table>
@@ -142,30 +162,30 @@
 					<li>75th Percentile:</li>
 						</ul></td>
 						<td class="input">
-							<span class="hoversource">
-								<f:formatNumber type="NUMBER" groupingUsed="false" value="${sat25}" />
-								<span class="target">
-									English 25th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satE25}" /><br />
-									Math 25th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satM25}" /><br />
-									Writing 25th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satW25}" />
-								</span>
-							</span><br />
-							<span class="hoversource">
-								<f:formatNumber type="NUMBER" groupingUsed="false" value="${satAvg}" />
-								<span class="target">
-									English Average: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satEAvg}" /><br />
-									Math Average: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satMAvg}" /><br />
-									Writing Average: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satWAvg}" />
-								</span>
-							</span><br />
-							<span class="hoversource">
-								<f:formatNumber type="NUMBER" groupingUsed="false" value="${sat75}" />
-								<span class="target">
-									English 75th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satE75}" /><br />
-									Math 75th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satM75}" /><br />
-									Writing 75th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${satW75}" />
-								</span>
-							</span>
+							<c:choose>
+								<c:when test="${act25 != 0}">
+									<f:formatNumber type="NUMBER" groupingUsed="false" value="${sat25}" /><br />
+								</c:when>
+								<c:otherwise>
+									No data<br />
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${actAvg != 0}">
+									<f:formatNumber type="NUMBER" groupingUsed="false" value="${satAvg}" /><br />
+								</c:when>
+								<c:otherwise>
+									No data<br />
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${act75 != 0}">
+									<f:formatNumber type="NUMBER" groupingUsed="false" value="${sat75}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
 				</table></td>
@@ -179,54 +199,98 @@
 					<li>75th Percentile:</li>
 						</ul></td>
 						<td class="input">
-							<span class="hoversource">
-								<f:formatNumber type="NUMBER" groupingUsed="false" value="${act25}" />
-								<span class="target">
-									English 25th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actE25}" /><br />
-									Math 25th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actM25}" /><br />
-									Writing 25th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actW25}" />
-								</span>
-							</span><br />
-							<span class="hoversource">
-								<f:formatNumber type="NUMBER" groupingUsed="false" value="${actAvg}" />
-								<span class="target">
-									English Average: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actEAvg}" /><br />
-									Math Average: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actMAvg}" /><br />
-									Writing Average: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actWAvg}" />
-								</span>
-							</span><br />
-							<span class="hoversource">
-								<f:formatNumber type="NUMBER" groupingUsed="false" value="${act75}" />
-								<span class="target">
-									English 75th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actE75}" /><br />
-									Math 75th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actM75}" /><br />
-									Writing 75th Percentile: <f:formatNumber type="NUMBER" groupingUsed="false" value="${actW75}" />
-								</span>
-							</span>
+							<c:choose>
+								<c:when test="${act25 != 0}">
+									<f:formatNumber type="NUMBER" groupingUsed="false" value="${act25}" /><br />
+								</c:when>
+								<c:otherwise>
+									No data<br />
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${actAvg != 0}">
+									<f:formatNumber type="NUMBER" groupingUsed="false" value="${actAvg}" /><br />
+								</c:when>
+								<c:otherwise>
+									No data<br />
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${act75 != 0}">
+									<f:formatNumber type="NUMBER" groupingUsed="false" value="${act75}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
 				</table></td>
 			</tr><tr>
 				<td>Most Popular Programs:</td>
-				<td><ol>
-					<li><c:out value="${prog_1}" /></li>
-					<li><c:out value="${prog_2}" /></li>
-					<li><c:out value="${prog_3}" /></li>
-					<li><c:out value="${prog_4}" /></li>
-					<li><c:out value="${prog_5}" /></li>
-				</ol></td>
+				<td>
+					<c:choose>
+						<c:when test="${not empty prog_1}">
+							<ol>
+								<li><c:out value="${prog_1}" /></li>
+								<c:if test="${not empty prog_2}">
+									<li><c:out value="${prog_2}" /></li>
+									<c:if test="${not empty prog_3}">
+										<li><c:out value="${prog_3}" /></li>
+										<c:if test="${not empty prog_4}">
+											<li><c:out value="${prog_4}" /></li>
+											<c:if test="${not empty prog_5}">
+												<li><c:out value="${prog_5}" /></li>
+											</c:if>
+										</c:if>
+									</c:if>
+								</c:if>
+							</ol>
+						</c:when>
+						<c:otherwise>
+							<span style="float:right;">No data</span>
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			
 			<!-- STUDENTS -->
 			<tr>
 				<td>Size of Undergraduate Student Body:</td>
-				<td class="input"><f:formatNumber type="NUMBER" value="${size}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${size != 0}">
+							<f:formatNumber type="NUMBER" value="${size}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Average Age of Entry:</td>
-				<td class="input"><f:formatNumber type="NUMBER" value="${age}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${age != 0}">
+							<f:formatNumber type="NUMBER" value="${age}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Percentage of First-Generation Students:</td>
-				<td class="input"><f:formatNumber type="PERCENT" minFractionDigits="1" value="${firstGen}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${firstGen != 0}">
+							<f:formatNumber type="PERCENT" minFractionDigits="1" value="${firstGen}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr><tr>
 				<td>Gender Demographics:</td>
 				<td><table>
@@ -236,39 +300,147 @@
 					<li>Female:</li>
 						</ul></td>
 						<td class="input">
-						<f:formatNumber type="PERCENT" minFractionDigits="1" value="${male}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="1" value="${female}" />
+							<c:choose>
+								<c:when test="${male != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="1" value="${male}" /><br />
+								</c:when>
+								<c:otherwise>
+									No data<br />
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${female != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="1" value="${female}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
 				</table></td>
 			</tr><tr>
 				<td>Ethnic Demographics:</td>
-				<td><table>
+				<td><table class="demolist">
 					<tr>
-						<td><ul>
-					<li>White:</li>
-					<li>Black:</li>
-					<li>Hispanic:</li>
-					<li>Asian:</li>
-					<li>American Indian:</li>
-					<li>Pacific Islander:</li>
-					<li>2 or more races:</li>
-					<li>Non-Residents:</li>
-					<li>Race is unknown:</li>
-						</ul></td>
+						<td><ul><li>White:</li></ul></td>
 						<td class="input">
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${white}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${black}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${hispanic}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${asian}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${aian}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${nhpi}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${multi}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${nonres}" /><br />
-						<f:formatNumber type="PERCENT" minFractionDigits="2" value="${unknown}" />
+							<c:choose>
+								<c:when test="${white != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${white}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
-				</table></td>
+					<tr>
+						<td><ul><li>Black:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${black != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${black}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>Hispanic:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${hispanic != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${hispanic}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>Asian:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${asian != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${asian}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>American Indian / Alaskan Native:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${aian != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${aian}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>Native Hawaiian / Pacific Islander:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${nhpi != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${nhpi}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>2 or more races:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${multi != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${multi}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>Non-residents:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${nonres != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${nonres}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td><ul><li>Race is unknown:</li></ul></td>
+						<td class="input">
+							<c:choose>
+								<c:when test="${unknown != 0}">
+									<f:formatNumber type="PERCENT" minFractionDigits="2" value="${unknown}" />
+								</c:when>
+								<c:otherwise>
+									No data
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+				</table>
+				</td>
 			</tr>
 		</table>
 	</div>
