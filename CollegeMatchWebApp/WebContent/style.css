@@ -205,6 +205,10 @@
 	td#fieldlist {
 		max-width: 250px;
 	}
+	
+	.demolist td {
+		min-width: 53px;
+	}
 
 /********************/
 /**** TEXT/LINKS ****/
