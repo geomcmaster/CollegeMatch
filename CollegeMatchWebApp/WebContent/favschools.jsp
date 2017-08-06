@@ -64,7 +64,7 @@
 						<table class="college">
 							<tr>
 								<td>#<c:out value="${rank}" /> <a href='viewSchool?id=<c:out value="${id}" />'><c:out value="${name}" /></a></td>
-								<td class="input"><a href=""><!--delete action--><img src="images/delete-128.png" width="14"></a></td>
+								<td class="input"><a href='modifyFavs?modifyAction=delete&modifyId=<c:out value="${id}" />'><img src="images/delete-128.png" width="14"></a></td>
 							</tr><tr>
 								<td>
 									<dl>
