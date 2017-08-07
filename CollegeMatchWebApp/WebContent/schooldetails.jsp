@@ -33,9 +33,6 @@
 				<td>Location:</td>
 				<td class="input"><c:out value="${city}" />, <c:out value="${state}" /></td>
 			</tr><tr>
-				<td>Region:</td>
-				<td class="input"><c:out value="${region}" /></td>
-			</tr><tr>
 				<td>Level of Institution:</td>
 				<td class="input">
 					<c:choose>
@@ -49,7 +46,16 @@
 				</td>
 			</tr><tr>
 				<td>Distance-Education (Online) Only?</td>
-				<td class="input"><c:out value="${distOnly}" /></td>
+				<td class="input">
+					<c:choose>
+						<c:when test="${not empty distOnly}">
+							<c:out value="${distOnly}" />
+						</c:when>
+						<c:otherwise>
+							No data
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			
 			<!-- FINANCES -->

@@ -61,8 +61,14 @@ public class Search extends HttpServlet {
 			List<Condition> OrGroup = new ArrayList<Condition>();
 			switch(type) {
 			case "distance":
-				// TODO: API?
-				
+				tablesToJoin |= SchoolDAO.COORDINATES;
+				int distance = Integer.parseInt(request.getParameter(opener + "dist"));
+				if (request.getParameter(opener + "check") != null) { // Use my location
+					conditions.add(db.distanceRange(distance, username));
+				} else { // Use entered ZIP
+					int zipCode = Integer.parseInt(request.getParameter(opener + "text"));
+					conditions.add(db.distanceRange(distance, zipCode));
+				}
 				break;
 			case "citystate":
 				String city = request.getParameter(opener + "text");
