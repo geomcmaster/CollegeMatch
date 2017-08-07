@@ -70,6 +70,10 @@
 	<servlet-name>SavePassword</servlet-name>
 	<servlet-class>com.servlets.SaveUserPassword</servlet-class>
   </servlet>
+  <servlet>
+	<servlet-name>ReplacePassword</servlet-name>
+	<servlet-class>com.servlets.ReplacePassword</servlet-class>
+  </servlet>
   
   
   <servlet-mapping>
@@ -131,5 +135,9 @@
   <servlet-mapping>
 	<servlet-name>SavePassword</servlet-name>
 	<url-pattern>/savepw</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>ReplacePassword</servlet-name>
+	<url-pattern>/retrievepw</url-pattern>
   </servlet-mapping>
 </web-app>
