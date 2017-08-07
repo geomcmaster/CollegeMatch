@@ -1,11 +1,5 @@
-
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "f" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-
-<%--
-	String[] fields = {"1|Agriculture, Agriculture Operations, and Related Sciences","2|Education","3|Homeland Security, Law Enforcement, Firefighting and Related Protective Services",};
-	request.setAttribute("fields", fields);
---%>
 
 <html>
 <head>

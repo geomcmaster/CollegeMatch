@@ -11,6 +11,10 @@
  * 
  * SHOWOPTIONS function shows an option deselected from one criterion on all other criteria lists
  * 
+ * NONUM disables relevant fields when users make certain selections
+ * 
+ * SHOWTHISOPTION disables option-hiding HTML/CSS to put a drop-down option back in the exact place it was originally.
+ * 
  */
 
 var valTds = document.getElementsByClassName("critvals");
@@ -203,6 +207,7 @@ function nonum(elCheck) {
 	var elGroupOpener = elCheck.id.substring(0,5);
 	var elSelect = document.getElementById(elGroupOpener + "type");
 	var elCompare = document.getElementById(elGroupOpener + "comp");
+	var wrap;
 	if (elSelect.options[elSelect.selectedIndex].value == "sat" || 
 			elSelect.options[elSelect.selectedIndex].value == "act") {
 		if (elCheck.checked) {
@@ -212,12 +217,12 @@ function nonum(elCheck) {
 				toggleBetween(elCompare);
 			}
 			elCompare.options[1].classList.add("hidden");
-			var wrap = document.createElement("span");
+			wrap = document.createElement("span");
 			wrap.innerHTML = elCompare.options[1].outerHTML;
 			elCompare.options[1].parentNode.insertBefore(wrap,elCompare.options[1]);
 			elCompare.options[1].remove();
 		} else {
-			var wrap = elCompare.getElementsByTagName("span")[0];
+			wrap = elCompare.getElementsByTagName("span")[0];
 			showThisOption(wrap);
 			document.getElementById(elGroupOpener + "num1").disabled = false;
 		}

@@ -1,21 +1,3 @@
-<!-- List o' tasks -->
-<!--
-TASK				QUERY			SCOPE	
-register user		insert			1 table
-save user data		insert/update	1 table
-delete user data	delete			1 table
-save favorites		insert/update	3+ tables (depends on user, field, school)
-search	(school)	select
- -- location						2 tables
- -- demographics					2-3 tables
- -- field of study					2 tables
- -- based on user location			3 tables, w/ subqueries
-search (field)		select			1 table
-display search results
-display user data
-display favorites
--->
-
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 
 <html>
