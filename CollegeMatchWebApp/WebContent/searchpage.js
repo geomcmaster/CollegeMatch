@@ -47,6 +47,7 @@ function showKids(source) {
 	var strOpen = tdParent.id.slice(0,5);
 	var selValue = source.options[source.selectedIndex].value;
 	var elHid = document.getElementById(strOpen + "hid");
+	var checkLab = document.getElementById(strOpen + "checkLab");
 	showOptions(source, elHid.value);
 	elHid.value = selValue;
 	hideAll(tdParent);
@@ -66,6 +67,10 @@ function showKids(source) {
 			}
 			elMid.appendChild(document.createTextNode("of ZIP"));
 			document.getElementById(strOpen + "text").classList.remove("hidden");
+			document.getElementById(strOpen + "checkBreak").classList.remove("hidden");
+			checkLab.classList.remove("hidden");
+			checkLab.appendChild(document.createTextNode("Use my location"));
+			document.getElementById(strOpen + "check").classList.remove("hidden");
 			break;
 		case "locationcs":
 			document.getElementById(strOpen + "text").classList.remove("hidden");
@@ -85,8 +90,8 @@ function showKids(source) {
 			document.getElementById(strOpen + "comp").classList.remove("hidden");
 			document.getElementById(strOpen + "num1").classList.remove("hidden");
 			document.getElementById(strOpen + "check").classList.remove("hidden");
-			document.getElementById(strOpen + "checkLab").appendChild(document.createTextNode("Use my scores"));
-			document.getElementById(strOpen + "checkLab").classList.remove("hidden");
+			checkLab.appendChild(document.createTextNode("Use my scores"));
+			checkLab.classList.remove("hidden");
 			document.getElementById(strOpen + "checkBreak").classList.remove("hidden");
 			document.getElementById(strOpen + "num1").step = "1";
 			document.getElementById(strOpen + "num2").step = "1";
@@ -215,6 +220,12 @@ function nonum(elCheck) {
 			var wrap = elCompare.getElementsByTagName("span")[0];
 			showThisOption(wrap);
 			document.getElementById(elGroupOpener + "num1").disabled = false;
+		}
+	} else if (elSelect.options[elSelect.selectedIndex].value == "locationz") {
+		if (elCheck.checked) {
+			document.getElementById(elGroupOpener + "text").disabled = true;
+		} else {
+			document.getElementById(elGroupOpener + "text").disabled = false;
 		}
 	}
 }
