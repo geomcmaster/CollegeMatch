@@ -1,7 +1,10 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.UserDAO;
+import main.java.User;
+import main.java.Location;
+import main.java.FavoriteFieldOfStudy;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

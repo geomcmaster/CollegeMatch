@@ -1,7 +1,7 @@
 package com.servlets;
 
 import java.io.IOException;
-import main.java.*;
+import main.java.UserDAO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

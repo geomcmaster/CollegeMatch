@@ -131,7 +131,7 @@ function reorderFavs(elChanger) {
 	var newRank = elChanger.value;
 	var reorderedName = elChanger.nextSibling.textContent.trim();
 	var reorderedKey = findKey(reorderedName);
-	var oldRank, i, rankSplit, sel, divAfter;
+	var oldRank = 0, i, rankSplit, sel, divAfter;
 	
 	// change hidden field first to get old rank
 	var hidInput = document.getElementById("hidField");
@@ -174,7 +174,7 @@ function reorderFavs(elChanger) {
 		}
 		sib = sib.nextSibling;
 	}
-	var sib = elDiv.previousSibling;
+	sib = elDiv.previousSibling;
 	while (sib != null) {
 		sel = sib.getElementsByTagName("select")[0];
 		if (sel != elChanger) {
