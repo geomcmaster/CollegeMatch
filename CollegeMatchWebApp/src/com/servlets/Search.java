@@ -315,6 +315,8 @@ public class Search extends HttpServlet {
 			return School.AVG_FAM_INC;
 		case "medinc":
 			return School.MED_FAM_INC;
+		case "meddebt":
+			return School.MED_DEBT;
 		case "tuitionin":
 			return School.TUITION_IN;
 		case "tuitionout":
