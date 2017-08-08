@@ -379,28 +379,43 @@ public class SchoolDAO {
 	 * @return
 	 */
 	public Condition distanceRange(int distance, String userName) {
-		String query = "SELECT location.ZIP FROM user "
+		double userLat = 0;
+		double userLon = 0;
+		String query = "SELECT coordinates.latitude, coordinates.longitude FROM user "
 				+ "JOIN residence ON user.ID = residence.std_ID JOIN location ON location.ID = residence.loc_ID "
-				+ " WHERE user.ID = ?";
+				+ "JOIN coordinates ON location.ZIP = coordinates.ZIP WHERE user.ID = ?";
 		
-		PreparedStatement getUserZip = null;
-		ResultSet userZip = null;
+		PreparedStatement getUserCoord = null;
+		ResultSet userCoord = null;
 		try {
-			getUserZip = dbUtil.getConnection().prepareStatement(query);
-			getUserZip.setString(1, userName);
-			userZip = getUserZip.executeQuery();
-			if (userZip.next()) {
-				return distanceRange(distance, userZip.getInt(1));
+			getUserCoord = dbUtil.getConnection().prepareStatement(query);
+			getUserCoord.setString(1, userName);
+			userCoord = getUserCoord.executeQuery();
+			if (userCoord.next()) {
+				userLat = userCoord.getDouble(1);
+				userLon = userCoord.getDouble(2);
 			} else {
 				return new Condition("", CondType.NO_COND, null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.closeResultSet(userZip);
-			DBUtil.closeStatement(getUserZip);
+			DBUtil.closeResultSet(userCoord);
+			DBUtil.closeStatement(getUserCoord);
 		}
-		return new Condition("", CondType.NO_COND, null);
+		
+		double lon1 = userLon - distance/Math.abs(Math.cos(Math.toRadians(userLat))*69.0);
+		double lon2 = userLon + distance/Math.abs(Math.cos(Math.toRadians(userLat))*69.0);
+		double lat1 = userLat - (distance/69.0);
+		double lat2 = userLat + (distance/69.0);
+		
+		String distQuery = "3956 * 2 * ASIN(SQRT( POWER(SIN((" + userLat + " - coordinates.latitude) "
+				+ "* pi()/180 / 2), 2) + COS(" + userLat + " * pi()/180) * COS(coordinates.latitude * "
+						+ "pi()/180) * POWER(SIN((" + userLon+ " - coordinates.longitude) * pi()/180 / 2), 2) )) "
+								+ "< " + distance + " AND coordinates.longitude BETWEEN " + lon1 + " AND " + 
+						lon2 + " AND coordinates.latitude BETWEEN " + lat1 + " AND " + lat2;
+		
+		return new Condition("", CondType.DISTANCE, CondVal.createDistanceVal(distQuery));
 	}
 	
 	/**
@@ -437,10 +452,10 @@ public class SchoolDAO {
 			DBUtil.closeStatement(getUserCoord);
 		}
 		
-		double lon1 = userLon - distance/Math.abs(Math.cos(Math.toRadians(userLat))*69);
-		double lon2 = userLon + distance/Math.abs(Math.cos(Math.toRadians(userLat))*69);
-		double lat1 = userLat - (distance/(double) 69);
-		double lat2 = userLat + (distance/(double) 69);
+		double lon1 = userLon - distance/Math.abs(Math.cos(Math.toRadians(userLat))*69.0);
+		double lon2 = userLon + distance/Math.abs(Math.cos(Math.toRadians(userLat))*69.0);
+		double lat1 = userLat - (distance/69.0);
+		double lat2 = userLat + (distance/69.0);
 		
 		String distQuery = "3956 * 2 * ASIN(SQRT( POWER(SIN((" + userLat + " - coordinates.latitude) "
 				+ "* pi()/180 / 2), 2) + COS(" + userLat + " * pi()/180) * COS(coordinates.latitude * "
@@ -889,8 +904,8 @@ public class SchoolDAO {
 					case INT_RANGE: 	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
 										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
 										break;
-					case DOUBLE_RANGE:	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
-										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+					case DOUBLE_RANGE:	pstmt.setDouble(val.getIndexOfMin(), val.getMinDouble());
+										pstmt.setDouble(val.getIndexOfMax(), val.getMaxDouble());
 										break;
 					case INT:			pstmt.setInt(val.getIndex(), val.getIntVal());
 										break;
