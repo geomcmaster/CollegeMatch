@@ -2,13 +2,6 @@
 <%@ taglib prefix = "f" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 
-<%--
-//data format: rank|id|name|url|admrate|in-tuit|out-tuit|city|stateInt|stateAbbr|satavg|actavg|appstatus|finaid|loanamt|meritamt
-	String[] schools = {" 1| 123| University of Wisconsin-Madison| http://www.wisc.edu| 0.557| 10410| 26660| Madison| 55| WI| 1285.9| 29.2| Applied!| 0| 0| 50",
-			" 2| 456| University of Illinois| http://illinois.edu/| 0.593| 12345| 29646| Champaign| 17| IL| 1326| 29| Not applied yet.| 0| 8000| 0"};	request.setAttribute("schools", schools);
-	request.setAttribute("userState",55);
---%>
-
 <html>
 <head>
 	<title>CollegeMatch: My Favorite Colleges</title> <!-- this will change with each page -->
@@ -144,7 +137,7 @@
 													<dd>No data</dd>
 												</c:when>
 												<c:otherwise>
-													<dd<c:if test="${userState eq stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
+													<dd><f:formatNumber type="CURRENCY" value="${inTuition}" /> / year</dd>
 												</c:otherwise>
 											</c:choose>
 										
@@ -154,7 +147,7 @@
 													<dd>No data</dd>
 												</c:when>
 												<c:otherwise>
-													<dd<c:if test="${userState ne stateId}"> class="highlit"</c:if>><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
+													<dd><f:formatNumber type="CURRENCY" value="${outTuition}" /> / year</dd>
 												</c:otherwise>
 											</c:choose>
 
