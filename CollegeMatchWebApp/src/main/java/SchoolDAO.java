@@ -889,8 +889,8 @@ public class SchoolDAO {
 					case INT_RANGE: 	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
 										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
 										break;
-					case DOUBLE_RANGE:	pstmt.setInt(val.getIndexOfMin(), val.getMinInt());
-										pstmt.setInt(val.getIndexOfMax(), val.getMaxInt());
+					case DOUBLE_RANGE:	pstmt.setDouble(val.getIndexOfMin(), val.getMinDouble());
+										pstmt.setDouble(val.getIndexOfMax(), val.getMaxDouble());
 										break;
 					case INT:			pstmt.setInt(val.getIndex(), val.getIntVal());
 										break;
