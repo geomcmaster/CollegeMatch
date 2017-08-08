@@ -1,7 +1,7 @@
 # CollegeMatch
 A Java EE web application for finding colleges based on a number of search criteria. Users can save personal data that can be used in search criteria and can also save colleges they are interested in and track them through the application process.
 
-Building and running the application:
+Building and running the application, assuming you have Java EE and Eclipse:
 * Download [Tomcat](https://tomcat.apache.org/download-80.cgi)
     * Download [MySql Connector](https://dev.mysql.com/downloads/connector/j/8.0.html) to Tomcat's lib folder
          * if this isn't set up right, you'll receive a "no suitable driver found" error
